@@ -257,8 +257,8 @@ export default function ArchitectureFlowDiagram({ diagramType = 'mvt-cycle' }) {
                     <circle cx="22" cy="14" r="3.5" fill="var(--blue-vibrant)" className="pulsing-flow-dot" />
                     <defs>
                       <linearGradient id="blueFlowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stopColor="#1E3A8A" stopOpacity="0.5" />
-                        <stop offset="100%" stopColor="#2563EB" stopOpacity="0.95" />
+                        <stop offset="0%" stopColor="#7B1C6E" stopOpacity="0.5" />
+                        <stop offset="100%" stopColor="#7B1C6E" stopOpacity="0.95" />
                       </linearGradient>
                     </defs>
                   </svg>

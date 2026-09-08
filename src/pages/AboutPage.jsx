@@ -32,8 +32,8 @@ export default function AboutPage({ onNavigate }) {
 
       {/* CURVY & DOTTED HERO BANNER (Pure Light Theme) */}
       <div className="catalog-hero-banner" style={{
-        background: 'linear-gradient(135deg, #F0F7FF 0%, #E0EFFF 50%, #FFFFFF 100%)',
-        border: '1.5px solid rgba(0, 102, 255, 0.16)',
+        background: 'linear-gradient(135deg, #FDF5FD 0%, #FDF5FD 50%, #FFFFFF 100%)',
+        border: '1.5px solid rgba(123, 28, 110, 0.16)',
         boxShadow: '0 16px 40px rgba(0, 60, 160, 0.08)'
       }}>
         <div className="watermark-tech-grid" />
@@ -79,21 +79,21 @@ export default function AboutPage({ onNavigate }) {
           background: '#FFFFFF',
           padding: '38px 32px',
           borderRadius: '28px',
-          border: '1.5px solid rgba(0, 102, 255, 0.14)',
+          border: '1.5px solid rgba(123, 28, 110, 0.14)',
           boxShadow: '0 10px 30px -5px rgba(10, 25, 60, 0.06)'
         }}>
           <div style={{
             width: '48px',
             height: '48px',
             borderRadius: '16px',
-            background: 'rgba(0, 102, 255, 0.08)',
+            background: 'rgba(123, 28, 110, 0.08)',
             color: 'var(--blue-primary)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             marginBottom: '20px'
           }}>
-            <Target size={24} color="#0066FF" />
+            <Target size={24} color="#7B1C6E" />
           </div>
           <h2 style={{ fontSize: '22px', marginBottom: '12px', color: '#0F172A', fontWeight: 800 }}>Institutional Mission</h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '14.5px', lineHeight: 1.75 }}>
@@ -105,21 +105,21 @@ export default function AboutPage({ onNavigate }) {
           background: '#FFFFFF',
           padding: '38px 32px',
           borderRadius: '28px',
-          border: '1.5px solid rgba(0, 102, 255, 0.14)',
+          border: '1.5px solid rgba(123, 28, 110, 0.14)',
           boxShadow: '0 10px 30px -5px rgba(10, 25, 60, 0.06)'
         }}>
           <div style={{
             width: '48px',
             height: '48px',
             borderRadius: '16px',
-            background: 'rgba(0, 229, 255, 0.1)',
-            color: '#0284C7',
+            background: 'rgba(253, 192, 41, 0.1)',
+            color: '#FDC029',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             marginBottom: '20px'
           }}>
-            <Compass size={24} color="#0284C7" />
+            <Compass size={24} color="#FDC029" />
           </div>
           <h2 style={{ fontSize: '22px', marginBottom: '12px', color: '#0F172A', fontWeight: 800 }}>Architectural Vision</h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '14.5px', lineHeight: 1.75 }}>
@@ -148,7 +148,7 @@ export default function AboutPage({ onNavigate }) {
           {siteConfig.capabilities.map(cap => (
             <div key={cap.id} className="pillar-mini-card" style={{ padding: '28px' }}>
               <div className="pillar-icon">
-                <Code size={20} color="#0066FF" />
+                <Code size={20} color="#7B1C6E" />
               </div>
               <h4 style={{ fontSize: '17px' }}>{cap.title}</h4>
               <p>{cap.desc}</p>
@@ -183,7 +183,7 @@ export default function AboutPage({ onNavigate }) {
               style={{
                 background: '#FFFFFF',
                 borderRadius: '24px',
-                border: '1.5px solid rgba(0, 102, 255, 0.12)',
+                border: '1.5px solid rgba(123, 28, 110, 0.12)',
                 padding: '28px 24px',
                 boxShadow: '0 8px 24px rgba(10, 25, 60, 0.05)',
                 display: 'flex',
@@ -193,12 +193,12 @@ export default function AboutPage({ onNavigate }) {
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translateY(-4px)';
-                e.currentTarget.style.borderColor = '#0066FF';
-                e.currentTarget.style.boxShadow = '0 16px 36px rgba(0, 102, 255, 0.12)';
+                e.currentTarget.style.borderColor = '#7B1C6E';
+                e.currentTarget.style.boxShadow = '0 16px 36px rgba(123, 28, 110, 0.12)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.borderColor = 'rgba(0, 102, 255, 0.12)';
+                e.currentTarget.style.borderColor = 'rgba(123, 28, 110, 0.12)';
                 e.currentTarget.style.boxShadow = '0 8px 24px rgba(10, 25, 60, 0.05)';
               }}
             >
@@ -208,11 +208,11 @@ export default function AboutPage({ onNavigate }) {
                     width: '44px',
                     height: '44px',
                     borderRadius: '14px',
-                    background: 'linear-gradient(135deg, rgba(0, 102, 255, 0.1) 0%, rgba(0, 229, 255, 0.15) 100%)',
+                    background: 'linear-gradient(135deg, rgba(123, 28, 110, 0.1) 0%, rgba(253, 192, 41, 0.15) 100%)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    color: '#0066FF',
+                    color: '#7B1C6E',
                     fontWeight: 800,
                     fontSize: '15px'
                   }}>
@@ -224,9 +224,9 @@ export default function AboutPage({ onNavigate }) {
                     textTransform: 'uppercase',
                     padding: '4px 12px',
                     borderRadius: 'var(--radius-full)',
-                    background: 'rgba(0, 102, 255, 0.08)',
-                    color: '#0066FF',
-                    border: '1px solid rgba(0, 102, 255, 0.2)'
+                    background: 'rgba(123, 28, 110, 0.08)',
+                    color: '#7B1C6E',
+                    border: '1px solid rgba(123, 28, 110, 0.2)'
                   }}>
                     {fac.tag}
                   </span>
@@ -235,7 +235,7 @@ export default function AboutPage({ onNavigate }) {
                 <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#0F172A', marginBottom: '6px' }}>
                   {fac.name}
                 </h3>
-                <div style={{ fontSize: '13px', fontWeight: 700, color: '#0066FF', marginBottom: '8px' }}>
+                <div style={{ fontSize: '13px', fontWeight: 700, color: '#7B1C6E', marginBottom: '8px' }}>
                   {fac.role}
                 </div>
                 <div style={{ fontSize: '12.5px', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: '14px' }}>
@@ -268,7 +268,7 @@ export default function AboutPage({ onNavigate }) {
 
       {/* Call to Action Bar */}
       <div style={{
-        background: 'linear-gradient(135deg, #060D24 0%, #0B193C 60%, #0052CC 100%)',
+        background: 'linear-gradient(135deg, #060D24 0%, #0B193C 60%, #7B1C6E 100%)',
         borderRadius: '32px',
         padding: '48px 40px',
         color: '#FFFFFF',

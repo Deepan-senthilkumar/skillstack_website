@@ -23,8 +23,8 @@ export default function CoursesPage({ subjects, onSelectSubject, onNavigate }) {
 
       {/* CURVY & DOTTED HERO BANNER (Light Layered Canvas) */}
       <div className="catalog-hero-banner" style={{
-        background: 'linear-gradient(135deg, #F0F7FF 0%, #E0EFFF 50%, #FFFFFF 100%)',
-        border: '1.5px solid rgba(0, 102, 255, 0.16)',
+        background: 'linear-gradient(135deg, #FDF5FD 0%, #FDF5FD 50%, #FFFFFF 100%)',
+        border: '1.5px solid rgba(123, 28, 110, 0.16)',
         boxShadow: '0 16px 40px rgba(0, 60, 160, 0.08)'
       }}>
         <div className="watermark-tech-grid" />

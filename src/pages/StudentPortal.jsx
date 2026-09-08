@@ -292,9 +292,9 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
                   fontWeight: 700,
                   borderRadius: 'var(--radius-full)',
                   border: '1px solid',
-                  borderColor: levelFilter === lvl ? '#0066FF' : '#E2E8F0',
-                  background: levelFilter === lvl ? 'rgba(0, 102, 255, 0.1)' : '#FFFFFF',
-                  color: levelFilter === lvl ? '#0066FF' : '#64748B',
+                  borderColor: levelFilter === lvl ? '#7B1C6E' : '#E2E8F0',
+                  background: levelFilter === lvl ? 'rgba(123, 28, 110, 0.1)' : '#FFFFFF',
+                  color: levelFilter === lvl ? '#7B1C6E' : '#64748B',
                   cursor: 'pointer',
                   textTransform: 'capitalize'
                 }}
@@ -315,7 +315,7 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
             <div key={mod.id} className="module-group" style={{ marginBottom: '16px' }}>
               <div className="module-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <span>{mod.name}</span>
-                <span style={{ fontSize: '9.5px', padding: '1px 6px', borderRadius: '4px', background: 'rgba(0, 102, 255, 0.08)', color: '#0066FF', fontWeight: 800 }}>
+                <span style={{ fontSize: '9.5px', padding: '1px 6px', borderRadius: '4px', background: 'rgba(123, 28, 110, 0.08)', color: '#7B1C6E', fontWeight: 800 }}>
                   {mod.level.toUpperCase()}
                 </span>
               </div>
@@ -339,8 +339,8 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
                       padding: '8px 12px',
                       borderRadius: 'var(--radius-md)',
                       cursor: 'pointer',
-                      background: isActive ? 'rgba(0, 102, 255, 0.08)' : 'transparent',
-                      borderLeft: isActive ? '3px solid #0066FF' : '3px solid transparent'
+                      background: isActive ? 'rgba(123, 28, 110, 0.08)' : 'transparent',
+                      borderLeft: isActive ? '3px solid #7B1C6E' : '3px solid transparent'
                     }}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', overflow: 'hidden' }}>
@@ -356,7 +356,7 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
                       <span style={{
                         fontSize: '12.5px',
                         fontWeight: isActive ? 700 : 500,
-                        color: isActive ? '#0066FF' : '#0F172A',
+                        color: isActive ? '#7B1C6E' : '#0F172A',
                         whiteSpace: 'nowrap',
                         textOverflow: 'ellipsis',
                         overflow: 'hidden'
@@ -396,7 +396,7 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
             {/* Topic Hero Header with Badges */}
             <div className="topic-hero" style={{
               background: '#FFFFFF',
-              border: '1.5px solid rgba(0, 102, 255, 0.14)',
+              border: '1.5px solid rgba(123, 28, 110, 0.14)',
               borderRadius: '24px',
               padding: '28px 32px',
               boxShadow: '0 10px 30px rgba(0, 60, 160, 0.05)',
@@ -407,8 +407,8 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
                   <span style={{
                     padding: '3px 10px',
                     borderRadius: 'var(--radius-full)',
-                    background: 'rgba(0, 102, 255, 0.08)',
-                    color: levelColor[activeTopic.level] || '#0066FF',
+                    background: 'rgba(123, 28, 110, 0.08)',
+                    color: levelColor[activeTopic.level] || '#7B1C6E',
                     fontWeight: 800,
                     textTransform: 'uppercase'
                   }}>
@@ -432,9 +432,9 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
                       fontWeight: 700,
                       padding: '6px 14px',
                       borderRadius: 'var(--radius-full)',
-                      borderColor: 'rgba(0, 102, 255, 0.2)',
-                      color: '#0066FF',
-                      background: 'rgba(0, 102, 255, 0.04)'
+                      borderColor: 'rgba(123, 28, 110, 0.2)',
+                      color: '#7B1C6E',
+                      background: 'rgba(123, 28, 110, 0.04)'
                     }}
                   >
                     <Zap size={13} /> Cheat Sheet
@@ -490,7 +490,7 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
                 onClick={() => setActiveTab('code')}
                 style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '9px 18px', borderRadius: 'var(--radius-full)', fontSize: '13px', fontWeight: 700 }}
               >
-                <Code size={14} color="#0066FF" /> Practical Code
+                <Code size={14} color="#7B1C6E" /> Practical Code
               </button>
 
               <button
@@ -498,7 +498,7 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
                 onClick={() => setActiveTab('sandbox')}
                 style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '9px 18px', borderRadius: 'var(--radius-full)', fontSize: '13px', fontWeight: 700 }}
               >
-                <Terminal size={14} color="#0284C7" /> Live Code Sandbox & Tester
+                <Terminal size={14} color="#FDC029" /> Live Code Sandbox & Tester
               </button>
 
               <button
@@ -531,7 +531,7 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
             {(activeTab === 'guide' || activeTab === 'diagram') && (
               <div className="explain-card" style={{
                 background: '#FFFFFF',
-                border: '1.5px solid rgba(0, 102, 255, 0.12)',
+                border: '1.5px solid rgba(123, 28, 110, 0.12)',
                 borderRadius: '24px',
                 padding: '28px 32px',
                 boxShadow: '0 8px 24px rgba(0, 0, 0, 0.04)',
@@ -557,7 +557,7 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
                   💻 Practical Code Implementation
                 </div>
                 {activeTopic.examples.map((ex, idx) => (
-                  <div key={ex.id || idx} className="code-container" style={{ borderRadius: '20px', overflow: 'hidden', border: '1.5px solid rgba(0, 102, 255, 0.18)', marginBottom: '20px' }}>
+                  <div key={ex.id || idx} className="code-container" style={{ borderRadius: '20px', overflow: 'hidden', border: '1.5px solid rgba(123, 28, 110, 0.18)', marginBottom: '20px' }}>
                     <div className="code-header" style={{ background: '#F1F5F9', padding: '12px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <span style={{ fontWeight: 700, color: '#0F172A', fontSize: '13px' }}>● {ex.label}</span>
                       <div style={{ display: 'flex', gap: '8px' }}>
@@ -602,7 +602,7 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
             {activeTab === 'sandbox' && (
               <div style={{
                 background: '#FFFFFF',
-                border: '1.5px solid rgba(0, 102, 255, 0.18)',
+                border: '1.5px solid rgba(123, 28, 110, 0.18)',
                 borderRadius: '24px',
                 padding: '24px',
                 boxShadow: '0 10px 30px rgba(0, 60, 160, 0.08)',
@@ -611,7 +611,7 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
                   <div>
                     <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#0F172A', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <Terminal size={18} color="#0066FF" /> Interactive Python/Django Code Playground
+                      <Terminal size={18} color="#7B1C6E" /> Interactive Python/Django Code Playground
                     </h3>
                     <p style={{ fontSize: '12.5px', color: '#64748B', margin: '2px 0 0' }}>
                       Write and test your custom models, functions, or views. Verify assertions in real-time.
@@ -658,7 +658,7 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
                     <span style={{ fontSize: '11px', color: '#94A3B8', fontFamily: "'IBM Plex Mono', monospace" }}>
                       sandbox_test_module.py
                     </span>
-                    <span style={{ fontSize: '10.5px', color: '#38BDF8', fontWeight: 700 }}>Python 3.12 Engine</span>
+                    <span style={{ fontSize: '10.5px', color: '#FDC029', fontWeight: 700 }}>Python 3.12 Engine</span>
                   </div>
                   <textarea
                     value={sandboxCode}
@@ -684,19 +684,19 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
                 {sandboxOutput && (
                   <div style={{
                     background: '#040816',
-                    border: '1px solid rgba(0, 210, 255, 0.25)',
+                    border: '1px solid rgba(253, 192, 41, 0.25)',
                     borderRadius: '16px',
                     padding: '16px 20px',
                     fontFamily: "'IBM Plex Mono', monospace",
                     fontSize: '12px'
                   }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', paddingBottom: '8px', marginBottom: '10px' }}>
-                      <span style={{ color: '#38BDF8', fontWeight: 700 }}>RUNTIME CONSOLE OUTPUT</span>
+                      <span style={{ color: '#FDC029', fontWeight: 700 }}>RUNTIME CONSOLE OUTPUT</span>
                       <span style={{ color: '#10B981' }}>⚡ Latency: {sandboxOutput.executionTime}ms</span>
                     </div>
                     {sandboxOutput.stdout.map((line, idx) => (
                       <div key={idx} style={{
-                        color: line.includes('PASS') ? '#4ADE80' : line.includes('>>') ? '#60A5FA' : '#CBD5E1',
+                        color: line.includes('PASS') ? '#4ADE80' : line.includes('>>') ? '#FDC029' : '#CBD5E1',
                         lineHeight: 1.6
                       }}>
                         {line}
@@ -713,7 +713,7 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
             {activeTab === 'notes' && (
               <div style={{
                 background: '#FFFFFF',
-                border: '1.5px solid rgba(0, 102, 255, 0.18)',
+                border: '1.5px solid rgba(123, 28, 110, 0.18)',
                 borderRadius: '24px',
                 padding: '24px 28px',
                 boxShadow: '0 10px 30px rgba(0, 60, 160, 0.08)',
@@ -837,7 +837,7 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
                     <div
                       key={problem.id}
                       className={`lab-card ${isUnlocked && !isExpired ? 'active-unlocked' : ''} ${!isUnlocked ? 'locked-state' : ''}`}
-                      style={{ background: '#FFFFFF', border: '1.5px solid rgba(0, 102, 255, 0.12)' }}
+                      style={{ background: '#FFFFFF', border: '1.5px solid rgba(123, 28, 110, 0.12)' }}
                     >
                       <div className="lab-card-top">
                         <div className="lab-title-group">
@@ -1016,12 +1016,12 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
             overflowY: 'auto',
             padding: '28px 32px',
             boxShadow: '0 25px 60px rgba(0, 0, 0, 0.25)',
-            border: '1.5px solid rgba(0, 102, 255, 0.2)'
+            border: '1.5px solid rgba(123, 28, 110, 0.2)'
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid #E2E8F0', paddingBottom: '14px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'rgba(0, 102, 255, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Zap size={20} color="#0066FF" />
+                <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'rgba(123, 28, 110, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Zap size={20} color="#7B1C6E" />
                 </div>
                 <div>
                   <h3 style={{ fontSize: '19px', fontWeight: 800, color: '#0F172A', margin: 0 }}>Django Core Cheatsheet</h3>
@@ -1038,7 +1038,7 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
 
             {/* Cheatsheet section 1: Commands */}
             <div style={{ marginBottom: '22px' }}>
-              <h4 style={{ fontSize: '14px', fontWeight: 800, color: '#0066FF', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '10px' }}>
+              <h4 style={{ fontSize: '14px', fontWeight: 800, color: '#7B1C6E', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '10px' }}>
                 1. Critical CLI Commands
               </h4>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '10px' }}>
@@ -1051,7 +1051,7 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
                 ].map((item, idx) => (
                   <div key={idx} style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '12px', padding: '10px 14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div>
-                      <code style={{ fontSize: '12px', color: '#1E40AF', fontWeight: 700 }}>{item.cmd}</code>
+                      <code style={{ fontSize: '12px', color: '#7B1C6E', fontWeight: 700 }}>{item.cmd}</code>
                       <div style={{ fontSize: '11px', color: '#64748B', marginTop: '2px' }}>{item.desc}</div>
                     </div>
                     <button
@@ -1067,14 +1067,14 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
 
             {/* Cheatsheet section 2: ORM Lookup Syntax */}
             <div style={{ marginBottom: '22px' }}>
-              <h4 style={{ fontSize: '14px', fontWeight: 800, color: '#0066FF', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '10px' }}>
+              <h4 style={{ fontSize: '14px', fontWeight: 800, color: '#7B1C6E', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '10px' }}>
                 2. ORM QuerySet Quick Patterns
               </h4>
               <div style={{ background: '#0B132B', borderRadius: '14px', padding: '16px', color: '#E2E8F0', fontFamily: "'IBM Plex Mono', monospace", fontSize: '12.5px', lineHeight: 1.7 }}>
-                <div><span style={{ color: '#60A5FA' }}>Course</span>.objects.filter(is_active=<span style={{ color: '#FCD34D' }}>True</span>)</div>
-                <div><span style={{ color: '#60A5FA' }}>Course</span>.objects.select_related(<span style={{ color: '#A7F3D0' }}>'instructor'</span>) <span style={{ color: '#64748B' }}># Single SQL JOIN</span></div>
-                <div><span style={{ color: '#60A5FA' }}>Course</span>.objects.prefetch_related(<span style={{ color: '#A7F3D0' }}>'modules'</span>) <span style={{ color: '#64748B' }}># 2 SQL queries for M2M</span></div>
-                <div><span style={{ color: '#60A5FA' }}>Submission</span>.objects.aggregate(avg_score=Avg(<span style={{ color: '#A7F3D0' }}>'score'</span>))</div>
+                <div><span style={{ color: '#FDC029' }}>Course</span>.objects.filter(is_active=<span style={{ color: '#FCD34D' }}>True</span>)</div>
+                <div><span style={{ color: '#FDC029' }}>Course</span>.objects.select_related(<span style={{ color: '#A7F3D0' }}>'instructor'</span>) <span style={{ color: '#64748B' }}># Single SQL JOIN</span></div>
+                <div><span style={{ color: '#FDC029' }}>Course</span>.objects.prefetch_related(<span style={{ color: '#A7F3D0' }}>'modules'</span>) <span style={{ color: '#64748B' }}># 2 SQL queries for M2M</span></div>
+                <div><span style={{ color: '#FDC029' }}>Submission</span>.objects.aggregate(avg_score=Avg(<span style={{ color: '#A7F3D0' }}>'score'</span>))</div>
               </div>
             </div>
 

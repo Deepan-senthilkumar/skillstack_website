@@ -351,7 +351,7 @@ export default function HomePage({
       {/* Curvy Wave Transition 3: Into Light Features */}
       <div className="curvy-wave-divider" style={{ background: '#F8FAFC' }}>
         <svg viewBox="0 0 1440 70" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-          <path d="M0,40 C420,80 980,10 1440,50 L1440,70 L0,70 Z" fill="#F0F7FF"/>
+          <path d="M0,40 C420,80 980,10 1440,50 L1440,70 L0,70 Z" fill="#FDF5FD"/>
         </svg>
       </div>
 
@@ -362,10 +362,10 @@ export default function HomePage({
         {/* Layer: Concentric Orbital Circles */}
         <div className="concentric-rings-layer" style={{ top: '10%', right: '5%', width: '450px', height: '450px', opacity: 0.5 }}>
           <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%' }}>
-            <circle cx="200" cy="200" r="180" stroke="rgba(0, 102, 255, 0.1)" strokeWidth="1.5" strokeDasharray="6 8" />
-            <circle cx="200" cy="200" r="120" stroke="rgba(0, 102, 255, 0.14)" strokeWidth="1.5" />
-            <circle cx="200" cy="60" r="4" fill="#0066FF" />
-            <circle cx="320" cy="200" r="4" fill="#00D2FF" />
+            <circle cx="200" cy="200" r="180" stroke="rgba(123, 28, 110, 0.1)" strokeWidth="1.5" strokeDasharray="6 8" />
+            <circle cx="200" cy="200" r="120" stroke="rgba(123, 28, 110, 0.14)" strokeWidth="1.5" />
+            <circle cx="200" cy="60" r="4" fill="#7B1C6E" />
+            <circle cx="320" cy="200" r="4" fill="#FDC029" />
           </svg>
         </div>
         <div className="curvy-bg-layer-2" style={{ width: '500px', height: '500px', top: '15%', left: '-100px' }} />
@@ -420,7 +420,7 @@ export default function HomePage({
       </section>
 
       {/* Curvy Wave Transition 4: Out of Features */}
-      <div className="curvy-wave-divider" style={{ background: '#F0F7FF' }}>
+      <div className="curvy-wave-divider" style={{ background: '#FDF5FD' }}>
         <svg viewBox="0 0 1440 64" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
           <path d="M0,20 C360,60 1020,0 1440,30 L1440,64 L0,64 Z" fill="#FFFFFF"/>
         </svg>

@@ -46,8 +46,8 @@ export default function ContactPage({ subjects = [] }) {
 
       {/* CURVY & DOTTED HERO BANNER (Pure Light Theme) */}
       <div className="catalog-hero-banner" style={{
-        background: 'linear-gradient(135deg, #F0F7FF 0%, #E0EFFF 50%, #FFFFFF 100%)',
-        border: '1.5px solid rgba(0, 102, 255, 0.16)',
+        background: 'linear-gradient(135deg, #FDF5FD 0%, #FDF5FD 50%, #FFFFFF 100%)',
+        border: '1.5px solid rgba(123, 28, 110, 0.16)',
         boxShadow: '0 16px 40px rgba(0, 60, 160, 0.08)'
       }}>
         <div className="watermark-tech-grid" />
@@ -90,7 +90,7 @@ export default function ContactPage({ subjects = [] }) {
             background: '#FFFFFF',
             padding: '32px',
             borderRadius: '28px',
-            border: '1.5px solid rgba(0, 102, 255, 0.14)',
+            border: '1.5px solid rgba(123, 28, 110, 0.14)',
             boxShadow: '0 10px 30px -5px rgba(10, 25, 60, 0.06)'
           }}>
             <h3 style={{ fontSize: '19px', fontWeight: 800, marginBottom: '18px', color: '#0F172A' }}>
@@ -103,14 +103,14 @@ export default function ContactPage({ subjects = [] }) {
                   width: '42px',
                   height: '42px',
                   borderRadius: '12px',
-                  background: 'rgba(0, 102, 255, 0.08)',
+                  background: 'rgba(123, 28, 110, 0.08)',
                   color: 'var(--blue-primary)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   flexShrink: 0
                 }}>
-                  <Mail size={18} color="#0066FF" />
+                  <Mail size={18} color="#7B1C6E" />
                 </div>
                 <div>
                   <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Official Admissions Email</div>
@@ -124,14 +124,14 @@ export default function ContactPage({ subjects = [] }) {
                   width: '42px',
                   height: '42px',
                   borderRadius: '12px',
-                  background: 'rgba(0, 102, 255, 0.08)',
+                  background: 'rgba(123, 28, 110, 0.08)',
                   color: 'var(--blue-primary)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   flexShrink: 0
                 }}>
-                  <Phone size={18} color="#0066FF" />
+                  <Phone size={18} color="#7B1C6E" />
                 </div>
                 <div>
                   <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Admissions Direct Line</div>
@@ -145,14 +145,14 @@ export default function ContactPage({ subjects = [] }) {
                   width: '42px',
                   height: '42px',
                   borderRadius: '12px',
-                  background: 'rgba(0, 102, 255, 0.08)',
+                  background: 'rgba(123, 28, 110, 0.08)',
                   color: 'var(--blue-primary)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   flexShrink: 0
                 }}>
-                  <MapPin size={18} color="#0066FF" />
+                  <MapPin size={18} color="#7B1C6E" />
                 </div>
                 <div>
                   <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Academic Campus</div>
@@ -169,12 +169,12 @@ export default function ContactPage({ subjects = [] }) {
             background: '#FFFFFF',
             padding: '24px 28px',
             borderRadius: '24px',
-            border: '1.5px solid rgba(0, 102, 255, 0.12)',
+            border: '1.5px solid rgba(123, 28, 110, 0.12)',
             display: 'flex',
             alignItems: 'center',
             gap: '14px'
           }}>
-            <Clock size={22} color="#0066FF" />
+            <Clock size={22} color="#7B1C6E" />
             <div>
               <div style={{ fontSize: '13.5px', fontWeight: 700, color: 'var(--text-primary)' }}>Operational Timings</div>
               <div style={{ fontSize: '12.5px', color: 'var(--text-secondary)' }}>{siteConfig.contact.workingHours}</div>
@@ -187,7 +187,7 @@ export default function ContactPage({ subjects = [] }) {
           background: '#FFFFFF',
           padding: '36px',
           borderRadius: '28px',
-          border: '1.5px solid rgba(0, 102, 255, 0.14)',
+          border: '1.5px solid rgba(123, 28, 110, 0.14)',
           boxShadow: '0 10px 30px -5px rgba(10, 25, 60, 0.06)'
         }}>
           {submitted ? (

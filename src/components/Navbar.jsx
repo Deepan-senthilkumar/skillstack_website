@@ -188,14 +188,14 @@ export default function Navbar({
                 padding: '5px 12px',
                 fontSize: '11px',
                 borderRadius: 'var(--radius-full)',
-                background: 'rgba(0, 102, 255, 0.05)',
-                border: '1px solid rgba(0, 102, 255, 0.15)',
+                background: 'rgba(123, 28, 110, 0.05)',
+                border: '1px solid rgba(123, 28, 110, 0.15)',
                 flexShrink: 0
               }}>
                 <div style={{ width: '36px', height: '5px', background: '#E2E8F0', borderRadius: '3px', overflow: 'hidden' }}>
-                  <div style={{ width: `${pct}%`, height: '100%', background: 'linear-gradient(90deg, #0066FF, #00D2FF)', borderRadius: '3px' }} />
+                  <div style={{ width: `${pct}%`, height: '100%', background: 'linear-gradient(90deg, #7B1C6E, #FDC029)', borderRadius: '3px' }} />
                 </div>
-                <span style={{ color: '#0066FF', fontWeight: 800 }}>{pct}%</span>
+                <span style={{ color: '#7B1C6E', fontWeight: 800 }}>{pct}%</span>
               </div>
             )}
 
@@ -207,7 +207,7 @@ export default function Navbar({
                 fontWeight: 700,
                 padding: '7px 14px',
                 borderRadius: 'var(--radius-full)',
-                background: 'linear-gradient(135deg, #0066FF 0%, #0284C7 100%)',
+                background: 'linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%)',
                 color: '#FFFFFF',
                 whiteSpace: 'nowrap',
                 flexShrink: 0
@@ -226,7 +226,7 @@ export default function Navbar({
               border: '1px solid #CBD5E1',
               flexShrink: 0
             }}>
-              <UserCheck size={13} color="#0066FF" />
+              <UserCheck size={13} color="#7B1C6E" />
               <span style={{ fontWeight: 700, color: '#0F172A', fontSize: '12px' }}>
                 {user.first_name || user.display_name || user.username}
               </span>
@@ -235,8 +235,8 @@ export default function Navbar({
                 fontWeight: 800,
                 padding: '1px 5px',
                 borderRadius: '3px',
-                background: 'rgba(0, 102, 255, 0.1)',
-                color: '#0066FF'
+                background: 'rgba(123, 28, 110, 0.1)',
+                color: '#7B1C6E'
               }}>
                 Fellow
               </span>

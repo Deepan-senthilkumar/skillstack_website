@@ -77,8 +77,8 @@ export default function SubjectDetailPage({
 
       {/* CURVY & DOTTED HERO HEADER CARD (Light Layered Theme) */}
       <div className="catalog-hero-banner" style={{
-        background: 'linear-gradient(135deg, #F0F7FF 0%, #E0EFFF 50%, #FFFFFF 100%)',
-        border: '1.5px solid rgba(0, 102, 255, 0.16)',
+        background: 'linear-gradient(135deg, #FDF5FD 0%, #FDF5FD 50%, #FFFFFF 100%)',
+        border: '1.5px solid rgba(123, 28, 110, 0.16)',
         padding: '44px 38px',
         borderRadius: '32px',
         marginBottom: '32px',
@@ -98,9 +98,9 @@ export default function SubjectDetailPage({
               display: 'inline-block',
               padding: '4px 14px',
               borderRadius: 'var(--radius-full)',
-              background: 'rgba(0, 102, 255, 0.08)',
-              border: '1px solid rgba(0, 102, 255, 0.2)',
-              color: '#0066FF',
+              background: 'rgba(123, 28, 110, 0.08)',
+              border: '1px solid rgba(123, 28, 110, 0.2)',
+              color: '#7B1C6E',
               fontSize: '11px',
               fontWeight: 800,
               textTransform: 'uppercase',
@@ -113,7 +113,7 @@ export default function SubjectDetailPage({
               ⏱ {subject.duration || '8 Weeks Track'}
             </span>
             <span style={{ fontSize: '13px', color: '#CBD5E1' }}>&bull;</span>
-            <span style={{ fontSize: '13px', color: '#0066FF', fontWeight: 700 }}>
+            <span style={{ fontSize: '13px', color: '#7B1C6E', fontWeight: 700 }}>
               ⚡ 100% Automated Output Evaluation
             </span>
           </div>
