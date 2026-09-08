@@ -189,7 +189,7 @@ export default function ContactPage() {
               </div>
               <h3 style={{ fontSize: '22px', fontWeight: 800, marginBottom: '8px', color: '#0F172A' }}>Inquiry Registered</h3>
               <p style={{ color: 'var(--text-secondary)', fontSize: '14px', lineHeight: 1.6, marginBottom: '24px' }}>
-                Thank you for contacting Nexura Institute. An academic advisor has been assigned and will reach out via email or phone within 24 hours.
+                Thank you for contacting SkillStack. An academic advisor has been assigned and will reach out via email or phone within 24 hours.
               </p>
               <button
                 className="btn-secondary"

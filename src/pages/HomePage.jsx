@@ -206,13 +206,13 @@ export default function HomePage({
           <div className="about-grid">
             <div className="about-left">
               <div className="section-tag">
-                <Shield size={14} /> The Nexura Standard
+                <Shield size={14} /> The SkillStack Standard
               </div>
               <h2 className="section-heading">
                 Engineering Rigor Meets Continuous Production Verification
               </h2>
               <p className="section-para">
-                Conventional engineering courses emphasize memorization over computational reasoning. At <strong>Nexura Institute of Technology</strong>, fellows construct scalable systems through 
+                Conventional engineering courses emphasize memorization over computational reasoning. At <strong>SkillStack Academy</strong>, fellows construct scalable systems through 
                 <strong> dual-language cognitive architecture</strong>, interactive visual execution topologies, and immediate automated output assertions.
               </p>
               <p className="section-para">
@@ -376,7 +376,7 @@ export default function HomePage({
             <div className="section-tag">
               <Sparkles size={14} /> Engineering Capabilities
             </div>
-            <h2 className="section-heading">Why Software Fellows Excel at Nexura</h2>
+            <h2 className="section-heading">Why Software Fellows Excel at SkillStack</h2>
             <p className="section-para" style={{ maxWidth: '640px', margin: '0 auto' }}>
               We unify computer science architectural discipline with enterprise production tooling and continuous automated validation.
             </p>

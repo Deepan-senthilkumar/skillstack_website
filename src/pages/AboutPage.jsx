@@ -117,7 +117,7 @@ export default function AboutPage({ onNavigate }) {
           <div className="section-tag" style={{ margin: '0 auto 12px' }}>
             <Award size={14} /> Academic Philosophy
           </div>
-          <h2 style={{ fontSize: '30px', color: '#0F172A', fontWeight: 800 }}>Core Pillars of the Nexura Curriculum</h2>
+          <h2 style={{ fontSize: '30px', color: '#0F172A', fontWeight: 800 }}>Core Pillars of the SkillStack Curriculum</h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '15px', maxWidth: '640px', margin: '0 auto' }}>
             Built around four interlocking principles designed to develop complete computational fluency.
           </p>

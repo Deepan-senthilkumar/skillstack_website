@@ -6,11 +6,12 @@
 
 export const siteConfig = {
   brand: {
-    name: "Nexura",
-    fullName: "Nexura Institute of Technology",
-    shortName: "Nexura Tech",
-    tagline: "School of Distributed Systems & Cloud Architecture",
-    description: "Enterprise software engineering academy specializing in backend systems, distributed microservices, visual architectural topology, and automated code evaluation.",
+    name: "SkillStack",
+    fullName: "SkillStack Learning Platform",
+    shortName: "SkillStack",
+    logo: "/skillstack.png",
+    tagline: "Master Software Engineering & Modern Tech Stacks",
+    description: "Interactive technology learning academy featuring hands-on modules, real-time code evaluation, and industry-grade curriculum.",
     established: 2026,
     version: "v3.4.0-enterprise",
     status: "Operational — All Systems Normal",
@@ -160,7 +161,7 @@ export const siteConfig = {
       name: "Priya Sundaram",
       role: "Systems Trainee at SaaS Microservices",
       cohort: "Engineering Fellow '26",
-      text: "Having dedicated faculty who actually review your automated execution outputs and step-by-step problem workbenches makes Nexura stand leagues apart from ordinary tutorial sites.",
+      text: "Having dedicated faculty who actually review your automated execution outputs and step-by-step problem workbenches makes SkillStack stand leagues apart from ordinary tutorial sites.",
       stars: 5,
       verified: true
     },
@@ -169,7 +170,7 @@ export const siteConfig = {
       name: "Karthikeyan R.",
       role: "Associate DevOps & Backend Engineer",
       cohort: "Engineering Fellow '25",
-      text: "The dual-mode workbench with immediate feedback loops allowed me to build real intuition for Django's MVT execution cycle. The curriculum is rigorous, practical, and highly rewarding.",
+      text: "The dual-mode workbench with immediate feedback loops allowed me to build real intuition for backend development execution cycles. The curriculum is rigorous, practical, and highly rewarding.",
       stars: 5,
       verified: true
     }
@@ -177,17 +178,17 @@ export const siteConfig = {
 
   // Official Channels & Contact Information
   contact: {
-    email: "admissions@nexura.edu",
-    supportEmail: "support@nexura.edu",
-    facultyDesk: "faculty@nexura.edu",
+    email: "admissions@skillstack.com",
+    supportEmail: "support@skillstack.com",
+    facultyDesk: "faculty@skillstack.com",
     phone: "+91 44 2850 4900",
     tollFree: "1800 572 8900",
-    campus: "Nexura Tech Hub, OMR Cyber Corridor, Chennai, Tamil Nadu, India",
+    campus: "SkillStack Tech Hub, OMR Cyber Corridor, Chennai, Tamil Nadu, India",
     workingHours: "Monday – Saturday: 09:00 AM – 07:00 PM IST",
     socials: {
-      github: "https://github.com/nexura-institute",
-      linkedin: "https://linkedin.com/school/nexura-institute",
-      twitter: "https://twitter.com/NexuraInstitute"
+      github: "https://github.com/skillstack-learning",
+      linkedin: "https://linkedin.com/company/skillstack-learning",
+      twitter: "https://twitter.com/SkillStackLearn"
     }
   }
 };

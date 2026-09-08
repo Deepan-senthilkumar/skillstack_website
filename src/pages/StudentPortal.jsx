@@ -127,7 +127,7 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
         success: isSyntaxValid,
         executionTime: Math.floor(Math.random() * 15 + 12),
         stdout: [
-          `[NEXURA PYTHON 3.12 KERNEL INITIALIZED]`,
+          `[SKILLSTACK PYTHON 3.12 KERNEL INITIALIZED]`,
           `>> Parsing AST & verifying Django module contracts...`,
           `>> Executing sandbox payload safely...`,
           `--------------------------------------------------`,
