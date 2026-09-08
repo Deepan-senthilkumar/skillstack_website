@@ -53,7 +53,7 @@ export default function ContactPage({ subjects = [] }) {
         <div className="watermark-tech-grid" />
         <div style={{ position: 'relative', zIndex: 2, maxWidth: '820px' }}>
           <div className="hero-badge" style={{ marginBottom: '16px' }}>
-            <MessageSquare size={14} color="#0066FF" />
+            <MessageSquare size={14} color="#FDC029" />
             <span>Admissions & Academic Support Desk</span>
           </div>
 
@@ -69,11 +69,11 @@ export default function ContactPage({ subjects = [] }) {
           </p>
 
           <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', alignItems: 'center' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#0066FF', fontWeight: 700 }}>
-              <Clock size={16} color="#0066FF" /> 24-Hour SLA Response Time
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#7B1C6E', fontWeight: 700 }}>
+              <Clock size={16} color="#7B1C6E" /> 24-Hour SLA Response Time
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#0066FF', fontWeight: 700 }}>
-              <Shield size={16} color="#0066FF" /> Dedicated Faculty Admissions Chair
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#7B1C6E', fontWeight: 700 }}>
+              <Shield size={16} color="#7B1C6E" /> Dedicated Faculty Admissions Chair
             </div>
           </div>
         </div>
@@ -359,7 +359,7 @@ export default function ContactPage({ subjects = [] }) {
                   gap: '8px',
                   cursor: 'pointer',
                   border: 'none',
-                  background: 'linear-gradient(135deg, #00E5FF 0%, #0066FF 100%)',
+                  background: 'linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%)',
                   color: '#FFFFFF',
                   boxShadow: '0 4px 14px var(--blue-glow)',
                   marginTop: '8px'

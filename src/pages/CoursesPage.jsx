@@ -30,7 +30,7 @@ export default function CoursesPage({ subjects, onSelectSubject, onNavigate }) {
         <div className="watermark-tech-grid" />
         <div style={{ position: 'relative', zIndex: 2, maxWidth: '820px' }}>
           <div className="hero-badge" style={{ marginBottom: '16px' }}>
-            <Sparkles size={14} color="#0066FF" />
+            <Sparkles size={14} color="#FDC029" />
             <span>Official Engineering Curriculum Catalog</span>
           </div>
 
@@ -46,14 +46,14 @@ export default function CoursesPage({ subjects, onSelectSubject, onNavigate }) {
           </p>
 
           <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', alignItems: 'center' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#0066FF', fontWeight: 700 }}>
-              <CheckCircle2 size={16} color="#0066FF" /> {siteConfig.metrics.seniorFacultyCount} Faculty Domain Chairs
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#7B1C6E', fontWeight: 700 }}>
+              <CheckCircle2 size={16} color="#7B1C6E" /> {siteConfig.metrics.seniorFacultyCount} Faculty Domain Chairs
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#0066FF', fontWeight: 700 }}>
-              <CheckCircle2 size={16} color="#0066FF" /> {siteConfig.metrics.automatedPassRate} Automated Assertion Accuracy
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#7B1C6E', fontWeight: 700 }}>
+              <CheckCircle2 size={16} color="#7B1C6E" /> {siteConfig.metrics.automatedPassRate} Automated Assertion Accuracy
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#0066FF', fontWeight: 700 }}>
-              <CheckCircle2 size={16} color="#0066FF" /> Applied Cognitive Architecture Pedagogy
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#7B1C6E', fontWeight: 700 }}>
+              <CheckCircle2 size={16} color="#7B1C6E" /> Applied Cognitive Architecture Pedagogy
             </div>
           </div>
         </div>

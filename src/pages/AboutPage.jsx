@@ -39,7 +39,7 @@ export default function AboutPage({ onNavigate }) {
         <div className="watermark-tech-grid" />
         <div style={{ position: 'relative', zIndex: 2, maxWidth: '820px' }}>
           <div className="hero-badge" style={{ marginBottom: '16px' }}>
-            <Sparkles size={14} color="#0066FF" />
+            <Sparkles size={14} color="#FDC029" />
             <span>Institutional Governance & Faculty</span>
           </div>
 
@@ -55,14 +55,14 @@ export default function AboutPage({ onNavigate }) {
           </p>
 
           <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', alignItems: 'center' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#0066FF', fontWeight: 700 }}>
-              <CheckCircle2 size={16} color="#0066FF" /> {siteConfig.metrics.seniorFacultyCount} Senior Domain Chairs
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#7B1C6E', fontWeight: 700 }}>
+              <CheckCircle2 size={16} color="#7B1C6E" /> {siteConfig.metrics.seniorFacultyCount} Senior Domain Chairs
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#0066FF', fontWeight: 700 }}>
-              <CheckCircle2 size={16} color="#0066FF" /> Industry Architectural Standards
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#7B1C6E', fontWeight: 700 }}>
+              <CheckCircle2 size={16} color="#7B1C6E" /> Industry Architectural Standards
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#0066FF', fontWeight: 700 }}>
-              <CheckCircle2 size={16} color="#0066FF" /> Automated Code Harness Benchmarking
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#7B1C6E', fontWeight: 700 }}>
+              <CheckCircle2 size={16} color="#7B1C6E" /> Automated Code Harness Benchmarking
             </div>
           </div>
         </div>
@@ -288,7 +288,7 @@ export default function AboutPage({ onNavigate }) {
             <button
               className="hero-btn btn-primary"
               onClick={() => onNavigate('courses')}
-              style={{ background: 'linear-gradient(135deg, #00E5FF 0%, #0066FF 100%)', color: '#FFFFFF' }}
+              style={{ background: 'linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%)', color: '#FFFFFF' }}
             >
               Explore Curriculum Tracks <ArrowRight size={15} />
             </button>

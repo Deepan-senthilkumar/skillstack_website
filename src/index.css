@@ -1,37 +1,37 @@
 :root {
-  /* SkillStack Premium Design System: Electric Violet, Deep Indigo & Neon Cyan */
-  --bg-main: #F8FAFC;
+  /* SkillStack Exact Logo Color Palette: Deep Magenta (#7B1C6E) & Gold (#FDC029) */
+  --bg-main: #FDFBFD;
   --bg-surface: #FFFFFF;
-  --bg-surface-elevated: #F1F5F9;
+  --bg-surface-elevated: #F9F3F8;
   --bg-sidebar: #FFFFFF;
-  --bg-code: #0B0F19;
+  --bg-code: #160614;
   
-  --border-subtle: #E2E8F0;
-  --border-medium: #CBD5E1;
-  --border-focus: #6366F1;
+  --border-subtle: #F0E2EE;
+  --border-medium: #E2CBDD;
+  --border-focus: #7B1C6E;
 
-  --text-primary: #0F172A;
-  --text-secondary: #334155;
-  --text-tertiary: #64748B;
+  --text-primary: #1F081C;
+  --text-secondary: #4A2045;
+  --text-tertiary: #7A5775;
 
-  /* SkillStack Vibrant Gradient System */
-  --blue-primary: #4F46E5;
-  --blue-vibrant: #6366F1;
-  --blue-gradient: linear-gradient(135deg, #4338CA 0%, #6366F1 50%, #06B6D4 100%);
-  --blue-gradient-hover: linear-gradient(135deg, #3730A3 0%, #4F46E5 50%, #0891B2 100%);
-  --blue-gradient-subtle: linear-gradient(180deg, #EEF2FF 0%, #FFFFFF 100%);
-  --blue-soft: rgba(99, 102, 241, 0.08);
-  --blue-border: rgba(99, 102, 241, 0.22);
-  --blue-glow: rgba(99, 102, 241, 0.3);
+  /* SkillStack Exact Logo Gradient System */
+  --blue-primary: #7B1C6E;
+  --blue-vibrant: #7B1C6E;
+  --blue-gradient: linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%);
+  --blue-gradient-hover: linear-gradient(135deg, #5C1352 0%, #E5A817 100%);
+  --blue-gradient-subtle: linear-gradient(180deg, #FDF5FD 0%, #FFFFFF 100%);
+  --blue-soft: rgba(123, 28, 110, 0.08);
+  --blue-border: rgba(123, 28, 110, 0.22);
+  --blue-glow: rgba(123, 28, 110, 0.3);
 
-  --cyan-accent: #06B6D4;
-  --accent: #6366F1;
-  --accent-hover: #4F46E5;
-  --accent-soft: rgba(99, 102, 241, 0.08);
-  --accent-glow: rgba(99, 102, 241, 0.3);
+  --accent: #7B1C6E;
+  --accent-gold: #FDC029;
+  --accent-hover: #5C1352;
+  --accent-soft: rgba(123, 28, 110, 0.08);
+  --accent-glow: rgba(123, 28, 110, 0.3);
 
-  --amber: #D97706;
-  --amber-soft: rgba(217, 119, 6, 0.1);
+  --amber: #FDC029;
+  --amber-soft: rgba(253, 192, 41, 0.15);
 
   --coral: #E11D48;
   --coral-soft: rgba(225, 29, 72, 0.08);

@@ -47,7 +47,7 @@ export default function BrandLogo({ size = 38, showText = true, variant = 'light
               fontWeight: 800,
               fontSize: size > 32 ? '20px' : '18px',
               letterSpacing: '-0.03em',
-              background: 'linear-gradient(135deg, #6366F1 0%, #06B6D4 100%)',
+              background: 'linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent'
             }}>
@@ -63,9 +63,9 @@ export default function BrandLogo({ size = 38, showText = true, variant = 'light
             letterSpacing: '0.1em',
             padding: '2px 7px',
             borderRadius: '4px',
-            background: 'rgba(99, 102, 241, 0.1)',
-            color: '#6366F1',
-            border: '1px solid rgba(99, 102, 241, 0.25)',
+            background: 'rgba(123, 28, 110, 0.1)',
+            color: '#7B1C6E',
+            border: '1px solid rgba(123, 28, 110, 0.25)',
             lineHeight: 1.2
           }}>
             LEARN

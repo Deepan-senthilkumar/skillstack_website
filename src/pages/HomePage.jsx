@@ -29,12 +29,12 @@ export default function HomePage({
         {/* Decorative Layer 2: Concentric Orbital Rings */}
         <div className="concentric-rings-layer hero-concentric-rings">
           <svg viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%' }}>
-            <circle cx="250" cy="250" r="230" stroke="rgba(0, 102, 255, 0.12)" strokeWidth="1.5" strokeDasharray="8 8" />
-            <circle cx="250" cy="250" r="170" stroke="rgba(0, 102, 255, 0.16)" strokeWidth="1.5" />
-            <circle cx="250" cy="250" r="110" stroke="rgba(0, 210, 255, 0.22)" strokeWidth="1.5" strokeDasharray="4 6" />
-            <circle cx="250" cy="20" r="5" fill="#0066FF" />
-            <circle cx="420" cy="250" r="6" fill="#00D2FF" />
-            <circle cx="150" cy="350" r="4.5" fill="#2563EB" />
+            <circle cx="250" cy="250" r="230" stroke="rgba(123, 28, 110, 0.12)" strokeWidth="1.5" strokeDasharray="8 8" />
+            <circle cx="250" cy="250" r="170" stroke="rgba(123, 28, 110, 0.16)" strokeWidth="1.5" />
+            <circle cx="250" cy="250" r="110" stroke="rgba(253, 192, 41, 0.3)" strokeWidth="1.5" strokeDasharray="4 6" />
+            <circle cx="250" cy="20" r="5" fill="#7B1C6E" />
+            <circle cx="420" cy="250" r="6" fill="#FDC029" />
+            <circle cx="150" cy="350" r="4.5" fill="#7B1C6E" />
           </svg>
         </div>
 
@@ -51,7 +51,7 @@ export default function HomePage({
           fontFamily: "'IBM Plex Mono', monospace",
           fontSize: '11px',
           fontWeight: 700,
-          color: '#0066FF',
+          color: '#7B1C6E',
           letterSpacing: '0.1em',
           transform: 'rotate(-12deg)'
         }}>
@@ -66,17 +66,17 @@ export default function HomePage({
           fontFamily: "'IBM Plex Mono', monospace",
           fontSize: '11px',
           fontWeight: 700,
-          color: '#0066FF',
+          color: '#7B1C6E',
           letterSpacing: '0.1em',
           transform: 'rotate(8deg)'
         }}>
-          SELECT * FROM nexura_engine;
+          SELECT * FROM skillstack_engine;
         </div>
 
         <div className="hero-container">
           <div className="hero-content">
             <div className="hero-badge">
-              <Sparkles size={15} color="#0066FF" />
+              <Sparkles size={15} color="#FDC029" />
               <span>{siteConfig.brand.tagline}</span>
             </div>
 
@@ -524,15 +524,15 @@ export default function HomePage({
               <h4>Admissions & Operations Desk</h4>
               <div style={{ fontSize: '13px', color: '#64748B', display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <Mail size={14} color="#0066FF" />
+                  <Mail size={14} color="#7B1C6E" />
                   <span>{siteConfig.contact.email}</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <Phone size={14} color="#0066FF" />
+                  <Phone size={14} color="#7B1C6E" />
                   <span>{siteConfig.contact.phone}</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
-                  <MapPin size={14} color="#0066FF" style={{ marginTop: '2px', flexShrink: 0 }} />
+                  <MapPin size={14} color="#7B1C6E" style={{ marginTop: '2px', flexShrink: 0 }} />
                   <span>{siteConfig.contact.campus}</span>
                 </div>
               </div>

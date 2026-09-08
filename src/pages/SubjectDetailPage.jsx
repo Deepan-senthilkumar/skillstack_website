@@ -159,8 +159,8 @@ export default function SubjectDetailPage({
                 alignItems: 'center',
                 gap: '10px',
                 borderRadius: 'var(--radius-full)',
-                background: 'linear-gradient(135deg, #0066FF 0%, #0284C7 100%)',
-                boxShadow: '0 8px 24px rgba(0, 102, 255, 0.35)'
+                background: 'linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%)',
+                boxShadow: '0 8px 24px rgba(123, 28, 110, 0.35)'
               }}
             >
               <Play size={16} fill="currentColor" /> Start Learning & Enter Lab

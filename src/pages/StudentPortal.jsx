@@ -243,10 +243,10 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
           <div style={{ marginTop: '12px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '4px' }}>
               <span>Curriculum Mastery</span>
-              <span style={{ color: '#0066FF' }}>{completedCount} / {flatTopics.length} ({progressPct}%)</span>
+              <span style={{ color: '#7B1C6E' }}>{completedCount} / {flatTopics.length} ({progressPct}%)</span>
             </div>
-            <div style={{ width: '100%', height: '6px', background: '#E2E8F0', borderRadius: '3px', overflow: 'hidden' }}>
-              <div style={{ width: `${progressPct}%`, height: '100%', background: 'linear-gradient(90deg, #0066FF, #00D2FF)', borderRadius: '3px', transition: 'width 0.4s ease' }} />
+            <div style={{ width: '100%', height: '6px', background: '#F0E2EE', borderRadius: '3px', overflow: 'hidden' }}>
+              <div style={{ width: `${progressPct}%`, height: '100%', background: 'linear-gradient(90deg, #7B1C6E, #FDC029)', borderRadius: '3px', transition: 'width 0.4s ease' }} />
             </div>
           </div>
         </div>
@@ -640,7 +640,7 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
                         fontWeight: 700,
                         padding: '6px 18px',
                         borderRadius: 'var(--radius-full)',
-                        background: 'linear-gradient(135deg, #0066FF 0%, #0284C7 100%)'
+                        background: 'linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%)'
                       }}
                     >
                       {isRunningCode ? (
@@ -965,7 +965,7 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
                   borderRadius: 'var(--radius-full)',
                   padding: '9px 22px',
                   fontSize: '13px',
-                  background: 'linear-gradient(135deg, #0066FF 0%, #0284C7 100%)'
+                  background: 'linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%)'
                 }}
               >
                 <CheckCircle2 size={15} /> Mark Done & Continue to Next Topic
