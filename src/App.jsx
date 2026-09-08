@@ -210,7 +210,7 @@ export default function App() {
           />
         )}
 
-        {currentPage === 'contact' && <ContactPage />}
+        {currentPage === 'contact' && <ContactPage subjects={subjects} />}
 
         {currentPage === 'learning' && (
           <StudentPortal

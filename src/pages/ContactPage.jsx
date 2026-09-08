@@ -1,19 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   MessageSquare, Mail, Phone, MapPin, Send, CheckCircle2,
   Clock, Shield, Sparkles, HelpCircle, ArrowRight
 } from 'lucide-react';
 import { siteConfig } from '../config/siteConfig';
+import { api } from '../api';
 
-export default function ContactPage() {
+export default function ContactPage({ subjects = [] }) {
+  const [trackList, setTrackList] = useState(subjects);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
-    subjectTrack: 'django-fullstack',
+    subjectTrack: 'general',
     message: ''
   });
   const [submitted, setSubmitted] = useState(false);
+
+  useEffect(() => {
+    if (subjects && subjects.length > 0) {
+      setTrackList(subjects);
+      setFormData(prev => ({ ...prev, subjectTrack: subjects[0]?.slug || 'general' }));
+    } else {
+      api.getSubjects()
+        .then(data => {
+          if (Array.isArray(data) && data.length > 0) {
+            setTrackList(data);
+            setFormData(prev => ({ ...prev, subjectTrack: data[0]?.slug || 'general' }));
+          }
+        })
+        .catch(() => {});
+    }
+  }, [subjects]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -292,10 +310,16 @@ export default function ContactPage() {
                     background: '#FFFFFF'
                   }}
                 >
-                  <option value="django-fullstack">Distributed Python & Django Systems</option>
-                  <option value="python-core">Core Python & Algorithmic Foundations</option>
-                  <option value="drf-microservices">REST APIs & Distributed Microservices</option>
-                  <option value="general">General Admissions & Fellowship Inquiries</option>
+                  {trackList && trackList.length > 0 ? (
+                    trackList.map(track => (
+                      <option key={track.id || track.slug} value={track.slug}>
+                        {track.name}
+                      </option>
+                    ))
+                  ) : (
+                    <option value="general">General Admissions & Fellowship Inquiries</option>
+                  )}
+                  <option value="general_other">General Inquiries / Support</option>
                 </select>
               </div>
 
