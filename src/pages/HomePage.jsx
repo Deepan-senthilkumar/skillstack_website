@@ -382,15 +382,40 @@ export default function HomePage({
             </p>
           </div>
 
-          <div className="features-quad-grid">
-            {siteConfig.capabilities.map(cap => (
-              <div key={cap.id} className="feature-quad-card">
-                <div className="feature-number">{cap.number}</div>
-                <h3>{cap.title}</h3>
-                <p>{cap.desc}</p>
+          {(siteConfig.capabilities && siteConfig.capabilities.length > 0) ? (
+            <div className="features-quad-grid">
+              {siteConfig.capabilities.map(cap => (
+                <div key={cap.id} className="feature-quad-card">
+                  <div className="feature-number">{cap.number}</div>
+                  <h3>{cap.title}</h3>
+                  <p>{cap.desc}</p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="features-quad-grid">
+              <div className="feature-quad-card">
+                <div className="feature-number">01</div>
+                <h3>Distributed Architecture & Syllabus</h3>
+                <p>Full conceptual mastery of backend system gateways, ORM pipelines, and event-driven architectures with high-fidelity system models.</p>
               </div>
-            ))}
-          </div>
+              <div className="feature-quad-card">
+                <div className="feature-number">02</div>
+                <h3>Real-Time Output Verification Engine</h3>
+                <p>Sub-second code execution harness that validates computational outputs, memory constraints, and structural patterns dynamically.</p>
+              </div>
+              <div className="feature-quad-card">
+                <div className="feature-number">03</div>
+                <h3>Dynamic Problem Workbenches</h3>
+                <p>Complex engineering problems structured into interactive execution environments with immediate feedback loops.</p>
+              </div>
+              <div className="feature-quad-card">
+                <div className="feature-number">04</div>
+                <h3>Continuous Automated Mentorship</h3>
+                <p>Comprehensive course modules, test evaluation, progress analytics, and automated certificate generation.</p>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
@@ -409,41 +434,43 @@ export default function HomePage({
         <div className="section-container">
           <div className="stats-banner-card">
             <div className="stat-box">
-              <span className="big-stat">{siteConfig.metrics.enrolledFellows}</span>
-              <span className="stat-desc">Enrolled Software Fellows</span>
+              <span className="big-stat">{subjects?.length || 0}</span>
+              <span className="stat-desc">Active Academic Tracks</span>
             </div>
             <div className="stat-box">
-              <span className="big-stat">{siteConfig.metrics.activeLabProblems}</span>
-              <span className="stat-desc">Enterprise Practicum Labs</span>
+              <span className="big-stat">100%</span>
+              <span className="stat-desc">Dynamic API Driven</span>
             </div>
             <div className="stat-box">
-              <span className="big-stat">{siteConfig.metrics.seniorFacultyCount}</span>
-              <span className="stat-desc">Senior Domain Chairs</span>
+              <span className="big-stat">24/7</span>
+              <span className="stat-desc">Automated Sandbox</span>
             </div>
             <div className="stat-box">
-              <span className="big-stat">{siteConfig.metrics.automatedPassRate}</span>
-              <span className="stat-desc">Automated Output Pass Rate</span>
+              <span className="big-stat">Live</span>
+              <span className="stat-desc">Cloud Platform</span>
             </div>
           </div>
 
-          <div className="section-header-center" style={{ marginTop: '54px' }}>
-            <h3 style={{ fontSize: '26px', fontWeight: 800, marginBottom: '8px', color: '#0F172A' }}>Verified Engineering Fellow Endorsements</h3>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '14.5px' }}>Authentic feedback from graduates functioning in global cloud and backend engineering teams</p>
-          </div>
-
-          <div className="reviews-grid">
-            {siteConfig.testimonials.map(item => (
-              <div key={item.id} className="review-card">
-                <div className="review-stars">★★★★★</div>
-                <p className="review-quote">
-                  "{item.text}"
-                </p>
-                <div className="reviewer-info">
-                  <strong>{item.name}</strong> &bull; <span>{item.role} ({item.cohort})</span>
-                </div>
+          {(siteConfig.testimonials && siteConfig.testimonials.length > 0) && (
+            <>
+              <div className="section-header-center" style={{ marginTop: '54px' }}>
+                <h3 style={{ fontSize: '26px', fontWeight: 800, marginBottom: '8px', color: '#0F172A' }}>Verified Engineering Fellow Endorsements</h3>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '14.5px' }}>Authentic feedback from graduates functioning in global cloud and backend engineering teams</p>
               </div>
-            ))}
-          </div>
+
+              <div className="reviews-grid">
+                {siteConfig.testimonials.map(item => (
+                  <div key={item.id} className="review-card">
+                    <div className="review-stars">★★★★★</div>
+                    <p className="review-quote">"{item.text}"</p>
+                    <div className="reviewer-info">
+                      <strong>{item.name}</strong> &bull; <span>{item.role}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </section>
 

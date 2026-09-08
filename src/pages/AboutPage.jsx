@@ -1,12 +1,29 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Sparkles, Award, Users, BookOpen, Shield, Code, Cpu, Target,
   CheckCircle2, ArrowRight, Compass, HeartHandshake, Layers,
   ExternalLink, GraduationCap, Building, Briefcase
 } from 'lucide-react';
 import { siteConfig } from '../config/siteConfig';
+import { api } from '../api';
 
 export default function AboutPage({ onNavigate }) {
+  const [facultyMembers, setFacultyMembers] = useState(siteConfig.faculty || []);
+
+  useEffect(() => {
+    async function loadFaculty() {
+      try {
+        const res = await api.getStaffFaculty();
+        if (Array.isArray(res) && res.length > 0) {
+          setFacultyMembers(res);
+        }
+      } catch (err) {
+        // Handle silently
+      }
+    }
+    loadFaculty();
+  }, []);
+
   return (
     <div style={{ maxWidth: '1240px', margin: '0 auto', padding: '36px 24px 80px', position: 'relative' }}>
       {/* Decorative Ambient Background Blobs */}
@@ -159,9 +176,10 @@ export default function AboutPage({ onNavigate }) {
           gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
           gap: '24px'
         }}>
-          {siteConfig.faculty.map(fac => (
-            <div
-              key={fac.id}
+          {facultyMembers && facultyMembers.length > 0 ? (
+            facultyMembers.map((fac, idx) => (
+              <div
+                key={fac.id || idx}
               style={{
                 background: '#FFFFFF',
                 borderRadius: '24px',
@@ -234,8 +252,16 @@ export default function AboutPage({ onNavigate }) {
               }}>
                 🎓 {fac.credentials}
               </div>
+            ))
+          ) : (
+            <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px 20px', background: '#FFFFFF', borderRadius: '16px', border: '1px border-subtle' }}>
+              <Users size={32} color="var(--blue-vibrant)" style={{ marginBottom: '10px' }} />
+              <div style={{ fontWeight: 700, fontSize: '16px', color: '#0F172A' }}>Faculty Chairs Managed Dynamically</div>
+              <p style={{ fontSize: '13.5px', color: 'var(--text-tertiary)', marginTop: '4px' }}>
+                Senior faculty chairs and domain specialists are dynamically assigned and managed via the SkillStack Admin Studio.
+              </p>
             </div>
-          ))}
+          )}
         </div>
       </div>
 
