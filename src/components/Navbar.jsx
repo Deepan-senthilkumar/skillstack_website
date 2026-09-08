@@ -176,30 +176,6 @@ export default function Navbar({
               Sign In
             </button>
 
-            {/* Faculty Console external link */}
-            <a
-              href={ADMIN_PANEL_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-primary"
-              style={{
-                fontSize: '12px',
-                fontWeight: 700,
-                padding: '7px 14px',
-                borderRadius: 'var(--radius-full)',
-                textDecoration: 'none',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '5px',
-                background: 'linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%)',
-                color: '#FFFFFF',
-                boxShadow: '0 2px 10px rgba(123, 28, 110, 0.25)',
-                whiteSpace: 'nowrap',
-                flexShrink: 0
-              }}
-            >
-              <Shield size={12} /> Console <ExternalLink size={10} />
-            </a>
           </div>
         ) : (
           /* Logged in as Student */

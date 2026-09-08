@@ -541,11 +541,6 @@ export default function HomePage({
 
           <div className="footer-bottom">
             <div>&copy; {new Date().getFullYear()} {siteConfig.brand.fullName}. All institutional rights reserved.</div>
-            <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-              <span>{siteConfig.brand.deployment}</span>
-              <span>&bull;</span>
-              <span>{siteConfig.brand.dbEngine}</span>
-            </div>
           </div>
         </div>
       </footer>
