@@ -149,6 +149,7 @@ button, input, select, textarea {
   letter-spacing: -0.01em;
   background: var(--blue-gradient);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -1363,6 +1364,7 @@ input:checked + .slider:before {
 .hero-gradient-text {
   background: linear-gradient(135deg, #7B1C6E 0%, #FDC029 50%, #FDC029 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block;
 }
@@ -1890,6 +1892,7 @@ input:checked + .slider:before {
   font-weight: 800;
   background: var(--blue-gradient);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   line-height: 1.1;
   margin-bottom: 6px;
