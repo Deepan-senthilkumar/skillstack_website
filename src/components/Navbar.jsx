@@ -44,7 +44,7 @@ export default function Navbar({
       zIndex: 1000,
       background: 'rgba(255, 255, 255, 0.96)',
       backdropFilter: 'blur(16px)',
-      borderBottom: '1px solid rgba(0, 102, 255, 0.12)',
+      borderBottom: '1px solid rgba(123, 28, 110, 0.12)',
       padding: '0 24px',
       height: '64px',
       display: 'flex',
@@ -54,7 +54,7 @@ export default function Navbar({
       flexWrap: 'nowrap',
       whiteSpace: 'nowrap',
       gap: '16px',
-      boxShadow: '0 4px 20px rgba(10, 25, 47, 0.04)',
+      boxShadow: '0 4px 20px rgba(31, 8, 28, 0.04)',
       overflowX: 'auto',
       scrollbarWidth: 'none'
     }}>
@@ -92,13 +92,13 @@ export default function Navbar({
                 fontSize: '13px',
                 fontWeight: isActive ? 700 : 600,
                 color: isActive ? '#FFFFFF' : 'var(--text-secondary)',
-                background: isActive ? 'linear-gradient(135deg, #0066FF 0%, #0284C7 100%)' : 'transparent',
+                background: isActive ? 'linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%)' : 'transparent',
                 border: 'none',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
                 whiteSpace: 'nowrap',
                 flexShrink: 0,
-                boxShadow: isActive ? '0 2px 10px rgba(0, 102, 255, 0.3)' : 'none'
+                boxShadow: isActive ? '0 2px 10px rgba(123, 28, 110, 0.3)' : 'none'
               }}
             >
               {link.icon}
@@ -125,9 +125,9 @@ export default function Navbar({
           fontSize: '11px',
           fontWeight: 700,
           borderRadius: 'var(--radius-full)',
-          background: 'rgba(0, 102, 255, 0.05)',
-          border: '1px solid rgba(0, 102, 255, 0.15)',
-          color: serverOnline ? '#0066FF' : serverOnline === false ? '#DC2626' : '#94A3B8',
+          background: 'rgba(123, 28, 110, 0.05)',
+          border: '1px solid rgba(123, 28, 110, 0.15)',
+          color: serverOnline ? '#7B1C6E' : serverOnline === false ? '#DC2626' : '#94A3B8',
           flexShrink: 0
         }} title="Production Cluster Status">
           <span style={{
@@ -151,9 +151,9 @@ export default function Navbar({
                 fontWeight: 700,
                 padding: '7px 14px',
                 borderRadius: 'var(--radius-full)',
-                borderColor: 'rgba(0, 102, 255, 0.25)',
-                color: '#0066FF',
-                background: 'rgba(0, 102, 255, 0.05)',
+                borderColor: 'rgba(123, 28, 110, 0.25)',
+                color: '#7B1C6E',
+                background: 'rgba(123, 28, 110, 0.05)',
                 whiteSpace: 'nowrap',
                 flexShrink: 0
               }}
@@ -191,9 +191,9 @@ export default function Navbar({
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '5px',
-                background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)',
+                background: 'linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%)',
                 color: '#FFFFFF',
-                boxShadow: '0 2px 10px rgba(15, 23, 42, 0.2)',
+                boxShadow: '0 2px 10px rgba(123, 28, 110, 0.25)',
                 whiteSpace: 'nowrap',
                 flexShrink: 0
               }}
