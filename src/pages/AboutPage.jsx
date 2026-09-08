@@ -252,7 +252,8 @@ export default function AboutPage({ onNavigate }) {
               }}>
                 🎓 {fac.credentials}
               </div>
-            ))
+            </div>
+          ))
           ) : (
             <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px 20px', background: '#FFFFFF', borderRadius: '16px', border: '1px border-subtle' }}>
               <Users size={32} color="var(--blue-vibrant)" style={{ marginBottom: '10px' }} />
