@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import CountdownTimer from '../components/CountdownTimer';
 import ProblemWorkbenchModal from '../components/ProblemWorkbenchModal';
+import RichContentRenderer from '../components/RichContentRenderer';
 
 export default function StudentPortal({ curriculum, user, onRefresh, currentSubject, onBackToCourses }) {
   const [activeTopicId, setActiveTopicId] = useState(null);
@@ -522,47 +523,7 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
                 marginBottom: '28px'
               }}>
                 {activeTopic.notes_content && activeTopic.notes_content.trim() ? (
-                  <div style={{ fontSize: '14.5px', lineHeight: 1.8, color: '#334155' }}>
-                    {activeTopic.notes_content.split('\n').map((line, i) => {
-                      if (/^# /.test(line)) return (
-                        <h2 key={i} style={{ fontSize: '20px', fontWeight: 800, color: '#0F172A', margin: '20px 0 10px', borderBottom: '2px solid rgba(123,28,110,0.12)', paddingBottom: '6px' }}>
-                          {line.replace(/^# /, '')}
-                        </h2>
-                      );
-                      if (/^## /.test(line)) return (
-                        <h3 key={i} style={{ fontSize: '16px', fontWeight: 800, color: '#1E293B', margin: '16px 0 8px' }}>
-                          {line.replace(/^## /, '')}
-                        </h3>
-                      );
-                      if (/^### /.test(line)) return (
-                        <h4 key={i} style={{ fontSize: '14px', fontWeight: 700, color: '#334155', margin: '12px 0 6px' }}>
-                          {line.replace(/^### /, '')}
-                        </h4>
-                      );
-                      if (/^---/.test(line)) return (
-                        <hr key={i} style={{ border: 'none', borderTop: '1.5px solid rgba(123,28,110,0.12)', margin: '16px 0' }} />
-                      );
-                      if (/^[-*] /.test(line)) return (
-                        <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', margin: '4px 0' }}>
-                          <span style={{ color: '#7B1C6E', fontWeight: 800, marginTop: '2px', flexShrink: 0 }}>•</span>
-                          <span dangerouslySetInnerHTML={{ __html: line.replace(/^[-*] /, '').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/`(.*?)`/g, '<code style="background:#F1F5F9;padding:1px 5px;border-radius:4px;font-family:monospace;font-size:13px;color:#7B1C6E">$1</code>') }} />
-                        </div>
-                      );
-                      if (/^\d+\. /.test(line)) return (
-                        <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', margin: '4px 0' }}>
-                          <span style={{ color: '#7B1C6E', fontWeight: 800, minWidth: '20px', flexShrink: 0 }}>{line.match(/^\d+/)?.[0]}.</span>
-                          <span dangerouslySetInnerHTML={{ __html: line.replace(/^\d+\. /, '').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/`(.*?)`/g, '<code style="background:#F1F5F9;padding:1px 5px;border-radius:4px;font-family:monospace;font-size:13px;color:#7B1C6E">$1</code>') }} />
-                        </div>
-                      );
-                      if (/^```/.test(line)) return null;
-                      if (!line.trim()) return <div key={i} style={{ height: '8px' }} />;
-                      return (
-                        <p key={i} style={{ margin: '6px 0', lineHeight: 1.75 }}
-                          dangerouslySetInnerHTML={{ __html: line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/`(.*?)`/g, '<code style="background:#F1F5F9;padding:1px 5px;border-radius:4px;font-family:monospace;font-size:13px;color:#7B1C6E">$1</code>') }}
-                        />
-                      );
-                    })}
-                  </div>
+                  <RichContentRenderer content={activeTopic.notes_content} />
                 ) : (
                   <div style={{ textAlign: 'center', padding: '40px 0', color: '#94A3B8' }}>
                     <div style={{ fontSize: '36px', marginBottom: '12px' }}>📝</div>
@@ -947,7 +908,9 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
                         </div>
                       </div>
 
-                      <p className="lab-desc">{problem.description}</p>
+                      <div className="lab-desc" style={{ marginBottom: '20px' }}>
+                        <RichContentRenderer content={problem.description} />
+                      </div>
 
                       {/* Footer with Timer and Action Button */}
                       <div className="lab-card-footer">

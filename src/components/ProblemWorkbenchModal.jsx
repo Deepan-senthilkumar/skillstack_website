@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import CountdownTimer from './CountdownTimer';
+import RichContentRenderer from './RichContentRenderer';
 import { api } from '../api';
 
 export default function ProblemWorkbenchModal({ problem, onClose, onSubmitted }) {
@@ -159,10 +160,8 @@ export default function ProblemWorkbenchModal({ problem, onClose, onSubmitted })
             marginBottom: '18px',
             boxShadow: 'var(--shadow-sm)'
           }}>
-            <h4 style={{ fontSize: '14px', marginBottom: '8px', color: 'var(--text-primary)' }}>Problem Statement:</h4>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '14px', lineHeight: 1.6, whiteSpace: 'pre-line' }}>
-              {problem.description}
-            </p>
+            <h4 style={{ fontSize: '14px', marginBottom: '8px', color: 'var(--text-primary)' }}>Problem Statement &amp; Requirements:</h4>
+            <RichContentRenderer content={problem.description} />
 
             {problem.expected_output && (
               <div style={{ marginTop: '12px', fontSize: '13px', color: 'var(--blue-primary)', background: 'var(--blue-soft)', padding: '10px 14px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--blue-border)' }}>
