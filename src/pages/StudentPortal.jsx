@@ -666,8 +666,8 @@ export default function StudentPortal({ curriculum, user, onRefresh, currentSubj
               ) : (
                 activeTopic.problems.map((problem, pIdx) => {
                   const access = problem.access_control || {};
-                  const isUnlocked = access.is_unlocked;
-                  const isExpired = access.is_expired;
+                  const isUnlocked = access.is_unlocked !== false;
+                  const isExpired = Boolean(access.is_expired);
                   const sub = problem.my_submission;
                   const isPassed = sub?.status === 'PASSED';
                   const isSubmitted = sub?.status === 'SUBMITTED';
