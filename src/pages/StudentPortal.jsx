@@ -532,19 +532,22 @@ export default function StudentPortal({ curriculum, user, onRefresh, currentSubj
                           )}
                         </button>
                       </div>
-                      {ex.code && (ex.code.includes('```') || ex.code.includes('###') || ex.code.includes('##')) ? (
-                        <div style={{ background: '#FFFFFF', padding: '24px 28px' }}>
-                          <RichContentRenderer content={ex.code} />
-                        </div>
-                      ) : (
-                        <pre className="code-pre" style={{ background: '#0B132B', padding: '20px', color: '#E2E8F0', fontSize: '13px', lineHeight: 1.65, overflowX: 'auto', margin: 0 }}>
-                          <code>{ex.code}</code>
-                        </pre>
-                      )}
+                      <pre className="code-pre" style={{
+                        background: '#0B132B',
+                        padding: '22px 24px',
+                        color: '#E2E8F0',
+                        fontSize: '13.5px',
+                        lineHeight: 1.7,
+                        overflowX: 'auto',
+                        margin: 0,
+                        fontFamily: "'IBM Plex Mono', Consolas, Monaco, monospace"
+                      }}>
+                        <code>{ex.code}</code>
+                      </pre>
                     </div>
-
                   ))
                 ) : (
+
                   <div style={{ textAlign: 'center', padding: '40px 0', color: '#94A3B8', background: '#FFFFFF', borderRadius: '20px', border: '1.5px solid rgba(123, 28, 110, 0.12)' }}>
                     <div style={{ fontSize: '36px', marginBottom: '12px' }}>💻</div>
                     <div style={{ fontWeight: 700, fontSize: '15px', color: '#64748B' }}>No code examples added yet for this topic.</div>
@@ -647,17 +650,19 @@ export default function StudentPortal({ curriculum, user, onRefresh, currentSubj
             )}
 
             {/* =========================================================================
-                TAB 6: Practice Labs & Challenges (Access Controlled)
+                TAB 4: Practice Labs & Challenges (Access Controlled)
                 ========================================================================= */}
-            <section className="labs-section">
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '22px' }}>
-                <div>
-                  <h2 style={{ fontSize: '24px', marginBottom: '4px', color: '#0F172A' }}>Practice Labs & Challenges</h2>
-                  <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
-                    Solve challenges unlocked by your instructor. Submit before deadline expires.
-                  </p>
+            {activeTab === 'labs' && (
+              <section className="labs-section">
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '22px' }}>
+                  <div>
+                    <h2 style={{ fontSize: '24px', marginBottom: '4px', color: '#0F172A' }}>Practice Labs & Challenges</h2>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
+                      Solve challenges unlocked by your instructor. Submit before deadline expires.
+                    </p>
+                  </div>
                 </div>
-              </div>
+
 
               {(!activeTopic.problems || activeTopic.problems.length === 0) ? (
                 <div style={{
@@ -805,6 +810,7 @@ export default function StudentPortal({ curriculum, user, onRefresh, currentSubj
                 })
               )}
             </section>
+          )}
 
             {/* Bottom Topic Navigation with Completion Checklist */}
             <div style={{
