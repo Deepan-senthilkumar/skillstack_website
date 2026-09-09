@@ -535,13 +535,82 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
                 marginBottom: '28px'
               }}>
                 <div className="section-badge" style={{ marginBottom: '16px' }}>
-                  💡 Textbook Concepts & Mental Models (Tamil-English)
+                  💡 Textbook Concepts &amp; Mental Models (Tamil-English)
                 </div>
-                <div>
-                  {(activeTopic.explain || []).map((para, i) => (
-                    <p key={i} className="explain-para" dangerouslySetInnerHTML={{ __html: para }} style={{ fontSize: '14.5px', lineHeight: 1.75, color: '#334155' }} />
-                  ))}
-                </div>
+
+                {/* explain JSON paragraphs */}
+                {(activeTopic.explain || []).length > 0 && (
+                  <div style={{ marginBottom: activeTopic.notes_content ? '24px' : 0 }}>
+                    {(activeTopic.explain || []).map((para, i) => (
+                      <p key={i} className="explain-para" dangerouslySetInnerHTML={{ __html: para }} style={{ fontSize: '14.5px', lineHeight: 1.75, color: '#334155' }} />
+                    ))}
+                  </div>
+                )}
+
+                {/* notes_content — Admin-added Markdown Study Notes */}
+                {activeTopic.notes_content && activeTopic.notes_content.trim() && (
+                  <div style={{
+                    marginTop: (activeTopic.explain || []).length > 0 ? '8px' : 0,
+                    borderTop: (activeTopic.explain || []).length > 0 ? '1.5px dashed rgba(123,28,110,0.15)' : 'none',
+                    paddingTop: (activeTopic.explain || []).length > 0 ? '20px' : 0,
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+                      <span style={{ fontSize: '12px', fontWeight: 800, color: '#7B1C6E', background: 'rgba(123,28,110,0.07)', padding: '4px 12px', borderRadius: '20px' }}>
+                        📝 Study Notes
+                      </span>
+                    </div>
+                    <div style={{ fontSize: '14.5px', lineHeight: 1.8, color: '#334155' }}>
+                      {activeTopic.notes_content.split('\n').map((line, i) => {
+                        if (/^# /.test(line)) return (
+                          <h2 key={i} style={{ fontSize: '20px', fontWeight: 800, color: '#0F172A', margin: '20px 0 10px', borderBottom: '2px solid rgba(123,28,110,0.12)', paddingBottom: '6px' }}>
+                            {line.replace(/^# /, '')}
+                          </h2>
+                        );
+                        if (/^## /.test(line)) return (
+                          <h3 key={i} style={{ fontSize: '16px', fontWeight: 800, color: '#1E293B', margin: '16px 0 8px' }}>
+                            {line.replace(/^## /, '')}
+                          </h3>
+                        );
+                        if (/^### /.test(line)) return (
+                          <h4 key={i} style={{ fontSize: '14px', fontWeight: 700, color: '#334155', margin: '12px 0 6px' }}>
+                            {line.replace(/^### /, '')}
+                          </h4>
+                        );
+                        if (/^---/.test(line)) return (
+                          <hr key={i} style={{ border: 'none', borderTop: '1.5px solid rgba(123,28,110,0.12)', margin: '16px 0' }} />
+                        );
+                        if (/^[-*] /.test(line)) return (
+                          <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', margin: '4px 0' }}>
+                            <span style={{ color: '#7B1C6E', fontWeight: 800, marginTop: '2px', flexShrink: 0 }}>•</span>
+                            <span dangerouslySetInnerHTML={{ __html: line.replace(/^[-*] /, '').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/`(.*?)`/g, '<code style="background:#F1F5F9;padding:1px 5px;border-radius:4px;font-family:monospace;font-size:13px;color:#7B1C6E">$1</code>') }} />
+                          </div>
+                        );
+                        if (/^\d+\. /.test(line)) return (
+                          <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', margin: '4px 0' }}>
+                            <span style={{ color: '#7B1C6E', fontWeight: 800, minWidth: '20px', flexShrink: 0 }}>{line.match(/^\d+/)?.[0]}.</span>
+                            <span dangerouslySetInnerHTML={{ __html: line.replace(/^\d+\. /, '').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/`(.*?)`/g, '<code style="background:#F1F5F9;padding:1px 5px;border-radius:4px;font-family:monospace;font-size:13px;color:#7B1C6E">$1</code>') }} />
+                          </div>
+                        );
+                        if (/^```/.test(line)) return null;
+                        if (!line.trim()) return <div key={i} style={{ height: '8px' }} />;
+                        return (
+                          <p key={i} style={{ margin: '6px 0', lineHeight: 1.75 }}
+                            dangerouslySetInnerHTML={{ __html: line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/`(.*?)`/g, '<code style="background:#F1F5F9;padding:1px 5px;border-radius:4px;font-family:monospace;font-size:13px;color:#7B1C6E">$1</code>') }}
+                          />
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Empty state */}
+                {(activeTopic.explain || []).length === 0 && (!activeTopic.notes_content || !activeTopic.notes_content.trim()) && (
+                  <div style={{ textAlign: 'center', padding: '32px 0', color: '#94A3B8', fontSize: '14px' }}>
+                    <div style={{ fontSize: '32px', marginBottom: '12px' }}>📝</div>
+                    <div style={{ fontWeight: 600 }}>Study notes not added yet.</div>
+                    <div style={{ fontSize: '12.5px', marginTop: '4px' }}>Admin panel → Topics → Edit → Study Notes Content-ல் add பண்ணுங்க.</div>
+                  </div>
+                )}
 
                 {/* Topic Images Gallery */}
                 {activeTopic.images && activeTopic.images.length > 0 && (
