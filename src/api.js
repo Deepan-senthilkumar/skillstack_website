@@ -179,6 +179,23 @@ class ApiClient {
     return this.request(`/curriculum/problems/${problemId}/`);
   }
 
+  // Public Website APIs
+  async getCapabilities() {
+    try {
+      return await this.request('/platform/capabilities/');
+    } catch (e) {
+      return [];
+    }
+  }
+
+  async getAnalytics() {
+    try {
+      return await this.request('/reports/analytics/');
+    } catch (e) {
+      return null;
+    }
+  }
+
   // Submissions (Student)
   async submitSolution(problemId, code, language = 'python', batchId = null, notes = '') {
     return this.request(`/problems/${problemId}/submit/`, {

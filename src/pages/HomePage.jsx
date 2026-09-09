@@ -10,6 +10,7 @@ import { siteConfig } from '../config/siteConfig';
 
 export default function HomePage({
   subjects,
+  capabilities,
   onSelectSubject,
   onNavigate,
   onOpenStudentAuth,
@@ -321,8 +322,12 @@ export default function HomePage({
                       <span className="meta-value">{subject.duration || '6-8 Weeks Track'}</span>
                     </div>
                     <div>
-                      <span className="meta-label">Syllabus</span>
-                      <span className="meta-value">{subject.total_modules || 8} Modules</span>
+                      <span className="meta-label">Modules</span>
+                      <span className="meta-value">{subject.module_count ?? subject.modules?.length ?? 0} Chapters</span>
+                    </div>
+                    <div>
+                      <span className="meta-label">Topics</span>
+                      <span className="meta-value">{subject.topic_count ?? 0} Topics</span>
                     </div>
                   </div>
 
@@ -382,13 +387,13 @@ export default function HomePage({
             </p>
           </div>
 
-          {(siteConfig.capabilities && siteConfig.capabilities.length > 0) ? (
+          {(capabilities && capabilities.length > 0) ? (
             <div className="features-quad-grid">
-              {siteConfig.capabilities.map(cap => (
+              {capabilities.map(cap => (
                 <div key={cap.id} className="feature-quad-card">
                   <div className="feature-number">{cap.number}</div>
                   <h3>{cap.title}</h3>
-                  <p>{cap.desc}</p>
+                  <p>{cap.description}</p>
                 </div>
               ))}
             </div>

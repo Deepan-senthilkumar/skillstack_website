@@ -20,6 +20,7 @@ export default function App() {
   const [selectedSubject, setSelectedSubject] = useState(null);
   const [curriculum, setCurriculum] = useState([]);
   const [loadingCurriculum, setLoadingCurriculum] = useState(false);
+  const [capabilities, setCapabilities] = useState([]);
 
   // Auth modal state
   const [authModalOpen, setAuthModalOpen] = useState(false);
@@ -68,6 +69,11 @@ export default function App() {
   useEffect(() => {
     fetchSubjects();
     if (api.getToken()) checkUser();
+
+    // Fetch dynamic website content
+    api.getCapabilities().then(data => {
+      if (data && data.length > 0) setCapabilities(data);
+    });
 
     const handleLogoutEvent = () => {
       setUser(null);
@@ -169,6 +175,7 @@ export default function App() {
         {currentPage === 'home' && (
           <HomePage
             subjects={subjects}
+            capabilities={capabilities}
             onSelectSubject={handleSelectSubject}
             onNavigate={(page) => {
               setCurrentPage(page);
