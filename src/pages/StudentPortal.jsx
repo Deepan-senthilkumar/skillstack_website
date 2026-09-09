@@ -532,10 +532,17 @@ export default function StudentPortal({ curriculum, user, onRefresh, currentSubj
                           )}
                         </button>
                       </div>
-                      <pre className="code-pre" style={{ background: '#0B132B', padding: '20px', color: '#E2E8F0', fontSize: '13px', lineHeight: 1.65, overflowX: 'auto', margin: 0 }}>
-                        <code>{ex.code}</code>
-                      </pre>
+                      {ex.code && (ex.code.includes('```') || ex.code.includes('###') || ex.code.includes('##')) ? (
+                        <div style={{ background: '#FFFFFF', padding: '24px 28px' }}>
+                          <RichContentRenderer content={ex.code} />
+                        </div>
+                      ) : (
+                        <pre className="code-pre" style={{ background: '#0B132B', padding: '20px', color: '#E2E8F0', fontSize: '13px', lineHeight: 1.65, overflowX: 'auto', margin: 0 }}>
+                          <code>{ex.code}</code>
+                        </pre>
+                      )}
                     </div>
+
                   ))
                 ) : (
                   <div style={{ textAlign: 'center', padding: '40px 0', color: '#94A3B8', background: '#FFFFFF', borderRadius: '20px', border: '1.5px solid rgba(123, 28, 110, 0.12)' }}>
