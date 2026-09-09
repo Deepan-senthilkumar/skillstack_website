@@ -7,13 +7,12 @@ import {
 } from 'lucide-react';
 import CountdownTimer from '../components/CountdownTimer';
 import ProblemWorkbenchModal from '../components/ProblemWorkbenchModal';
-import ArchitectureFlowDiagram from '../components/ArchitectureFlowDiagram';
 
 export default function StudentPortal({ curriculum, user, onRefresh, currentSubject, onBackToCourses }) {
   const [activeTopicId, setActiveTopicId] = useState(null);
   const [copiedIndex, setCopiedIndex] = useState(null);
   const [selectedProblem, setSelectedProblem] = useState(null);
-  const [activeTab, setActiveTab] = useState('diagram'); // 'diagram' | 'guide' | 'code' | 'sandbox' | 'notes' | 'labs'
+  const [activeTab, setActiveTab] = useState('notes_content'); // 'notes_content' | 'code' | 'sandbox' | 'notes' | 'labs'
   
   // Search and filter in syllabus
   const [searchQuery, setSearchQuery] = useState('');
@@ -463,26 +462,18 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
                 {activeTopic.title}
               </h1>
               <p style={{ fontSize: '14px', color: '#475569', lineHeight: 1.6, margin: 0 }}>
-                Explore the architectural mental model, textbook explanations, code implementation, and launch interactive test sandboxes.
+                Explore study notes, practical code implementations, and interactive test sandboxes.
               </p>
             </div>
 
-            {/* Extended Feature Tabs */}
+            {/* Content Tabs */}
             <div className="content-tabs" style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '24px' }}>
               <button
-                className={`content-tab-btn ${activeTab === 'diagram' ? 'active' : ''}`}
-                onClick={() => setActiveTab('diagram')}
+                className={`content-tab-btn ${activeTab === 'notes_content' ? 'active' : ''}`}
+                onClick={() => setActiveTab('notes_content')}
                 style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '9px 18px', borderRadius: 'var(--radius-full)', fontSize: '13px', fontWeight: 700 }}
               >
-                <Sparkles size={14} color="var(--blue-vibrant)" /> Architecture Diagram
-              </button>
-
-              <button
-                className={`content-tab-btn ${activeTab === 'guide' ? 'active' : ''}`}
-                onClick={() => setActiveTab('guide')}
-                style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '9px 18px', borderRadius: 'var(--radius-full)', fontSize: '13px', fontWeight: 700 }}
-              >
-                <BookOpen size={14} color="#D97706" /> Tamil-English Guide
+                <BookOpen size={14} color="#D97706" /> Study Notes
               </button>
 
               <button
@@ -498,7 +489,7 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
                 onClick={() => setActiveTab('sandbox')}
                 style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '9px 18px', borderRadius: 'var(--radius-full)', fontSize: '13px', fontWeight: 700 }}
               >
-                <Terminal size={14} color="#FDC029" /> Live Code Sandbox & Tester
+                <Terminal size={14} color="#FDC029" /> Live Code Sandbox &amp; Tester
               </button>
 
               <button
@@ -506,7 +497,7 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
                 onClick={() => setActiveTab('notes')}
                 style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '9px 18px', borderRadius: 'var(--radius-full)', fontSize: '13px', fontWeight: 700 }}
               >
-                <Edit3 size={14} color="#8B5CF6" /> Fellow Scratchpad & Notes
+                <Edit3 size={14} color="#8B5CF6" /> Fellow Scratchpad &amp; Notes
               </button>
 
               <button
@@ -519,13 +510,9 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
             </div>
 
             {/* =========================================================================
-                TAB 1: Visual Architecture Flow Diagram
+                TAB 1: Study Notes (admin notes_content markdown & uploaded images)
                 ========================================================================= */}
-            {activeTab === 'diagram' && (
-              <ArchitectureFlowDiagram diagramType={getDiagramType(activeTopic.topic_id)} />
-            )}
-
-            {(activeTab === 'guide' || activeTab === 'diagram') && (
+            {activeTab === 'notes_content' && (
               <div className="explain-card" style={{
                 background: '#FFFFFF',
                 border: '1.5px solid rgba(123, 28, 110, 0.12)',
@@ -534,81 +521,53 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
                 boxShadow: '0 8px 24px rgba(0, 0, 0, 0.04)',
                 marginBottom: '28px'
               }}>
-                <div className="section-badge" style={{ marginBottom: '16px' }}>
-                  💡 Textbook Concepts &amp; Mental Models (Tamil-English)
-                </div>
-
-                {/* explain JSON paragraphs */}
-                {(activeTopic.explain || []).length > 0 && (
-                  <div style={{ marginBottom: activeTopic.notes_content ? '24px' : 0 }}>
-                    {(activeTopic.explain || []).map((para, i) => (
-                      <p key={i} className="explain-para" dangerouslySetInnerHTML={{ __html: para }} style={{ fontSize: '14.5px', lineHeight: 1.75, color: '#334155' }} />
-                    ))}
+                {activeTopic.notes_content && activeTopic.notes_content.trim() ? (
+                  <div style={{ fontSize: '14.5px', lineHeight: 1.8, color: '#334155' }}>
+                    {activeTopic.notes_content.split('\n').map((line, i) => {
+                      if (/^# /.test(line)) return (
+                        <h2 key={i} style={{ fontSize: '20px', fontWeight: 800, color: '#0F172A', margin: '20px 0 10px', borderBottom: '2px solid rgba(123,28,110,0.12)', paddingBottom: '6px' }}>
+                          {line.replace(/^# /, '')}
+                        </h2>
+                      );
+                      if (/^## /.test(line)) return (
+                        <h3 key={i} style={{ fontSize: '16px', fontWeight: 800, color: '#1E293B', margin: '16px 0 8px' }}>
+                          {line.replace(/^## /, '')}
+                        </h3>
+                      );
+                      if (/^### /.test(line)) return (
+                        <h4 key={i} style={{ fontSize: '14px', fontWeight: 700, color: '#334155', margin: '12px 0 6px' }}>
+                          {line.replace(/^### /, '')}
+                        </h4>
+                      );
+                      if (/^---/.test(line)) return (
+                        <hr key={i} style={{ border: 'none', borderTop: '1.5px solid rgba(123,28,110,0.12)', margin: '16px 0' }} />
+                      );
+                      if (/^[-*] /.test(line)) return (
+                        <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', margin: '4px 0' }}>
+                          <span style={{ color: '#7B1C6E', fontWeight: 800, marginTop: '2px', flexShrink: 0 }}>•</span>
+                          <span dangerouslySetInnerHTML={{ __html: line.replace(/^[-*] /, '').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/`(.*?)`/g, '<code style="background:#F1F5F9;padding:1px 5px;border-radius:4px;font-family:monospace;font-size:13px;color:#7B1C6E">$1</code>') }} />
+                        </div>
+                      );
+                      if (/^\d+\. /.test(line)) return (
+                        <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', margin: '4px 0' }}>
+                          <span style={{ color: '#7B1C6E', fontWeight: 800, minWidth: '20px', flexShrink: 0 }}>{line.match(/^\d+/)?.[0]}.</span>
+                          <span dangerouslySetInnerHTML={{ __html: line.replace(/^\d+\. /, '').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/`(.*?)`/g, '<code style="background:#F1F5F9;padding:1px 5px;border-radius:4px;font-family:monospace;font-size:13px;color:#7B1C6E">$1</code>') }} />
+                        </div>
+                      );
+                      if (/^```/.test(line)) return null;
+                      if (!line.trim()) return <div key={i} style={{ height: '8px' }} />;
+                      return (
+                        <p key={i} style={{ margin: '6px 0', lineHeight: 1.75 }}
+                          dangerouslySetInnerHTML={{ __html: line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/`(.*?)`/g, '<code style="background:#F1F5F9;padding:1px 5px;border-radius:4px;font-family:monospace;font-size:13px;color:#7B1C6E">$1</code>') }}
+                        />
+                      );
+                    })}
                   </div>
-                )}
-
-                {/* notes_content — Admin-added Markdown Study Notes */}
-                {activeTopic.notes_content && activeTopic.notes_content.trim() && (
-                  <div style={{
-                    marginTop: (activeTopic.explain || []).length > 0 ? '8px' : 0,
-                    borderTop: (activeTopic.explain || []).length > 0 ? '1.5px dashed rgba(123,28,110,0.15)' : 'none',
-                    paddingTop: (activeTopic.explain || []).length > 0 ? '20px' : 0,
-                  }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
-                      <span style={{ fontSize: '12px', fontWeight: 800, color: '#7B1C6E', background: 'rgba(123,28,110,0.07)', padding: '4px 12px', borderRadius: '20px' }}>
-                        📝 Study Notes
-                      </span>
-                    </div>
-                    <div style={{ fontSize: '14.5px', lineHeight: 1.8, color: '#334155' }}>
-                      {activeTopic.notes_content.split('\n').map((line, i) => {
-                        if (/^# /.test(line)) return (
-                          <h2 key={i} style={{ fontSize: '20px', fontWeight: 800, color: '#0F172A', margin: '20px 0 10px', borderBottom: '2px solid rgba(123,28,110,0.12)', paddingBottom: '6px' }}>
-                            {line.replace(/^# /, '')}
-                          </h2>
-                        );
-                        if (/^## /.test(line)) return (
-                          <h3 key={i} style={{ fontSize: '16px', fontWeight: 800, color: '#1E293B', margin: '16px 0 8px' }}>
-                            {line.replace(/^## /, '')}
-                          </h3>
-                        );
-                        if (/^### /.test(line)) return (
-                          <h4 key={i} style={{ fontSize: '14px', fontWeight: 700, color: '#334155', margin: '12px 0 6px' }}>
-                            {line.replace(/^### /, '')}
-                          </h4>
-                        );
-                        if (/^---/.test(line)) return (
-                          <hr key={i} style={{ border: 'none', borderTop: '1.5px solid rgba(123,28,110,0.12)', margin: '16px 0' }} />
-                        );
-                        if (/^[-*] /.test(line)) return (
-                          <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', margin: '4px 0' }}>
-                            <span style={{ color: '#7B1C6E', fontWeight: 800, marginTop: '2px', flexShrink: 0 }}>•</span>
-                            <span dangerouslySetInnerHTML={{ __html: line.replace(/^[-*] /, '').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/`(.*?)`/g, '<code style="background:#F1F5F9;padding:1px 5px;border-radius:4px;font-family:monospace;font-size:13px;color:#7B1C6E">$1</code>') }} />
-                          </div>
-                        );
-                        if (/^\d+\. /.test(line)) return (
-                          <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', margin: '4px 0' }}>
-                            <span style={{ color: '#7B1C6E', fontWeight: 800, minWidth: '20px', flexShrink: 0 }}>{line.match(/^\d+/)?.[0]}.</span>
-                            <span dangerouslySetInnerHTML={{ __html: line.replace(/^\d+\. /, '').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/`(.*?)`/g, '<code style="background:#F1F5F9;padding:1px 5px;border-radius:4px;font-family:monospace;font-size:13px;color:#7B1C6E">$1</code>') }} />
-                          </div>
-                        );
-                        if (/^```/.test(line)) return null;
-                        if (!line.trim()) return <div key={i} style={{ height: '8px' }} />;
-                        return (
-                          <p key={i} style={{ margin: '6px 0', lineHeight: 1.75 }}
-                            dangerouslySetInnerHTML={{ __html: line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/`(.*?)`/g, '<code style="background:#F1F5F9;padding:1px 5px;border-radius:4px;font-family:monospace;font-size:13px;color:#7B1C6E">$1</code>') }}
-                          />
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-
-                {/* Empty state */}
-                {(activeTopic.explain || []).length === 0 && (!activeTopic.notes_content || !activeTopic.notes_content.trim()) && (
-                  <div style={{ textAlign: 'center', padding: '32px 0', color: '#94A3B8', fontSize: '14px' }}>
-                    <div style={{ fontSize: '32px', marginBottom: '12px' }}>📝</div>
-                    <div style={{ fontWeight: 600 }}>Study notes not added yet.</div>
-                    <div style={{ fontSize: '12.5px', marginTop: '4px' }}>Admin panel → Topics → Edit → Study Notes Content-ல் add பண்ணுங்க.</div>
+                ) : (
+                  <div style={{ textAlign: 'center', padding: '40px 0', color: '#94A3B8' }}>
+                    <div style={{ fontSize: '36px', marginBottom: '12px' }}>📝</div>
+                    <div style={{ fontWeight: 700, fontSize: '15px', color: '#64748B' }}>No study notes added yet for this topic.</div>
+                    <div style={{ fontSize: '12.5px', marginTop: '6px' }}>Notes added in Django Admin will appear here dynamically.</div>
                   </div>
                 )}
 
@@ -617,7 +576,7 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
                   <div style={{ marginTop: '24px', borderTop: '1px solid rgba(123, 28, 110, 0.1)', paddingTop: '24px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
                       <span style={{ fontSize: '13px', fontWeight: 700, color: '#7B1C6E', background: 'rgba(123,28,110,0.07)', padding: '4px 12px', borderRadius: '20px' }}>
-                        🖼️ Visual References & Diagrams
+                        🖼️ Visual References &amp; Diagrams
                       </span>
                     </div>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
@@ -649,52 +608,60 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
             )}
 
             {/* =========================================================================
-                TAB 3: Practical Code Examples
+                TAB 2: Practical Code Examples
                 ========================================================================= */}
-            {(activeTab === 'code' || activeTab === 'diagram' || activeTab === 'guide') && activeTopic.examples && activeTopic.examples.length > 0 && (
+            {activeTab === 'code' && (
               <div style={{ marginBottom: '36px' }}>
                 <div className="section-badge" style={{ marginBottom: '16px' }}>
                   💻 Practical Code Implementation
                 </div>
-                {activeTopic.examples.map((ex, idx) => (
-                  <div key={ex.id || idx} className="code-container" style={{ borderRadius: '20px', overflow: 'hidden', border: '1.5px solid rgba(123, 28, 110, 0.18)', marginBottom: '20px' }}>
-                    <div className="code-header" style={{ background: '#F1F5F9', padding: '12px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span style={{ fontWeight: 700, color: '#0F172A', fontSize: '13px' }}>● {ex.label}</span>
-                      <div style={{ display: 'flex', gap: '8px' }}>
-                        <button
-                          className="btn-secondary"
-                          onClick={() => {
-                            setSandboxCode(ex.code);
-                            setActiveTab('sandbox');
-                          }}
-                          style={{ fontSize: '11.5px', padding: '4px 10px', borderRadius: 'var(--radius-full)' }}
-                        >
-                          <Play size={11} /> Open in Sandbox
-                        </button>
-                        <button
-                          className="code-copy-btn"
-                          onClick={() => copyCode(ex.code, idx)}
-                          style={{ fontSize: '11.5px', padding: '4px 10px', borderRadius: 'var(--radius-full)' }}
-                        >
-                          {copiedIndex === idx ? (
-                            <>
-                              <Check size={12} color="#16A34A" /> Copied!
-                            </>
-                          ) : (
-                            <>
-                              <Copy size={12} /> Copy
-                            </>
-                          )}
-                        </button>
+                {activeTopic.examples && activeTopic.examples.length > 0 ? (
+                  activeTopic.examples.map((ex, idx) => (
+                    <div key={ex.id || idx} className="code-container" style={{ borderRadius: '20px', overflow: 'hidden', border: '1.5px solid rgba(123, 28, 110, 0.18)', marginBottom: '20px' }}>
+                      <div className="code-header" style={{ background: '#F1F5F9', padding: '12px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{ fontWeight: 700, color: '#0F172A', fontSize: '13px' }}>● {ex.label}</span>
+                        <div style={{ display: 'flex', gap: '8px' }}>
+                          <button
+                            className="btn-secondary"
+                            onClick={() => {
+                              setSandboxCode(ex.code);
+                              setActiveTab('sandbox');
+                            }}
+                            style={{ fontSize: '11.5px', padding: '4px 10px', borderRadius: 'var(--radius-full)' }}
+                          >
+                            <Play size={11} /> Open in Sandbox
+                          </button>
+                          <button
+                            className="code-copy-btn"
+                            onClick={() => copyCode(ex.code, idx)}
+                            style={{ fontSize: '11.5px', padding: '4px 10px', borderRadius: 'var(--radius-full)' }}
+                          >
+                            {copiedIndex === idx ? (
+                              <>
+                                <Check size={12} color="#16A34A" /> Copied!
+                              </>
+                            ) : (
+                              <>
+                                <Copy size={12} /> Copy
+                              </>
+                            )}
+                          </button>
+                        </div>
                       </div>
+                      <pre className="code-pre" style={{ background: '#0B132B', padding: '20px', color: '#E2E8F0', fontSize: '13px', lineHeight: 1.65, overflowX: 'auto', margin: 0 }}>
+                        <code>{ex.code}</code>
+                      </pre>
                     </div>
-                    <pre className="code-pre" style={{ background: '#0B132B', padding: '20px', color: '#E2E8F0', fontSize: '13px', lineHeight: 1.65, overflowX: 'auto', margin: 0 }}>
-                      <code>{ex.code}</code>
-                    </pre>
+                  ))
+                ) : (
+                  <div style={{ textAlign: 'center', padding: '40px 0', color: '#94A3B8', background: '#FFFFFF', borderRadius: '20px', border: '1.5px solid rgba(123, 28, 110, 0.12)' }}>
+                    <div style={{ fontSize: '36px', marginBottom: '12px' }}>💻</div>
+                    <div style={{ fontWeight: 700, fontSize: '15px', color: '#64748B' }}>No code examples added yet for this topic.</div>
                   </div>
-                ))}
+                )}
               </div>
             )}
+
 
             {/* =========================================================================
                 TAB 4: LIVE CODE PLAYGROUND & ASSERTION SIMULATOR
