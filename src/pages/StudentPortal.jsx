@@ -721,8 +721,37 @@ export default function StudentPortal({ curriculum, user, onRefresh, currentSubj
                       </div>
 
                       <div className="lab-desc" style={{ marginBottom: '20px' }}>
-                        <RichContentRenderer content={problem.description} />
+                        {problem.description && (
+                          <div style={{ marginBottom: problem.starter_code ? '14px' : '0' }}>
+                            <RichContentRenderer content={problem.description} />
+                          </div>
+                        )}
+
+                        {problem.starter_code && (
+                          <div style={{
+                            background: '#F8FAFC',
+                            borderRadius: '14px',
+                            border: '1.5px solid #E2E8F0',
+                            padding: '16px 18px',
+                            marginTop: '12px'
+                          }}>
+                            <div style={{
+                              fontSize: '12px',
+                              fontWeight: 700,
+                              color: '#334155',
+                              marginBottom: '10px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '6px'
+                            }}>
+                              <Terminal size={14} color="#7B1C6E" />
+                              <span>Code Commands & Starter Implementation:</span>
+                            </div>
+                            <RichContentRenderer content={problem.starter_code} />
+                          </div>
+                        )}
                       </div>
+
 
                       {/* Footer with Timer and Action Button */}
                       <div className="lab-card-footer">
