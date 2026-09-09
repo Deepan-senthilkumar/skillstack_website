@@ -156,9 +156,19 @@ class ApiClient {
     return this.request(`/subjects/${slug}/`);
   }
 
-  // Curriculum
+  // Curriculum — fetch modules+topics nested inside a subject
   async getCurriculum(subjectSlug = '') {
-    return this.request(`/curriculum/${subjectSlug ? '?subject=' + subjectSlug : ''}`);
+    if (!subjectSlug) {
+      // Fallback: return first subject's modules
+      const subjects = await this.request('/subjects/');
+      if (subjects && subjects.length > 0) {
+        const first = await this.request(`/subjects/${subjects[0].slug}/`);
+        return first.modules || [];
+      }
+      return [];
+    }
+    const subject = await this.request(`/subjects/${subjectSlug}/`);
+    return subject.modules || [];
   }
 
   async getTopic(topicId) {
