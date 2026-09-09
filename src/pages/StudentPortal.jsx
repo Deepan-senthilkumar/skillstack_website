@@ -525,9 +525,6 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
               <ArchitectureFlowDiagram diagramType={getDiagramType(activeTopic.topic_id)} />
             )}
 
-            {/* =========================================================================
-                TAB 2: Tamil-English Conversational Guide
-                ========================================================================= */}
             {(activeTab === 'guide' || activeTab === 'diagram') && (
               <div className="explain-card" style={{
                 background: '#FFFFFF',
@@ -545,6 +542,40 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
                     <p key={i} className="explain-para" dangerouslySetInnerHTML={{ __html: para }} style={{ fontSize: '14.5px', lineHeight: 1.75, color: '#334155' }} />
                   ))}
                 </div>
+
+                {/* Topic Images Gallery */}
+                {activeTopic.images && activeTopic.images.length > 0 && (
+                  <div style={{ marginTop: '24px', borderTop: '1px solid rgba(123, 28, 110, 0.1)', paddingTop: '24px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+                      <span style={{ fontSize: '13px', fontWeight: 700, color: '#7B1C6E', background: 'rgba(123,28,110,0.07)', padding: '4px 12px', borderRadius: '20px' }}>
+                        🖼️ Visual References & Diagrams
+                      </span>
+                    </div>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
+                      {activeTopic.images.map((img, idx) => (
+                        <div
+                          key={img.id || idx}
+                          style={{ flex: '1 1 280px', maxWidth: '420px', borderRadius: '16px', overflow: 'hidden', border: '1.5px solid rgba(123,28,110,0.12)', boxShadow: '0 4px 12px rgba(0,0,0,0.06)', background: '#FAFAFA', cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s' }}
+                          onClick={() => window.open(img.image_url, '_blank')}
+                          onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.02)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.12)'; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.06)'; }}
+                        >
+                          <img
+                            src={img.image_url}
+                            alt={img.caption || `Diagram ${idx + 1}`}
+                            style={{ width: '100%', display: 'block', maxHeight: '280px', objectFit: 'contain', background: '#fff', padding: '8px' }}
+                            loading="lazy"
+                          />
+                          {img.caption && (
+                            <div style={{ padding: '10px 14px', fontSize: '12.5px', color: '#475569', fontStyle: 'italic', borderTop: '1px solid rgba(123,28,110,0.08)', background: '#FFF' }}>
+                              📌 {img.caption}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
