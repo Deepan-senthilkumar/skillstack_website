@@ -13,24 +13,15 @@ export default function StudentPortal({ curriculum, user, onRefresh, currentSubj
   const [activeTopicId, setActiveTopicId] = useState(null);
   const [copiedIndex, setCopiedIndex] = useState(null);
   const [selectedProblem, setSelectedProblem] = useState(null);
-  const [activeTab, setActiveTab] = useState('notes_content'); // 'notes_content' | 'code' | 'sandbox' | 'notes' | 'labs'
+  const [activeTab, setActiveTab] = useState('notes_content'); // 'notes_content' | 'code' | 'notes' | 'labs'
   
   // Search and filter in syllabus
   const [searchQuery, setSearchQuery] = useState('');
   const [levelFilter, setLevelFilter] = useState('all'); // 'all' | 'beginner' | 'intermediate' | 'advanced' | 'lab_open'
 
-  // Cheatsheet modal state
-  const [showCheatsheet, setShowCheatsheet] = useState(false);
-  const [cheatCopied, setCheatCopied] = useState(null);
-
-  // Scratchpad / Notes state
+  // Personal Notes state
   const [notes, setNotes] = useState('');
   const [noteSavedTime, setNoteSavedTime] = useState(null);
-
-  // Interactive Sandbox Code Runner State
-  const [sandboxCode, setSandboxCode] = useState('');
-  const [isRunningCode, setIsRunningCode] = useState(false);
-  const [sandboxOutput, setSandboxOutput] = useState(null);
 
   const [readTopics, setReadTopics] = useState(() => {
     try {
@@ -70,36 +61,16 @@ export default function StudentPortal({ curriculum, user, onRefresh, currentSubj
   // Load saved notes when topic changes
   useEffect(() => {
     if (activeTopic) {
-      const savedNotes = localStorage.getItem(`nexura_topic_notes_${activeTopic.topic_id}`) || '';
+      const savedNotes = localStorage.getItem(`kalari_topic_notes_${activeTopic.topic_id}`) || '';
       setNotes(savedNotes);
       setNoteSavedTime(savedNotes ? 'Saved in local storage' : null);
-
-      // Pre-fill sandbox with topic example or boilerplate
-      if (activeTopic.examples && activeTopic.examples.length > 0) {
-        setSandboxCode(activeTopic.examples[0].code || '');
-      } else {
-        setSandboxCode(
-`# Nexura Python/Django Live Sandbox
-from django.db import models
-
-class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models.Model):
-    title = models.CharField(max_length=200)
-    created_at = models.DateTimeField(auto_now_add=True)
-    is_active = models.BooleanField(default=True)
-
-    def __str__(self):
-        return f"{self.title}"
-`
-        );
-      }
-      setSandboxOutput(null);
     }
   }, [activeTopicId]);
 
   const saveNotes = (content) => {
     setNotes(content);
     if (activeTopic) {
-      localStorage.setItem(`nexura_topic_notes_${activeTopic.topic_id}`, content);
+      localStorage.setItem(`kalari_topic_notes_${activeTopic.topic_id}`, content);
       setNoteSavedTime(`Saved at ${new Date().toLocaleTimeString()}`);
     }
   };
@@ -107,39 +78,11 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
   const insertNoteTemplate = (type) => {
     let template = '';
     if (type === 'concept') {
-      template = `\n### 💡 Key Concept Takeaway:\n- Core Idea: \n- Why it matters in production: \n`;
+      template = `\n### 💡 Key Concept Takeaway:\n- Core Idea: \n- Key Point: \n`;
     } else if (type === 'code') {
-      template = `\n\`\`\`python\n# Practical Implementation Note:\n\n\`\`\`\n`;
-    } else if (type === 'question') {
-      template = `\n❓ Question for Senior Faculty Office Hours:\n- Topic: \n- What I tried: \n`;
+      template = `\n\`\`\`python\n# Personal Code Note:\n\n\`\`\`\n`;
     }
     saveNotes(notes + template);
-  };
-
-  const runSandboxSimulation = () => {
-    setIsRunningCode(true);
-    setSandboxOutput(null);
-
-    setTimeout(() => {
-      setIsRunningCode(false);
-      const isSyntaxValid = sandboxCode.includes('class') || sandboxCode.includes('def') || sandboxCode.includes('import');
-      setSandboxOutput({
-        success: isSyntaxValid,
-        executionTime: Math.floor(Math.random() * 15 + 12),
-        stdout: [
-          `[SKILLSTACK PYTHON 3.12 KERNEL INITIALIZED]`,
-          `>> Parsing AST & verifying Django module contracts...`,
-          `>> Executing sandbox payload safely...`,
-          `--------------------------------------------------`,
-          `Compiled entities: [${activeTopic?.title || 'Entity'}] registered successfully.`,
-          `--------------------------------------------------`,
-          `✔ PASS: Syntax & Type Annotation check (0.008s)`,
-          `✔ PASS: Django Model Meta validation (0.006s)`,
-          `✔ PASS: QuerySet execution assertion (0.012s)`,
-          `[STATUS] All assertions passed. Ready for enterprise deployment!`
-        ]
-      });
-    }, 600);
   };
 
   const toggleTopicRead = (tid) => {
@@ -482,15 +425,7 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
                 onClick={() => setActiveTab('code')}
                 style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '9px 18px', borderRadius: 'var(--radius-full)', fontSize: '13px', fontWeight: 700 }}
               >
-                <Code size={14} color="#7B1C6E" /> Practical Code
-              </button>
-
-              <button
-                className={`content-tab-btn ${activeTab === 'sandbox' ? 'active' : ''}`}
-                onClick={() => setActiveTab('sandbox')}
-                style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '9px 18px', borderRadius: 'var(--radius-full)', fontSize: '13px', fontWeight: 700 }}
-              >
-                <Terminal size={14} color="#FDC029" /> Live Code Sandbox &amp; Tester
+                <Code size={14} color="#7B1C6E" /> Practical Code ({activeTopic.examples?.length || 0})
               </button>
 
               <button
@@ -498,7 +433,7 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
                 onClick={() => setActiveTab('notes')}
                 style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '9px 18px', borderRadius: 'var(--radius-full)', fontSize: '13px', fontWeight: 700 }}
               >
-                <Edit3 size={14} color="#8B5CF6" /> Fellow Scratchpad &amp; Notes
+                <Edit3 size={14} color="#8B5CF6" /> My Notes
               </button>
 
               <button
@@ -581,33 +516,21 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
                     <div key={ex.id || idx} className="code-container" style={{ borderRadius: '20px', overflow: 'hidden', border: '1.5px solid rgba(123, 28, 110, 0.18)', marginBottom: '20px' }}>
                       <div className="code-header" style={{ background: '#F1F5F9', padding: '12px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <span style={{ fontWeight: 700, color: '#0F172A', fontSize: '13px' }}>● {ex.label}</span>
-                        <div style={{ display: 'flex', gap: '8px' }}>
-                          <button
-                            className="btn-secondary"
-                            onClick={() => {
-                              setSandboxCode(ex.code);
-                              setActiveTab('sandbox');
-                            }}
-                            style={{ fontSize: '11.5px', padding: '4px 10px', borderRadius: 'var(--radius-full)' }}
-                          >
-                            <Play size={11} /> Open in Sandbox
-                          </button>
-                          <button
-                            className="code-copy-btn"
-                            onClick={() => copyCode(ex.code, idx)}
-                            style={{ fontSize: '11.5px', padding: '4px 10px', borderRadius: 'var(--radius-full)' }}
-                          >
-                            {copiedIndex === idx ? (
-                              <>
-                                <Check size={12} color="#16A34A" /> Copied!
-                              </>
-                            ) : (
-                              <>
-                                <Copy size={12} /> Copy
-                              </>
-                            )}
-                          </button>
-                        </div>
+                        <button
+                          className="code-copy-btn"
+                          onClick={() => copyCode(ex.code, idx)}
+                          style={{ fontSize: '11.5px', padding: '4px 12px', borderRadius: 'var(--radius-full)' }}
+                        >
+                          {copiedIndex === idx ? (
+                            <>
+                              <Check size={12} color="#16A34A" /> Copied!
+                            </>
+                          ) : (
+                            <>
+                              <Copy size={12} /> Copy Code
+                            </>
+                          )}
+                        </button>
                       </div>
                       <pre className="code-pre" style={{ background: '#0B132B', padding: '20px', color: '#E2E8F0', fontSize: '13px', lineHeight: 1.65, overflowX: 'auto', margin: 0 }}>
                         <code>{ex.code}</code>
@@ -625,118 +548,7 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
 
 
             {/* =========================================================================
-                TAB 4: LIVE CODE PLAYGROUND & ASSERTION SIMULATOR
-                ========================================================================= */}
-            {activeTab === 'sandbox' && (
-              <div style={{
-                background: '#FFFFFF',
-                border: '1.5px solid rgba(123, 28, 110, 0.18)',
-                borderRadius: '24px',
-                padding: '24px',
-                boxShadow: '0 10px 30px rgba(0, 60, 160, 0.08)',
-                marginBottom: '28px'
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
-                  <div>
-                    <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#0F172A', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <Terminal size={18} color="#7B1C6E" /> Interactive Python/Django Code Playground
-                    </h3>
-                    <p style={{ fontSize: '12.5px', color: '#64748B', margin: '2px 0 0' }}>
-                      Write and test your custom models, functions, or views. Verify assertions in real-time.
-                    </p>
-                  </div>
-
-                  <div style={{ display: 'flex', gap: '8px' }}>
-                    <button
-                      className="btn-secondary"
-                      onClick={() => {
-                        if (activeTopic.examples && activeTopic.examples[0]) {
-                          setSandboxCode(activeTopic.examples[0].code);
-                        }
-                      }}
-                      style={{ fontSize: '12px', padding: '6px 12px', borderRadius: 'var(--radius-full)' }}
-                    >
-                      <RotateCcw size={12} /> Reset Template
-                    </button>
-
-                    <button
-                      className="btn-primary"
-                      onClick={runSandboxSimulation}
-                      disabled={isRunningCode}
-                      style={{
-                        fontSize: '12.5px',
-                        fontWeight: 700,
-                        padding: '6px 18px',
-                        borderRadius: 'var(--radius-full)',
-                        background: 'linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%)'
-                      }}
-                    >
-                      {isRunningCode ? (
-                        <>Executing...</>
-                      ) : (
-                        <><Play size={13} fill="currentColor" /> Run & Test Assertions</>
-                      )}
-                    </button>
-                  </div>
-                </div>
-
-                {/* Editor Area */}
-                <div style={{ borderRadius: '16px', overflow: 'hidden', border: '1px solid #CBD5E1', marginBottom: '16px' }}>
-                  <div style={{ background: '#0F172A', padding: '8px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontSize: '11px', color: '#94A3B8', fontFamily: "'IBM Plex Mono', monospace" }}>
-                      sandbox_test_module.py
-                    </span>
-                    <span style={{ fontSize: '10.5px', color: '#FDC029', fontWeight: 700 }}>Python 3.12 Engine</span>
-                  </div>
-                  <textarea
-                    value={sandboxCode}
-                    onChange={(e) => setSandboxCode(e.target.value)}
-                    rows={12}
-                    style={{
-                      width: '100%',
-                      background: '#090E1A',
-                      color: '#E2E8F0',
-                      fontFamily: "'IBM Plex Mono', monospace",
-                      fontSize: '13px',
-                      lineHeight: 1.6,
-                      padding: '16px',
-                      border: 'none',
-                      outline: 'none',
-                      resize: 'vertical',
-                      boxSizing: 'border-box'
-                    }}
-                  />
-                </div>
-
-                {/* Virtual Output Console */}
-                {sandboxOutput && (
-                  <div style={{
-                    background: '#040816',
-                    border: '1px solid rgba(253, 192, 41, 0.25)',
-                    borderRadius: '16px',
-                    padding: '16px 20px',
-                    fontFamily: "'IBM Plex Mono', monospace",
-                    fontSize: '12px'
-                  }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', paddingBottom: '8px', marginBottom: '10px' }}>
-                      <span style={{ color: '#FDC029', fontWeight: 700 }}>RUNTIME CONSOLE OUTPUT</span>
-                      <span style={{ color: '#10B981' }}>⚡ Latency: {sandboxOutput.executionTime}ms</span>
-                    </div>
-                    {sandboxOutput.stdout.map((line, idx) => (
-                      <div key={idx} style={{
-                        color: line.includes('PASS') ? '#4ADE80' : line.includes('>>') ? '#FDC029' : '#CBD5E1',
-                        lineHeight: 1.6
-                      }}>
-                        {line}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* =========================================================================
-                TAB 5: FELLOW SCRATCHPAD & NOTES
+                TAB 3: PERSONAL STUDY NOTES (Local student notes)
                 ========================================================================= */}
             {activeTab === 'notes' && (
               <div style={{
@@ -1022,104 +834,7 @@ class ${activeTopic.title.replace(/[^a-zA-Z0-9]/g, '') || 'CustomEntity'}(models
         )}
       </main>
 
-      {/* =========================================================================
-          DJANGO CHEAT SHEET MODAL
-          ========================================================================= */}
-      {showCheatsheet && (
-        <div style={{
-          position: 'fixed',
-          top: 0, left: 0, right: 0, bottom: 0,
-          background: 'rgba(15, 23, 42, 0.65)',
-          backdropFilter: 'blur(8px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 9999,
-          padding: '20px'
-        }}>
-          <div style={{
-            background: '#FFFFFF',
-            borderRadius: '24px',
-            maxWidth: '750px',
-            width: '100%',
-            maxHeight: '88vh',
-            overflowY: 'auto',
-            padding: '28px 32px',
-            boxShadow: '0 25px 60px rgba(0, 0, 0, 0.25)',
-            border: '1.5px solid rgba(123, 28, 110, 0.2)'
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid #E2E8F0', paddingBottom: '14px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'rgba(123, 28, 110, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Zap size={20} color="#7B1C6E" />
-                </div>
-                <div>
-                  <h3 style={{ fontSize: '19px', fontWeight: 800, color: '#0F172A', margin: 0 }}>Django Core Cheatsheet</h3>
-                  <span style={{ fontSize: '12px', color: '#64748B' }}>Production commands, ORM lookup syntax & architectural quick-reference</span>
-                </div>
-              </div>
-              <button
-                onClick={() => setShowCheatsheet(false)}
-                style={{ border: 'none', background: '#F1F5F9', width: '32px', height: '32px', borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-              >
-                <X size={16} />
-              </button>
-            </div>
 
-            {/* Cheatsheet section 1: Commands */}
-            <div style={{ marginBottom: '22px' }}>
-              <h4 style={{ fontSize: '14px', fontWeight: 800, color: '#7B1C6E', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '10px' }}>
-                1. Critical CLI Commands
-              </h4>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '10px' }}>
-                {[
-                  { cmd: 'python manage.py makemigrations', desc: 'Inspect models & compile SQL migration schema' },
-                  { cmd: 'python manage.py migrate', desc: 'Execute unapplied migration files onto the DB' },
-                  { cmd: 'python manage.py runserver 8000', desc: 'Boot standard ASGI/WSGI local dev server' },
-                  { cmd: 'python manage.py createsuperuser', desc: 'Create root administrator auth credentials' },
-                  { cmd: 'python manage.py shell', desc: 'Launch interactive Python shell with Django loaded' }
-                ].map((item, idx) => (
-                  <div key={idx} style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '12px', padding: '10px 14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div>
-                      <code style={{ fontSize: '12px', color: '#7B1C6E', fontWeight: 700 }}>{item.cmd}</code>
-                      <div style={{ fontSize: '11px', color: '#64748B', marginTop: '2px' }}>{item.desc}</div>
-                    </div>
-                    <button
-                      onClick={() => copyCheat(item.cmd, `cmd_${idx}`)}
-                      style={{ border: 'none', background: '#FFFFFF', padding: '4px 8px', borderRadius: '6px', cursor: 'pointer', border: '1px solid #CBD5E1', fontSize: '11px' }}
-                    >
-                      {cheatCopied === `cmd_${idx}` ? <Check size={12} color="#16A34A" /> : <Copy size={12} />}
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Cheatsheet section 2: ORM Lookup Syntax */}
-            <div style={{ marginBottom: '22px' }}>
-              <h4 style={{ fontSize: '14px', fontWeight: 800, color: '#7B1C6E', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '10px' }}>
-                2. ORM QuerySet Quick Patterns
-              </h4>
-              <div style={{ background: '#0B132B', borderRadius: '14px', padding: '16px', color: '#E2E8F0', fontFamily: "'IBM Plex Mono', monospace", fontSize: '12.5px', lineHeight: 1.7 }}>
-                <div><span style={{ color: '#FDC029' }}>Course</span>.objects.filter(is_active=<span style={{ color: '#FCD34D' }}>True</span>)</div>
-                <div><span style={{ color: '#FDC029' }}>Course</span>.objects.select_related(<span style={{ color: '#A7F3D0' }}>'instructor'</span>) <span style={{ color: '#64748B' }}># Single SQL JOIN</span></div>
-                <div><span style={{ color: '#FDC029' }}>Course</span>.objects.prefetch_related(<span style={{ color: '#A7F3D0' }}>'modules'</span>) <span style={{ color: '#64748B' }}># 2 SQL queries for M2M</span></div>
-                <div><span style={{ color: '#FDC029' }}>Submission</span>.objects.aggregate(avg_score=Avg(<span style={{ color: '#A7F3D0' }}>'score'</span>))</div>
-              </div>
-            </div>
-
-            <div style={{ textAlign: 'right' }}>
-              <button
-                className="btn-primary"
-                onClick={() => setShowCheatsheet(false)}
-                style={{ borderRadius: 'var(--radius-full)', padding: '8px 22px', fontSize: '12.5px' }}
-              >
-                Close Reference
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Problem Workbench Modal */}
       {selectedProblem && (
