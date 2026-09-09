@@ -1,6 +1,6 @@
-// API Client for Django Kalari
+// API Client for SkillStack Tutor Management Platform
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://skilltrack-backend-a36m.onrender.com/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api';
 
 class ApiClient {
   constructor() {
@@ -170,22 +170,25 @@ class ApiClient {
   }
 
   // Submissions (Student)
-  async submitSolution(problemId, submittedCode, notes = '') {
+  async submitSolution(problemId, code, language = 'python', batchId = null, notes = '') {
     return this.request(`/problems/${problemId}/submit/`, {
       method: 'POST',
       body: JSON.stringify({
-        submitted_code: submittedCode,
+        code,
+        language,
+        batch_id: batchId,
         notes,
       }),
     });
   }
 
-  async testRunCode(problemId, code, notes = '') {
+  async testRunCode(problemId, code, language = 'python', expectedOutput = '') {
     return this.request(`/problems/${problemId}/test-run/`, {
       method: 'POST',
       body: JSON.stringify({
         code,
-        notes,
+        language,
+        expected_output: expectedOutput,
       }),
     });
   }

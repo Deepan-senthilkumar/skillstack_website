@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   X, Play, CheckCircle2, Award, MessageSquare, AlertCircle,
-  FileCode, Check, Terminal, Sparkles, HelpCircle, CheckSquare, XCircle
+  FileCode, Check, Terminal, Sparkles, HelpCircle, CheckSquare, XCircle, Clock, Zap
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import CountdownTimer from './CountdownTimer';
@@ -11,12 +11,15 @@ export default function ProblemWorkbenchModal({ problem, onClose, onSubmitted })
   const existingSubmission = problem.my_submission;
   const access = problem.access_control || {};
   const isExpired = access.is_expired;
-  const isUnlocked = access.is_unlocked;
+  const isUnlocked = access.is_unlocked !== false;
 
+  const [language, setLanguage] = useState(problem.language || 'python');
   const [code, setCode] = useState(
     existingSubmission?.submitted_code ||
     problem.starter_code ||
-    '# Write your Django solution or code snippet here\n\n'
+    (problem.language === 'c' ? '#include <stdio.h>\n\nint main() {\n    // Write your code here\n    \n    return 0;\n}' :
+     problem.language === 'javascript' ? '// Write your solution here\nconsole.log("Output");\n' :
+     '# Write your solution here\n')
   );
   const [notes, setNotes] = useState(existingSubmission?.notes || '');
   const [submitting, setSubmitting] = useState(false);
@@ -29,23 +32,23 @@ export default function ProblemWorkbenchModal({ problem, onClose, onSubmitted })
 
   const handleRunTest = async () => {
     if (!code.trim()) {
-      setErrorMsg('Please write your code or solution before running automated tests.');
+      setErrorMsg('Please write your code before running test.');
       return;
     }
     setTesting(true);
     setErrorMsg('');
     try {
-      const res = await api.testRunCode(problem.id, code, notes);
+      const res = await api.testRunCode(problem.id, code, language, problem.expected_output);
       setTestResult(res);
-      if (res.status === 'PASSED') {
+      if (res.is_passed) {
         confetti({
-          particleCount: 35,
+          particleCount: 40,
           spread: 60,
           origin: { y: 0.8 }
         });
       }
     } catch (err) {
-      setErrorMsg(err.message || 'Automated test execution failed.');
+      setErrorMsg(err.message || 'Automated execution failed.');
     } finally {
       setTesting(false);
     }
@@ -53,7 +56,7 @@ export default function ProblemWorkbenchModal({ problem, onClose, onSubmitted })
 
   const handleSubmit = async () => {
     if (!code.trim()) {
-      setErrorMsg('Please write your code or solution before submitting.');
+      setErrorMsg('Please write your code before submitting.');
       return;
     }
 
@@ -62,18 +65,24 @@ export default function ProblemWorkbenchModal({ problem, onClose, onSubmitted })
     setSuccessMsg('');
 
     try {
-      const result = await api.submitSolution(problem.id, code, notes);
-      setSuccessMsg(`Solution submitted and automatically graded! Score: ${result.score}/${result.max_points} (${result.status})`);
-      confetti({
-        particleCount: 70,
-        spread: 80,
-        origin: { y: 0.7 }
-      });
+      const result = await api.submitSolution(problem.id, code, language, null, notes);
+      setSuccessMsg(
+        result.is_passed
+          ? `🎉 Perfect Solution! Auto-Validated Correct (${result.execution_time_ms} ms)`
+          : `Submitted (Attempt #${result.attempt_number || 1}) - Status: ${result.status}`
+      );
+      if (result.is_passed) {
+        confetti({
+          particleCount: 80,
+          spread: 80,
+          origin: { y: 0.7 }
+        });
+      }
       if (onSubmitted) {
         onSubmitted(result);
       }
     } catch (err) {
-      setErrorMsg(err.message || 'Failed to submit. Check deadline or access permissions.');
+      setErrorMsg(err.message || 'Failed to submit. Please check connection or permissions.');
     } finally {
       setSubmitting(false);
     }
@@ -93,14 +102,16 @@ export default function ProblemWorkbenchModal({ problem, onClose, onSubmitted })
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" style={{ maxWidth: '880px', width: '92%' }} onClick={(e) => e.stopPropagation()}>
+      <div className="modal-content" style={{ maxWidth: '900px', width: '94%' }} onClick={(e) => e.stopPropagation()}>
         {/* Header */}
         <div className="modal-header">
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-              <span className="lab-number">{problem.module_level?.toUpperCase()}</span>
+              <span className="lab-number" style={{ textTransform: 'uppercase' }}>
+                {language}
+              </span>
               <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
-                {problem.module_name} &bull; {problem.topic_title}
+                {problem.topic_title}
               </span>
             </div>
             <h2 style={{ fontSize: '20px', color: 'var(--text-primary)' }}>{problem.title}</h2>
@@ -116,7 +127,7 @@ export default function ProblemWorkbenchModal({ problem, onClose, onSubmitted })
         </div>
 
         {/* Body */}
-        <div className="modal-body">
+        <div className="modal-body" style={{ maxHeight: '78vh', overflowY: 'auto' }}>
           {/* Timeline & Status Bar */}
           <div style={{
             display: 'flex',
@@ -125,13 +136,13 @@ export default function ProblemWorkbenchModal({ problem, onClose, onSubmitted })
             background: 'var(--bg-surface-elevated)',
             padding: '12px 18px',
             borderRadius: 'var(--radius-md)',
-            marginBottom: '20px',
+            marginBottom: '16px',
             border: '1px solid var(--border-subtle)'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <Award size={17} color="var(--blue-vibrant)" />
               <span style={{ fontSize: '13.5px', fontWeight: 700, color: 'var(--blue-primary)' }}>
-                {problem.points} Marks Possible &bull; Instant Automated Evaluation
+                {problem.points || 10} Points &bull; Sandboxed Output Auto-Validation
               </span>
             </div>
 
@@ -145,229 +156,187 @@ export default function ProblemWorkbenchModal({ problem, onClose, onSubmitted })
             borderRadius: 'var(--radius-md)',
             border: '1px solid var(--border-subtle)',
             borderLeft: '4px solid var(--blue-vibrant)',
-            marginBottom: '20px',
+            marginBottom: '18px',
             boxShadow: 'var(--shadow-sm)'
           }}>
-            <h4 style={{ fontSize: '14px', marginBottom: '8px', color: 'var(--text-primary)' }}>Assignment Task:</h4>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '14.5px', lineHeight: 1.6, whiteSpace: 'pre-line' }}>
+            <h4 style={{ fontSize: '14px', marginBottom: '8px', color: 'var(--text-primary)' }}>Problem Statement:</h4>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '14px', lineHeight: 1.6, whiteSpace: 'pre-line' }}>
               {problem.description}
             </p>
 
-            {problem.test_criteria && (
-              <div style={{ marginTop: '12px', fontSize: '13px', color: 'var(--blue-primary)', background: 'var(--blue-soft)', padding: '8px 12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--blue-border)' }}>
-                ⚡ <strong>Automated Test Criteria:</strong> {problem.test_criteria}
-              </div>
-            )}
-
-            {problem.expected_keywords && (
-              <div style={{ marginTop: '8px', fontSize: '12px', color: 'var(--text-secondary)' }}>
-                🔑 <strong>Required Django Keywords:</strong> <code>{problem.expected_keywords}</code>
-              </div>
-            )}
-
-            {problem.expected_output_hint && (
-              <div style={{ marginTop: '8px', fontSize: '12.5px', color: 'var(--text-secondary)' }}>
-                💡 <strong>Hint / Output Format:</strong> {problem.expected_output_hint}
+            {problem.expected_output && (
+              <div style={{ marginTop: '12px', fontSize: '13px', color: 'var(--blue-primary)', background: 'var(--blue-soft)', padding: '10px 14px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--blue-border)' }}>
+                <span style={{ fontWeight: 800, display: 'block', marginBottom: '4px' }}>🎯 Expected Terminal Output (Answer Key):</span>
+                <pre style={{ margin: 0, fontFamily: 'IBM Plex Mono', fontSize: '12px', whiteSpace: 'pre-wrap' }}>
+                  {problem.expected_output}
+                </pre>
               </div>
             )}
           </div>
 
-          {/* Existing or New Submission Auto-Graded Status Card */}
-          {existingSubmission && (
-            <div style={{
-              background: existingSubmission.status === 'PASSED' ? 'rgba(22, 163, 74, 0.07)' : 'rgba(217, 119, 6, 0.08)',
-              border: `1.5px solid ${existingSubmission.status === 'PASSED' ? 'rgba(22, 163, 74, 0.3)' : 'rgba(217, 119, 6, 0.3)'}`,
-              borderRadius: 'var(--radius-md)',
-              padding: '16px 20px',
-              marginBottom: '20px'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-                <span style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  fontWeight: 800,
-                  fontSize: '13.5px',
-                  color: existingSubmission.status === 'PASSED' ? '#16A34A' : '#D97706'
-                }}>
-                  <CheckCircle2 size={17} /> Automated Mark Result: {existingSubmission.status}
-                </span>
-                <span style={{ fontFamily: 'IBM Plex Mono', fontWeight: 800, fontSize: '14px', color: 'var(--text-primary)' }}>
-                  Score: {existingSubmission.score} / {problem.points} Marks
-                </span>
-              </div>
-              {existingSubmission.staff_feedback && (
-                <div style={{ fontSize: '13px', color: 'var(--text-secondary)', display: 'flex', gap: '8px', alignItems: 'flex-start', marginTop: '6px' }}>
-                  <MessageSquare size={15} style={{ flexShrink: 0, marginTop: '2px', color: 'var(--blue-vibrant)' }} />
-                  <div>
-                    <strong>System & Instructor Notes:</strong> {existingSubmission.staff_feedback}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Code Solution Editor */}
+          {/* Code Solution Editor with Language Selector */}
           <div style={{ marginBottom: '18px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
-              <label style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <FileCode size={15} color="var(--blue-vibrant)" /> Your Code Solution (Python / Django)
-              </label>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <label style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <FileCode size={15} color="var(--blue-vibrant)" /> Source Code Editor
+                </label>
+                <select
+                  value={language}
+                  onChange={(e) => setLanguage(e.target.value)}
+                  style={{
+                    padding: '4px 8px',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    borderRadius: 'var(--radius-sm)',
+                    border: '1px solid var(--border-medium)',
+                    background: 'var(--gray-50)'
+                  }}
+                >
+                  <option value="python">Python 3</option>
+                  <option value="c">C Programming</option>
+                  <option value="javascript">JavaScript (Node)</option>
+                </select>
+              </div>
+
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <span style={{ fontSize: '11px', color: 'var(--text-tertiary)' }}>Supports Tab indentation</span>
                 <button
                   type="button"
                   onClick={handleRunTest}
                   disabled={testing || !canSubmit}
                   className="btn-secondary"
                   style={{
-                    padding: '4px 12px',
-                    fontSize: '12px',
+                    padding: '6px 14px',
+                    fontSize: '12.5px',
                     fontWeight: 700,
                     borderColor: 'var(--blue-border)',
                     color: 'var(--blue-primary)',
                     background: 'var(--blue-soft)'
                   }}
                 >
-                  <Terminal size={13} /> {testing ? 'Testing Code Output...' : 'Run & Auto-Test Code'}
+                  <Terminal size={14} /> {testing ? 'Compiling & Running…' : 'Run Code (Live Output)'}
                 </button>
               </div>
             </div>
+
             <textarea
               className="code-editor-area"
               value={code}
               onChange={(e) => setCode(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="def my_view(request): ... or paste your code here"
+              placeholder="Write your code here..."
               disabled={!canSubmit}
-              rows={11}
+              rows={12}
+              style={{
+                width: '100%',
+                fontFamily: 'IBM Plex Mono, monospace',
+                fontSize: '13.5px',
+                lineHeight: 1.5,
+                background: '#0F172A',
+                color: '#F8FAFC',
+                padding: '14px 16px',
+                borderRadius: 'var(--radius-md)',
+                border: '1px solid #1E293B',
+                outline: 'none',
+                resize: 'vertical'
+              }}
             />
           </div>
 
           {/* Test Runner Results Panel */}
           {testResult && (
             <div style={{
-              background: '#FFFFFF',
-              border: `1.5px solid ${testResult.status === 'PASSED' ? 'rgba(22, 163, 74, 0.4)' : 'rgba(217, 119, 6, 0.4)'}`,
+              background: testResult.is_passed ? 'rgba(16, 185, 129, 0.08)' : 'rgba(239, 68, 68, 0.08)',
+              border: `1.5px solid ${testResult.is_passed ? '#10B981' : '#EF4444'}`,
               borderRadius: 'var(--radius-md)',
               padding: '16px 18px',
-              marginBottom: '20px',
-              boxShadow: 'var(--shadow-sm)'
+              marginBottom: '18px'
             }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Terminal size={16} color={testResult.status === 'PASSED' ? '#16A34A' : '#D97706'} />
-                  <strong style={{ fontSize: '13.5px', color: 'var(--text-primary)' }}>
-                    Automated Test Runner Output
+                  {testResult.is_passed ? (
+                    <CheckCircle2 size={18} color="#10B981" />
+                  ) : (
+                    <XCircle size={18} color="#EF4444" />
+                  )}
+                  <strong style={{ fontSize: '14px', color: testResult.is_passed ? '#047857' : '#B91C1C' }}>
+                    {testResult.is_passed ? 'MATCH: Actual output equals expected output!' : `Status: ${testResult.status}`}
                   </strong>
                 </div>
-                <div style={{ fontFamily: 'IBM Plex Mono', fontWeight: 800, fontSize: '13px', color: testResult.status === 'PASSED' ? '#16A34A' : '#D97706' }}>
-                  Auto-Grade: {testResult.score} / {testResult.max_points} ({testResult.status})
+                <div style={{ fontFamily: 'IBM Plex Mono', fontSize: '12px', color: 'var(--text-secondary)' }}>
+                  <Clock size={12} style={{ display: 'inline', marginRight: '4px' }} />
+                  {testResult.execution_time_ms} ms
                 </div>
               </div>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                {(testResult.details || []).map((detail, idx) => (
-                  <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12.5px', color: 'var(--text-secondary)' }}>
-                    {detail.startsWith('[Passed]') ? (
-                      <CheckSquare size={14} color="#16A34A" style={{ flexShrink: 0 }} />
-                    ) : (
-                      <XCircle size={14} color="#DC2626" style={{ flexShrink: 0 }} />
-                    )}
-                    <span>{detail}</span>
-                  </div>
-                ))}
+              {/* Actual Console Output */}
+              <div>
+                <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-tertiary)', display: 'block', marginBottom: '4px' }}>
+                  Captured Actual Console Output (stdout):
+                </span>
+                <pre style={{
+                  background: '#0F172A',
+                  color: '#F8FAFC',
+                  fontFamily: 'IBM Plex Mono',
+                  fontSize: '12px',
+                  padding: '10px 12px',
+                  borderRadius: 'var(--radius-sm)',
+                  margin: 0,
+                  whiteSpace: 'pre-wrap'
+                }}>
+                  {testResult.actual_output || '(No console output produced)'}
+                </pre>
               </div>
+
+              {testResult.error_detail && (
+                <div style={{ marginTop: '10px' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: '#DC2626', display: 'block', marginBottom: '4px' }}>
+                    Error Output (stderr / compilation):
+                  </span>
+                  <pre style={{
+                    background: '#450A0A',
+                    color: '#FECACA',
+                    fontFamily: 'IBM Plex Mono',
+                    fontSize: '12px',
+                    padding: '10px 12px',
+                    borderRadius: 'var(--radius-sm)',
+                    margin: 0,
+                    whiteSpace: 'pre-wrap'
+                  }}>
+                    {testResult.error_detail}
+                  </pre>
+                </div>
+              )}
             </div>
           )}
 
-          {/* Execution Log / Terminal Output Notes */}
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', display: 'block', marginBottom: '6px' }}>
-              Terminal Output / Verification Log (Optional)
-            </label>
-            <textarea
-              style={{
-                width: '100%',
-                background: 'var(--bg-surface)',
-                border: '1px solid var(--border-medium)',
-                borderRadius: 'var(--radius-md)',
-                color: 'var(--text-primary)',
-                padding: '10px 14px',
-                fontSize: '13px',
-                outline: 'none',
-                minHeight: '60px'
-              }}
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              placeholder="e.g., Output: HTTP/1.1 200 OK or test assertions passed..."
-              disabled={!canSubmit}
-            />
-          </div>
-
-          {/* Alert feedback */}
           {errorMsg && (
-            <div style={{
-              background: 'var(--coral-soft)',
-              color: 'var(--coral)',
-              padding: '10px 14px',
-              borderRadius: 'var(--radius-sm)',
-              fontSize: '13px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              marginBottom: '14px'
-            }}>
+            <div style={{ color: '#DC2626', background: '#FEE2E2', padding: '10px 14px', borderRadius: 'var(--radius-sm)', marginBottom: '14px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <AlertCircle size={16} /> {errorMsg}
             </div>
           )}
 
           {successMsg && (
-            <div style={{
-              background: 'rgba(22, 163, 74, 0.1)',
-              color: '#16A34A',
-              padding: '10px 14px',
-              borderRadius: 'var(--radius-sm)',
-              fontSize: '13px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              marginBottom: '14px',
-              fontWeight: 600
-            }}>
-              <Check size={16} /> {successMsg}
+            <div style={{ color: '#047857', background: '#E6F8F0', padding: '10px 14px', borderRadius: 'var(--radius-sm)', marginBottom: '14px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <CheckCircle2 size={16} /> {successMsg}
             </div>
           )}
         </div>
 
         {/* Footer */}
-        <div className="modal-footer">
-          <button className="btn-secondary" onClick={onClose}>
+        <div className="modal-footer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '10px', padding: '14px 20px', borderTop: '1px solid var(--border-subtle)' }}>
+          <button type="button" className="btn-secondary" onClick={onClose}>
             Close
           </button>
-          
-          <div style={{ display: 'flex', gap: '10px' }}>
-            <button
-              type="button"
-              className="btn-secondary"
-              onClick={handleRunTest}
-              disabled={!canSubmit || testing}
-              style={{ fontWeight: 700, borderColor: 'var(--blue-border)', color: 'var(--blue-primary)', background: 'var(--blue-soft)' }}
-            >
-              <Terminal size={14} />
-              {testing ? 'Testing...' : 'Run Tests'}
-            </button>
-
-            <button
-              className="btn-primary"
-              onClick={handleSubmit}
-              disabled={!canSubmit || submitting}
-              title={!canSubmit ? 'This challenge is locked or deadline has expired' : ''}
-            >
-              <Play size={14} fill="currentColor" />
-              {submitting ? 'Auto-Grading & Submitting...' : existingSubmission ? 'Resubmit & Auto-Grade' : 'Submit for Auto-Grading'}
-            </button>
-          </div>
+          <button
+            type="button"
+            className="btn-primary"
+            onClick={handleSubmit}
+            disabled={submitting || !canSubmit}
+            style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+          >
+            <Sparkles size={15} /> {submitting ? 'Auto-Grading…' : 'Submit for Auto-Validation'}
+          </button>
         </div>
       </div>
     </div>
