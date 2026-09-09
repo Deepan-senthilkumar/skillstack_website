@@ -256,34 +256,6 @@ export default function LoginModal({
               </button>
             </div>
 
-            {/* Quick Demo Student Pill */}
-            {!isStudentRegister && (
-              <div style={{ marginBottom: '16px' }}>
-                <button
-                  type="button"
-                  onClick={() => handleStudentLogin('student', '1234')}
-                  disabled={loading}
-                  style={{
-                    width: '100%',
-                    padding: '8px 12px',
-                    borderRadius: 'var(--radius-md)',
-                    background: 'var(--blue-soft)',
-                    border: '1px dashed var(--blue-border)',
-                    color: 'var(--blue-primary)',
-                    fontSize: '12px',
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '6px'
-                  }}
-                >
-                  <Sparkles size={14} /> Quick Demo Student (Mobile / PIN: 1234)
-                </button>
-              </div>
-            )}
-
             {isStudentRegister ? (
               /* STUDENT REGISTRATION FORM */
               <form onSubmit={handleStudentRegister}>
@@ -475,32 +447,6 @@ export default function LoginModal({
         {/* ================= STAFF TAB CONTENT ================= */}
         {activeTab === 'staff' && (
           <div>
-            {/* Quick Demo Staff Pill */}
-            <div style={{ marginBottom: '16px' }}>
-              <button
-                type="button"
-                onClick={() => handleStaffLogin('staff', 'Staff@12345')}
-                disabled={loading}
-                style={{
-                  width: '100%',
-                  padding: '8px 12px',
-                  borderRadius: 'var(--radius-md)',
-                  background: 'var(--blue-soft)',
-                  border: '1px dashed var(--blue-border)',
-                  color: 'var(--blue-primary)',
-                  fontSize: '12px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '6px'
-                }}
-              >
-                <Shield size={14} /> Super Admin 1-Click (staff / Staff@12345)
-              </button>
-            </div>
-
             <form onSubmit={(e) => { e.preventDefault(); handleStaffLogin(); }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '16px' }}>
                 <div>
