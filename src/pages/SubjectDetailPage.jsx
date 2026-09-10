@@ -50,18 +50,18 @@ export default function SubjectDetailPage({
   };
 
   return (
-    <div style={{ maxWidth: '1140px', margin: '0 auto', padding: '36px 24px 80px', position: 'relative' }}>
+    <div style={{ maxWidth: '1140px', width: '100%', margin: '0 auto', padding: '24px 16px 80px', position: 'relative', overflow: 'hidden', boxSizing: 'border-box' }}>
       {/* Decorative Ambient Background Blobs */}
-      <div className="curvy-floating-orb orb-blue" style={{ top: '40px', left: '-60px', width: '360px', height: '360px' }} />
-      <div className="curvy-floating-orb orb-cyan" style={{ top: '220px', right: '-50px', width: '320px', height: '320px' }} />
+      <div className="curvy-floating-orb orb-blue" style={{ top: '40px', left: '0px', width: 'min(280px, 70vw)', height: 'min(280px, 70vw)', opacity: 0.6 }} />
+      <div className="curvy-floating-orb orb-cyan" style={{ top: '220px', right: '0px', width: 'min(260px, 65vw)', height: 'min(260px, 65vw)', opacity: 0.6 }} />
 
       {/* Back Button */}
       <button
         className="btn-secondary"
         onClick={onBack}
         style={{
-          marginBottom: '24px',
-          display: 'flex',
+          marginBottom: '20px',
+          display: 'inline-flex',
           alignItems: 'center',
           gap: '8px',
           fontSize: '13px',
@@ -232,42 +232,44 @@ export default function SubjectDetailPage({
                     boxShadow: 'var(--shadow-sm)'
                   }}
                 >
-                  <div
-                    onClick={() => setExpandedModule(isOpen ? null : module.id)}
-                    style={{
-                      padding: '16px 20px',
+                    <div style={{
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'space-between',
+                      gap: '12px',
                       cursor: 'pointer',
+                      padding: '16px 18px',
                       background: isOpen ? 'var(--blue-gradient-subtle)' : '#FFFFFF'
                     }}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                      <span style={{
-                        fontSize: '11px',
-                        fontWeight: 800,
-                        textTransform: 'uppercase',
-                        padding: '2px 8px',
-                        borderRadius: '4px',
-                        background: 'var(--blue-soft)',
-                        color: 'var(--blue-primary)',
-                        border: '1px solid var(--blue-border)'
-                      }}>
-                        Module {mIdx + 1}
-                      </span>
-                      <strong style={{ fontSize: '15.5px', color: 'var(--text-primary)' }}>
-                        {module.name}
-                      </strong>
-                    </div>
+                    onClick={() => setExpandedModule(isOpen ? null : module.id)}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
+                        <span style={{
+                          fontSize: '11px',
+                          fontWeight: 800,
+                          textTransform: 'uppercase',
+                          padding: '3px 8px',
+                          borderRadius: '4px',
+                          background: 'var(--blue-soft)',
+                          color: 'var(--blue-primary)',
+                          border: '1px solid var(--blue-border)',
+                          whiteSpace: 'nowrap',
+                          flexShrink: 0
+                        }}>
+                          Module {mIdx + 1}
+                        </span>
+                        <strong style={{ fontSize: '15px', color: 'var(--text-primary)', wordBreak: 'break-word', lineHeight: 1.3 }}>
+                          {module.name}
+                        </strong>
+                      </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                      <span style={{ fontSize: '12.5px', color: 'var(--text-secondary)' }}>
-                        {module.topics?.length || 0} Topics
-                      </span>
-                      {isOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+                        <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>
+                          {module.topics?.length || 0} Topics
+                        </span>
+                        {isOpen ? <ChevronUp size={16} color="#7B1C6E" /> : <ChevronDown size={16} color="#94A3B8" />}
+                      </div>
                     </div>
-                  </div>
 
                   {isOpen && (
                     <div style={{ padding: '16px 20px', borderTop: '1px solid var(--border-subtle)', background: '#FAFAFA' }}>
