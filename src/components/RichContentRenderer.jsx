@@ -12,7 +12,7 @@ function CodeBlock({ code, lang }) {
 
   return (
     <div style={{
-      margin: '14px 0',
+      margin: '16px 0',
       borderRadius: '12px',
       overflow: 'hidden',
       border: '1px solid #1E293B',
@@ -114,45 +114,169 @@ function renderInlineText(text) {
         return <strong key={j} style={{ color: '#0F172A', fontWeight: 700 }}>{bPart.slice(2, -2)}</strong>;
       }
 
-      // Link formatting: [label](url)
-      const linkParts = bPart.split(/(\[[^\]]+\]\([^)]+\))/g);
-      return linkParts.map((lPart, k) => {
-        const linkMatch = lPart.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
-        if (linkMatch) {
-          return (
-            <a
-              key={k}
-              href={linkMatch[2]}
-              target="_blank"
-              rel="noreferrer"
-              style={{ color: '#7B1C6E', textDecoration: 'underline', fontWeight: 600 }}
-            >
-              {linkMatch[1]}
-            </a>
-          );
+      // Italic formatting: *italic* or _italic_
+      const italicParts = bPart.split(/(\*[^*]+\*|_[^_]+_)/g);
+      return italicParts.map((itPart, m) => {
+        if ((itPart.startsWith('*') && itPart.endsWith('*') && itPart.length >= 3) ||
+            (itPart.startsWith('_') && itPart.endsWith('_') && itPart.length >= 3)) {
+          return <em key={m} style={{ color: '#475569', fontStyle: 'italic' }}>{itPart.slice(1, -1)}</em>;
         }
 
-        // Raw URLs: http(s)://...
-        const urlParts = lPart.split(/(https?:\/\/[^\s]+)/g);
-        return urlParts.map((uPart, l) => {
-          if (/^https?:\/\//.test(uPart)) {
+        // Link formatting: [label](url)
+        const linkParts = itPart.split(/(\[[^\]]+\]\([^)]+\))/g);
+        return linkParts.map((lPart, k) => {
+          const linkMatch = lPart.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+          if (linkMatch) {
             return (
               <a
-                key={l}
-                href={uPart}
+                key={k}
+                href={linkMatch[2]}
                 target="_blank"
                 rel="noreferrer"
-                style={{ color: '#7B1C6E', textDecoration: 'underline', wordBreak: 'break-all' }}
+                style={{ color: '#7B1C6E', textDecoration: 'underline', fontWeight: 600 }}
               >
-                {uPart}
+                {linkMatch[1]}
               </a>
             );
           }
-          return uPart;
+
+          // Raw URLs: http(s)://...
+          const urlParts = lPart.split(/(https?:\/\/[^\s]+)/g);
+          return urlParts.map((uPart, l) => {
+            if (/^https?:\/\//.test(uPart)) {
+              return (
+                <a
+                  key={l}
+                  href={uPart}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ color: '#7B1C6E', textDecoration: 'underline', wordBreak: 'break-all' }}
+                >
+                  {uPart}
+                </a>
+              );
+            }
+            return uPart;
+          });
         });
       });
     });
   });
+}
+
+function splitTableLine(line) {
+  let trimmed = line.trim();
+  if (trimmed.startsWith('|')) trimmed = trimmed.slice(1);
+  if (trimmed.endsWith('|')) trimmed = trimmed.slice(0, -1);
+
+  const cells = [];
+  let current = '';
+  let inCode = false;
+  let braceDepth = 0;
+
+  for (let i = 0; i < trimmed.length; i++) {
+    const char = trimmed[i];
+    if (char === '`') {
+      inCode = !inCode;
+      current += char;
+    } else if (!inCode && (char === '{' || char === '[' || char === '(')) {
+      braceDepth++;
+      current += char;
+    } else if (!inCode && (char === '}' || char === ']' || char === ')')) {
+      if (braceDepth > 0) braceDepth--;
+      current += char;
+    } else if (char === '|' && !inCode && braceDepth === 0) {
+      cells.push(current.trim());
+      current = '';
+    } else {
+      current += char;
+    }
+  }
+  cells.push(current.trim());
+  return cells;
+}
+
+function isTableDelimiter(line) {
+  if (!line || !line.includes('|')) return false;
+  const cells = splitTableLine(line);
+  return cells.length > 0 && cells.every(c => /^:?-{2,}:?$/.test(c.replace(/\s+/g, '')));
+}
+
+function TableBlock({ headers, alignments = [], rows = [] }) {
+  return (
+    <div style={{
+      margin: '18px 0',
+      overflowX: 'auto',
+      borderRadius: '14px',
+      border: '1.5px solid rgba(123, 28, 110, 0.16)',
+      boxShadow: '0 4px 20px rgba(123, 28, 110, 0.05)',
+      background: '#FFFFFF'
+    }}>
+      <table style={{
+        width: '100%',
+        borderCollapse: 'collapse',
+        textAlign: 'left',
+        fontSize: '13.5px',
+        lineHeight: 1.6
+      }}>
+        {headers && headers.length > 0 && (
+          <thead>
+            <tr style={{
+              background: 'linear-gradient(135deg, #FDF5FD 0%, #F8FAFC 100%)',
+              borderBottom: '2px solid rgba(123, 28, 110, 0.18)'
+            }}>
+              {headers.map((head, idx) => (
+                <th
+                  key={idx}
+                  style={{
+                    padding: '12px 18px',
+                    fontWeight: 800,
+                    color: '#7B1C6E',
+                    textAlign: alignments[idx] || 'left',
+                    whiteSpace: 'nowrap',
+                    fontSize: '12.5px',
+                    letterSpacing: '0.03em',
+                    textTransform: 'uppercase'
+                  }}
+                >
+                  {renderInlineText(head)}
+                </th>
+              ))}
+            </tr>
+          </thead>
+        )}
+        <tbody>
+          {rows.map((row, rIdx) => (
+            <tr
+              key={rIdx}
+              style={{
+                borderBottom: rIdx < rows.length - 1 ? '1px solid #F1F5F9' : 'none',
+                background: rIdx % 2 === 0 ? '#FFFFFF' : '#FAFCFF',
+                transition: 'background 0.15s ease'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.background = '#FDF5FD'}
+              onMouseLeave={(e) => e.currentTarget.style.background = rIdx % 2 === 0 ? '#FFFFFF' : '#FAFCFF'}
+            >
+              {row.map((cell, cIdx) => (
+                <td
+                  key={cIdx}
+                  style={{
+                    padding: '12px 18px',
+                    color: '#334155',
+                    textAlign: alignments[cIdx] || 'left',
+                    verticalAlign: 'middle',
+                    fontWeight: 500
+                  }}
+                >
+                  {renderInlineText(cell)}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
 }
 
 export default function RichContentRenderer({ content, className = '' }) {
@@ -192,6 +316,38 @@ export default function RichContentRenderer({ content, className = '' }) {
       continue;
     }
 
+    // Table detection: line with pipes followed by delimiter row
+    if (line.includes('|')) {
+      const nextLine = lines[i + 1];
+      if (nextLine && isTableDelimiter(nextLine)) {
+        const headers = splitTableLine(line);
+        const delims = splitTableLine(nextLine);
+        const alignments = delims.map(d => {
+          const clean = d.trim();
+          if (clean.startsWith(':') && clean.endsWith(':')) return 'center';
+          if (clean.endsWith(':')) return 'right';
+          return 'left';
+        });
+
+        const rows = [];
+        i += 2; // Jump past header and delimiter line
+        while (i < lines.length && lines[i].trim() && lines[i].includes('|') && !/^```/.test(lines[i].trim())) {
+          const rowCells = splitTableLine(lines[i]);
+          rows.push(rowCells);
+          i++;
+        }
+        i--; // compensate for for-loop increment
+
+        blocks.push({
+          type: 'table',
+          headers,
+          alignments,
+          rows
+        });
+        continue;
+      }
+    }
+
     // Headings
     if (/^# /.test(line)) {
       blocks.push({ type: 'h1', text: line.replace(/^# /, '') });
@@ -210,8 +366,14 @@ export default function RichContentRenderer({ content, className = '' }) {
       continue;
     }
 
-    // Horizontal Rule
-    if (/^---/.test(line.trim())) {
+    // Blockquote
+    if (/^>\s?/.test(line)) {
+      blocks.push({ type: 'quote', text: line.replace(/^>\s?/, '') });
+      continue;
+    }
+
+    // Horizontal Rule (exact dashes or stars)
+    if (/^---+$|^\*\*\*+$/.test(line.trim())) {
       blocks.push({ type: 'hr' });
       continue;
     }
@@ -252,8 +414,37 @@ export default function RichContentRenderer({ content, className = '' }) {
     <div className={`rich-content-flow ${className}`} style={{ fontSize: '14.5px', lineHeight: 1.75, color: '#334155' }}>
       {blocks.map((block, idx) => {
         switch (block.type) {
+          case 'table':
+            return (
+              <TableBlock
+                key={idx}
+                headers={block.headers}
+                alignments={block.alignments}
+                rows={block.rows}
+              />
+            );
+
           case 'code':
             return <CodeBlock key={idx} code={block.code} lang={block.lang} />;
+
+          case 'quote':
+            return (
+              <blockquote
+                key={idx}
+                style={{
+                  margin: '14px 0',
+                  padding: '12px 18px',
+                  background: 'rgba(123, 28, 110, 0.05)',
+                  borderLeft: '4px solid #7B1C6E',
+                  borderRadius: '0 10px 10px 0',
+                  color: '#475569',
+                  fontStyle: 'italic',
+                  lineHeight: 1.65
+                }}
+              >
+                {renderInlineText(block.text)}
+              </blockquote>
+            );
 
           case 'h1':
             return (
