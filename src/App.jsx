@@ -7,6 +7,7 @@ import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import StudentPortal from './pages/StudentPortal';
 import LoginModal from './components/LoginModal';
+import Footer from './components/Footer';
 import { api } from './api';
 
 // ADMIN PANEL URL — update this to your deployed admin Vercel URL
@@ -229,6 +230,17 @@ export default function App() {
           />
         )}
       </main>
+
+      {currentPage !== 'learning' && (
+        <Footer
+          onNavigate={(page) => {
+            setCurrentPage(page);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+          onOpenStudentAuth={(isReg) => handleOpenAuth('student', isReg)}
+          onOpenStaffAuth={() => handleOpenAuth('staff', false)}
+        />
+      )}
 
       {/* Auth Modal */}
       {authModalOpen && (

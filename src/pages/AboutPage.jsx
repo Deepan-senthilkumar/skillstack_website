@@ -25,10 +25,10 @@ export default function AboutPage({ onNavigate }) {
   }, []);
 
   return (
-    <div style={{ maxWidth: '1240px', margin: '0 auto', padding: '36px 24px 80px', position: 'relative' }}>
+    <div style={{ maxWidth: '1240px', width: '100%', margin: '0 auto', padding: '36px 20px 80px', position: 'relative', overflow: 'hidden', boxSizing: 'border-box' }}>
       {/* Decorative Ambient Background Blobs */}
-      <div className="curvy-floating-orb orb-blue" style={{ top: '60px', left: '-50px', width: '380px', height: '380px' }} />
-      <div className="curvy-floating-orb orb-cyan" style={{ top: '240px', right: '-60px', width: '340px', height: '340px' }} />
+      <div className="curvy-floating-orb orb-blue" style={{ top: '60px', left: '0px', width: 'min(380px, 80vw)', height: 'min(380px, 80vw)' }} />
+      <div className="curvy-floating-orb orb-cyan" style={{ top: '240px', right: '0px', width: 'min(340px, 75vw)', height: 'min(340px, 75vw)' }} />
 
       {/* CURVY & DOTTED HERO BANNER (Pure Light Theme) */}
       <div className="catalog-hero-banner" style={{

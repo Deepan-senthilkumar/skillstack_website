@@ -42,8 +42,8 @@ export default function HomePage({
         {/* Decorative Layer 3: Watermark Tech Grid */}
         <div className="watermark-tech-grid" />
 
-        {/* Floating Subtle Watermark Badges */}
-        <div style={{
+        {/* Floating Subtle Watermark Badges (Desktop Only) */}
+        <div className="desktop-only-flex" style={{
           position: 'absolute',
           top: '12%',
           right: '38%',
@@ -58,7 +58,7 @@ export default function HomePage({
         }}>
           &lt;ASGI::Distributed_Cluster&gt;
         </div>
-        <div style={{
+        <div className="desktop-only-flex" style={{
           position: 'absolute',
           bottom: '18%',
           left: '5%',
@@ -478,77 +478,6 @@ export default function HomePage({
           )}
         </div>
       </section>
-
-      {/* Curvy Wave Transition 5: Into Corporate Footer */}
-      <div className="curvy-wave-divider" style={{ background: '#FFFFFF' }}>
-        <svg viewBox="0 0 1440 64" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-          <path d="M0,35 C380,70 1060,10 1440,40 L1440,64 L0,64 Z" fill="#F8FAFC"/>
-        </svg>
-      </div>
-
-      {/* =========================================================================
-          SECTION 6: ENTERPRISE CORPORATE FOOTER (High-End Light Slate & Azure)
-          ========================================================================= */}
-      <footer className="home-footer">
-        <div className="watermark-tech-grid" />
-        <div className="section-container">
-          <div className="footer-grid">
-            <div className="footer-col brand-col">
-              <div style={{ marginBottom: '16px' }}>
-                <BrandLogo size={36} showText={true} variant="light" />
-              </div>
-              <p style={{ fontSize: '13.5px', color: '#64748B', lineHeight: 1.7, maxWidth: '340px' }}>
-                {siteConfig.brand.description}
-              </p>
-              <div style={{ marginTop: '16px', fontSize: '11.5px', color: '#64748B', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10B981' }} />
-                <span>{siteConfig.brand.status}</span>
-              </div>
-            </div>
-
-            <div className="footer-col">
-              <h4>Academic Navigation</h4>
-              <ul className="footer-links">
-                <li><button onClick={() => onNavigate('home')}>Institute Home</button></li>
-                <li><button onClick={() => onNavigate('courses')}>Curriculum & Tracks</button></li>
-                <li><button onClick={() => onNavigate('about')}>Governance & Faculty</button></li>
-                <li><button onClick={() => onNavigate('contact')}>Admissions & Inquiries</button></li>
-              </ul>
-            </div>
-
-            <div className="footer-col">
-              <h4>Engineering Portals</h4>
-              <ul className="footer-links">
-                <li><button onClick={() => onOpenStudentAuth(false)}>Fellow Portal Login</button></li>
-                <li><button onClick={() => onOpenStudentAuth(true)}>New Fellow Enrollment</button></li>
-                <li><button onClick={() => onOpenStaffAuth()}>Faculty Command Center</button></li>
-              </ul>
-            </div>
-
-            <div className="footer-col">
-              <h4>Admissions & Operations Desk</h4>
-              <div style={{ fontSize: '13px', color: '#64748B', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <Mail size={14} color="#7B1C6E" />
-                  <span>{siteConfig.contact.email}</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <Phone size={14} color="#7B1C6E" />
-                  <span>{siteConfig.contact.phone}</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
-                  <MapPin size={14} color="#7B1C6E" style={{ marginTop: '2px', flexShrink: 0 }} />
-                  <span>{siteConfig.contact.campus}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="footer-bottom">
-            <div>&copy; {new Date().getFullYear()} {siteConfig.brand.fullName}. All institutional rights reserved.</div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
