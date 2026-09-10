@@ -164,10 +164,34 @@ function renderInlineText(text) {
   });
 }
 
-function splitTableLine(line) {
+// Universal table helper: detects borders (Unicode box-drawing, ASCII +, and markdown -)
+function isBoxBorderLine(line) {
+  if (!line) return false;
+  const trimmed = line.trim();
+  if (!trimmed) return false;
+  
+  // Unicode Box border characters: ┌ ┐ └ ┘ ├ ┤ ┬ ┴ ┼ ─ ═ ╔ ╗ ╚ ╝ ╠ ╣ ╦ ╩ ╬
+  // ASCII grid borders: +---+---+ or |---|---|
+  return /^[┌╔├╠└╚\+][─═\-\+\┬╦┼╬┴╩│║\| \t]*[┐╗┤╣┘╝\+]?$/.test(trimmed) ||
+         /^[\|\+][\-\:\s\+\|]+[\|\+]?$/.test(trimmed) ||
+         /^[─═\-]{3,}$/.test(trimmed);
+}
+
+// Detects content rows with vertical dividers: │, ║, or |
+function isBoxContentRow(line) {
+  if (!line) return false;
+  const trimmed = line.trim();
+  if (!trimmed) return false;
+  if (isBoxBorderLine(trimmed)) return false;
+  return trimmed.includes('│') || trimmed.includes('║') || trimmed.includes('|');
+}
+
+// Split cells intelligently while respecting braces {}, backticks ``, and brackets []
+function splitUniversalTableLine(line) {
   let trimmed = line.trim();
-  if (trimmed.startsWith('|')) trimmed = trimmed.slice(1);
-  if (trimmed.endsWith('|')) trimmed = trimmed.slice(0, -1);
+  // Strip outer vertical borders: │, ║, |
+  if (/^[│║\|]/.test(trimmed)) trimmed = trimmed.slice(1);
+  if (/[│║\|]$/.test(trimmed)) trimmed = trimmed.slice(0, -1);
 
   const cells = [];
   let current = '';
@@ -185,7 +209,7 @@ function splitTableLine(line) {
     } else if (!inCode && (char === '}' || char === ']' || char === ')')) {
       if (braceDepth > 0) braceDepth--;
       current += char;
-    } else if (char === '|' && !inCode && braceDepth === 0) {
+    } else if ((char === '│' || char === '║' || char === '|') && !inCode && braceDepth === 0) {
       cells.push(current.trim());
       current = '';
     } else {
@@ -196,20 +220,14 @@ function splitTableLine(line) {
   return cells;
 }
 
-function isTableDelimiter(line) {
-  if (!line || !line.includes('|')) return false;
-  const cells = splitTableLine(line);
-  return cells.length > 0 && cells.every(c => /^:?-{2,}:?$/.test(c.replace(/\s+/g, '')));
-}
-
-function TableBlock({ headers, alignments = [], rows = [] }) {
+function TableBlock({ headers = [], alignments = [], rows = [] }) {
   return (
     <div style={{
-      margin: '18px 0',
+      margin: '20px 0',
       overflowX: 'auto',
       borderRadius: '14px',
       border: '1.5px solid rgba(123, 28, 110, 0.16)',
-      boxShadow: '0 4px 20px rgba(123, 28, 110, 0.05)',
+      boxShadow: '0 6px 24px rgba(123, 28, 110, 0.06)',
       background: '#FFFFFF'
     }}>
       <table style={{
@@ -229,14 +247,15 @@ function TableBlock({ headers, alignments = [], rows = [] }) {
                 <th
                   key={idx}
                   style={{
-                    padding: '12px 18px',
+                    padding: '13px 18px',
                     fontWeight: 800,
                     color: '#7B1C6E',
                     textAlign: alignments[idx] || 'left',
                     whiteSpace: 'nowrap',
                     fontSize: '12.5px',
                     letterSpacing: '0.03em',
-                    textTransform: 'uppercase'
+                    textTransform: 'uppercase',
+                    borderRight: idx < headers.length - 1 ? '1px solid rgba(123, 28, 110, 0.1)' : 'none'
                   }}
                 >
                   {renderInlineText(head)}
@@ -265,7 +284,8 @@ function TableBlock({ headers, alignments = [], rows = [] }) {
                     color: '#334155',
                     textAlign: alignments[cIdx] || 'left',
                     verticalAlign: 'middle',
-                    fontWeight: 500
+                    fontWeight: 500,
+                    borderRight: cIdx < row.length - 1 ? '1px solid #F8FAFC' : 'none'
                   }}
                 >
                   {renderInlineText(cell)}
@@ -284,7 +304,7 @@ export default function RichContentRenderer({ content, className = '' }) {
     return null;
   }
 
-  // Parse markdown into blocks
+  // Parse markdown and ASCII/Unicode box tables into structured blocks
   const lines = content.split('\n');
   const blocks = [];
   let currentCode = null;
@@ -316,28 +336,59 @@ export default function RichContentRenderer({ content, className = '' }) {
       continue;
     }
 
-    // Table detection: line with pipes followed by delimiter row
-    if (line.includes('|')) {
-      const nextLine = lines[i + 1];
-      if (nextLine && isTableDelimiter(nextLine)) {
-        const headers = splitTableLine(line);
-        const delims = splitTableLine(nextLine);
-        const alignments = delims.map(d => {
-          const clean = d.trim();
-          if (clean.startsWith(':') && clean.endsWith(':')) return 'center';
-          if (clean.endsWith(':')) return 'right';
-          return 'left';
-        });
+    // 1. Check for Table start (Unicode Box tables: ┌...┐, or Markdown/ASCII tables: | Header | or +---+---+)
+    const isBoxStart = isBoxBorderLine(line);
+    const isRowStart = isBoxContentRow(line);
 
+    if (isBoxStart || isRowStart) {
+      // Lookahead to see if next lines form a valid table structure
+      let testIdx = isBoxStart ? i + 1 : i;
+      if (testIdx < lines.length && isBoxContentRow(lines[testIdx])) {
+        // We have a table!
+        let headers = [];
+        let alignments = [];
         const rows = [];
-        i += 2; // Jump past header and delimiter line
-        while (i < lines.length && lines[i].trim() && lines[i].includes('|') && !/^```/.test(lines[i].trim())) {
-          const rowCells = splitTableLine(lines[i]);
-          rows.push(rowCells);
-          i++;
-        }
-        i--; // compensate for for-loop increment
 
+        // Parse header row
+        headers = splitUniversalTableLine(lines[testIdx]);
+        testIdx++;
+
+        // Check if there is an alignment / separator border line
+        if (testIdx < lines.length && isBoxBorderLine(lines[testIdx])) {
+          const delimCells = splitUniversalTableLine(lines[testIdx]);
+          alignments = delimCells.map(d => {
+            const clean = d.trim();
+            if (clean.startsWith(':') && clean.endsWith(':')) return 'center';
+            if (clean.endsWith(':')) return 'right';
+            return 'left';
+          });
+          testIdx++;
+        }
+
+        // Collect body rows
+        while (testIdx < lines.length) {
+          const curLine = lines[testIdx];
+          if (isBoxBorderLine(curLine)) {
+            // Check if bottom border or middle divider
+            testIdx++;
+            // If the next line is not a content row, this was the bottom border
+            if (testIdx >= lines.length || !isBoxContentRow(lines[testIdx])) {
+              break;
+            }
+            continue;
+          }
+
+          if (isBoxContentRow(curLine)) {
+            const rowCells = splitUniversalTableLine(curLine);
+            rows.push(rowCells);
+            testIdx++;
+          } else {
+            // Non-table line encountered
+            break;
+          }
+        }
+
+        i = testIdx - 1; // Update loop index to the end of the table
         blocks.push({
           type: 'table',
           headers,
