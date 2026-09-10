@@ -2072,4 +2072,234 @@ input:checked + .slider:before {
   box-shadow: 0 10px 30px -5px rgba(30, 58, 138, 0.08);
 }
 
+/* ==========================================================================
+   MOBILE RESPONSIVENESS & SLIDE-OVER SHEET SYSTEM
+   ========================================================================== */
+
+/* Keyframe Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes slideInLeft {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+/* Desktop vs Mobile display utilities */
+.desktop-only-flex {
+  display: flex;
+}
+
+.mobile-only-flex {
+  display: none;
+}
+
+.desktop-sidebar {
+  display: block;
+}
+
+.mobile-lessons-topbar {
+  display: none;
+}
+
+/* Mobile Topbar Navigation in Student Workspace */
+.mobile-lessons-topbar {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: #FFFFFF;
+  border: 1.5px solid rgba(123, 28, 110, 0.16);
+  border-radius: 16px;
+  padding: 10px 14px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 16px rgba(123, 28, 110, 0.06);
+  position: sticky;
+  top: 74px;
+  z-index: 100;
+}
+
+.mobile-browse-lessons-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, #7B1C6E 0%, #A21CAF 100%);
+  color: #FFFFFF;
+  font-size: 12.5px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 3px 10px rgba(123, 28, 110, 0.25);
+  flex-shrink: 0;
+}
+
+.mobile-topic-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.mobile-topic-pill {
+  font-size: 11px;
+  font-weight: 800;
+  color: #701A75;
+  background: #FDF4FF;
+  padding: 2px 6px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.mobile-topic-name {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #0F172A;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mobile-prev-next-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.mobile-nav-arrow-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #475569;
+  transition: all 0.15s ease;
+}
+
+.mobile-nav-arrow-btn:hover {
+  background: #F8FAFC;
+  border-color: #7B1C6E;
+  color: #7B1C6E;
+}
+
+/* Tablet & Mobile Media Queries (< 1024px) */
+@media (max-width: 1024px) {
+  .app-sidebar.desktop-sidebar {
+    display: none !important;
+  }
+
+  .mobile-lessons-topbar {
+    display: flex;
+  }
+
+  .app-main {
+    padding: 20px 16px 60px !important;
+    width: 100% !important;
+  }
+}
+
+/* Mobile Phone Media Queries (< 768px) */
+@media (max-width: 768px) {
+  .desktop-only-flex {
+    display: none !important;
+  }
+
+  .mobile-only-flex {
+    display: flex !important;
+  }
+
+  .navbar {
+    padding: 0 16px !important;
+    height: 60px !important;
+  }
+
+  /* Workspace Hero Header on Mobile */
+  .topic-hero {
+    padding: 20px 16px !important;
+    border-radius: 18px !important;
+    margin-bottom: 20px !important;
+  }
+
+  .topic-hero .topic-title {
+    font-size: 22px !important;
+  }
+
+  /* Content Tabs on Mobile */
+  .content-tabs {
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    padding-bottom: 6px !important;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 6px !important;
+  }
+
+  .content-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .content-tab-btn {
+    padding: 8px 14px !important;
+    font-size: 12px !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Catalog / Hero Banners on Mobile */
+  .catalog-hero-banner {
+    padding: 28px 20px !important;
+    border-radius: 24px !important;
+  }
+
+  .catalog-search-pill-bar {
+    padding: 12px 16px !important;
+    border-radius: 20px !important;
+  }
+
+  /* Rich Content Tables & Code on Mobile */
+  .rich-content-container {
+    padding: 16px 14px !important;
+    border-radius: 16px !important;
+  }
+
+  .rich-table-wrapper {
+    margin: 16px -14px !important;
+    border-radius: 0 !important;
+    border-left: none !important;
+    border-right: none !important;
+  }
+
+  .code-block-wrapper pre {
+    padding: 14px !important;
+    font-size: 12px !important;
+  }
+}
+
+/* Small Screens (< 480px) */
+@media (max-width: 480px) {
+  .topic-hero .topic-title {
+    font-size: 19px !important;
+  }
+
+  .mobile-browse-lessons-btn {
+    padding: 6px 10px !important;
+    font-size: 11.5px !important;
+  }
+}
+
 
