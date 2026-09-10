@@ -155,7 +155,7 @@ export default function CoursesPage({ subjects, onSelectSubject, onNavigate }) {
 
                 <h3 className="subject-title">{subject.name}</h3>
                 <p className="subject-desc">
-                  {subject.short_description || subject.description?.slice(0, 130) + '...'}
+                  {subject.short_description || (subject.description && subject.description.trim() !== '...' ? subject.description : 'Comprehensive curriculum track with structured modules, visual architecture models, and automated engineering workbenches.')}
                 </p>
               </div>
 

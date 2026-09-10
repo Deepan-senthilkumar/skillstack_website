@@ -1663,15 +1663,22 @@ input:checked + .slider:before {
 
 .subjects-cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 380px));
   gap: 28px;
+  justify-content: flex-start;
+}
+
+@media (max-width: 640px) {
+  .subjects-cards-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .subject-card {
   background: #FFFFFF;
   border: 1.5px solid rgba(123, 28, 110, 0.14);
   border-radius: 28px;
-  padding: 32px 28px;
+  padding: 30px 26px;
   box-shadow: 0 10px 30px -5px rgba(30, 58, 138, 0.06);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
@@ -1680,6 +1687,7 @@ input:checked + .slider:before {
   position: relative;
   overflow: hidden;
   cursor: pointer;
+  min-height: 360px;
 }
 
 .subject-card::after {
@@ -1697,7 +1705,7 @@ input:checked + .slider:before {
 
 .subject-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 20px 45px -5px rgba(30, 58, 138, 0.14), 0 0 0 1.5px var(--blue-vibrant);
+  box-shadow: 0 20px 45px -5px rgba(123, 28, 110, 0.18), 0 0 0 1.5px var(--blue-vibrant);
   border-color: var(--blue-vibrant);
 }
 
@@ -1705,7 +1713,7 @@ input:checked + .slider:before {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 .subject-icon-box {
@@ -1741,27 +1749,33 @@ input:checked + .slider:before {
 }
 
 .subject-desc {
-  font-size: 14px;
+  font-size: 13.5px;
   color: var(--text-secondary);
-  line-height: 1.65;
-  margin-bottom: 24px;
-  flex: 1;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  min-height: 42px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .subject-meta-strip {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 18px;
+  padding: 12px 16px;
   background: #F8FAFC;
   border: 1px solid var(--border-subtle);
-  border-radius: 18px;
-  margin-bottom: 22px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  gap: 10px;
 }
 
 .subject-meta-strip .meta-label {
   display: block;
-  font-size: 10.5px;
+  font-size: 10px;
   color: var(--text-tertiary);
   font-weight: 700;
   text-transform: uppercase;
@@ -1771,16 +1785,17 @@ input:checked + .slider:before {
 
 .subject-meta-strip .meta-value {
   display: block;
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 700;
   color: var(--text-primary);
+  white-space: nowrap;
 }
 
 .subject-cta-btn {
   width: 100%;
   padding: 12px;
   border-radius: var(--radius-full);
-  font-size: 13.5px;
+  font-size: 13px;
   font-weight: 700;
   display: flex;
   align-items: center;
