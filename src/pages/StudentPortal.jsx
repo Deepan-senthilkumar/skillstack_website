@@ -14,6 +14,7 @@ export default function StudentPortal({ curriculum, user, onRefresh, currentSubj
   const [copiedIndex, setCopiedIndex] = useState(null);
   const [selectedProblem, setSelectedProblem] = useState(null);
   const [activeTab, setActiveTab] = useState('notes_content'); // 'notes_content' | 'code' | 'notes' | 'labs'
+  const [mobileLessonsOpen, setMobileLessonsOpen] = useState(false);
   
   // Search and filter in syllabus
   const [searchQuery, setSearchQuery] = useState('');
@@ -144,196 +145,318 @@ export default function StudentPortal({ curriculum, user, onRefresh, currentSubj
   const completedCount = flatTopics.filter(t => readTopics[t.topic_id]).length;
   const progressPct = flatTopics.length > 0 ? Math.round((completedCount / flatTopics.length) * 100) : 0;
 
+  // Render Sidebar Content (Shared between Desktop Sidebar and Mobile Sheet Drawer)
+  const renderSidebarContent = (isMobile = false) => (
+    <>
+      {/* Track Header with Switch button */}
+      <div style={{
+        padding: '14px 16px',
+        borderBottom: '1px solid var(--border-subtle)',
+        background: 'linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%)',
+        marginBottom: '12px',
+        borderRadius: 'var(--radius-md)'
+      }}>
+        {onBackToCourses && (
+          <button
+            className="btn-secondary"
+            onClick={() => {
+              if (isMobile) setMobileLessonsOpen(false);
+              onBackToCourses();
+            }}
+            style={{
+              width: '100%',
+              padding: '6px 10px',
+              fontSize: '11.5px',
+              marginBottom: '10px',
+              justifyContent: 'center',
+              gap: '6px',
+              borderRadius: 'var(--radius-full)'
+            }}
+          >
+            <ArrowLeft size={13} /> Switch Subject Track
+          </button>
+        )}
+        <div style={{ fontSize: '10px', color: 'var(--text-tertiary)', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.08em' }}>
+          Current Subject Track
+        </div>
+        <div style={{ fontSize: '14.5px', fontWeight: 800, color: 'var(--blue-primary)', marginTop: '2px', lineHeight: 1.3 }}>
+          {currentSubject?.name || 'Django Full Stack Mastery'}
+        </div>
+
+        {/* Track Progress Bar */}
+        <div style={{ marginTop: '12px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '4px' }}>
+            <span>Curriculum Mastery</span>
+            <span style={{ color: '#7B1C6E' }}>{completedCount} / {flatTopics.length} ({progressPct}%)</span>
+          </div>
+          <div style={{ width: '100%', height: '6px', background: '#F0E2EE', borderRadius: '3px', overflow: 'hidden' }}>
+            <div style={{ width: `${progressPct}%`, height: '100%', background: 'linear-gradient(90deg, #7B1C6E, #FDC029)', borderRadius: '3px', transition: 'width 0.4s ease' }} />
+          </div>
+        </div>
+      </div>
+
+      {/* Search Bar in Sidebar */}
+      <div style={{ padding: '0 4px 12px' }}>
+        <div style={{ position: 'relative', marginBottom: '8px' }}>
+          <Search size={13} color="#94A3B8" style={{ position: 'absolute', left: '10px', top: '10px' }} />
+          <input
+            type="text"
+            placeholder="Search syllabus..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            style={{
+              width: '100%',
+              padding: '7px 28px 7px 30px',
+              fontSize: '12px',
+              borderRadius: 'var(--radius-full)',
+              border: '1px solid #CBD5E1',
+              background: '#F8FAFC',
+              outline: 'none'
+            }}
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery('')}
+              style={{ position: 'absolute', right: '8px', top: '8px', border: 'none', background: 'transparent', cursor: 'pointer', color: '#94A3B8' }}
+            >
+              <X size={13} />
+            </button>
+          )}
+        </div>
+
+        {/* Level Filter Pills */}
+        <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
+          {['all', 'beginner', 'intermediate', 'advanced', 'lab_open'].map(lvl => (
+            <button
+              key={lvl}
+              onClick={() => setLevelFilter(lvl)}
+              style={{
+                padding: '3px 8px',
+                fontSize: '10px',
+                fontWeight: 700,
+                borderRadius: 'var(--radius-full)',
+                border: '1px solid',
+                borderColor: levelFilter === lvl ? '#7B1C6E' : '#E2E8F0',
+                background: levelFilter === lvl ? 'rgba(123, 28, 110, 0.1)' : '#FFFFFF',
+                color: levelFilter === lvl ? '#7B1C6E' : '#64748B',
+                cursor: 'pointer',
+                textTransform: 'capitalize'
+              }}
+            >
+              {lvl === 'all' ? 'All' : lvl === 'lab_open' ? '⚡ Lab Open' : lvl}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Topic List */}
+      {filteredCurriculum.length === 0 ? (
+        <div style={{ padding: '24px 12px', textAlign: 'center', color: '#94A3B8', fontSize: '12.5px' }}>
+          No topics matched your search filter.
+        </div>
+      ) : (
+        filteredCurriculum.map(mod => (
+          <div key={mod.id} className="module-group" style={{ marginBottom: '16px' }}>
+            <div className="module-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <span>{mod.name}</span>
+              <span style={{ fontSize: '9.5px', padding: '1px 6px', borderRadius: '4px', background: 'rgba(123, 28, 110, 0.08)', color: '#7B1C6E', fontWeight: 800 }}>
+                {mod.level.toUpperCase()}
+              </span>
+            </div>
+            {mod.filteredTopics.map(topic => {
+              const isActive = topic.topic_id === activeTopicId;
+              const isRead = !!readTopics[topic.topic_id];
+              const hasUnlockedProblem = (topic.problems || []).some(p => p.access_control?.is_active_now);
+
+              return (
+                <div
+                  key={topic.id}
+                  className={`topic-row ${isActive ? 'active' : ''}`}
+                  onClick={() => {
+                    setActiveTopicId(topic.topic_id);
+                    if (isMobile) setMobileLessonsOpen(false);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '8px 12px',
+                    borderRadius: 'var(--radius-md)',
+                    cursor: 'pointer',
+                    background: isActive ? 'rgba(123, 28, 110, 0.08)' : 'transparent',
+                    borderLeft: isActive ? '3px solid #7B1C6E' : '3px solid transparent'
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', overflow: 'hidden' }}>
+                    <span style={{
+                      width: '16px', height: '16px', borderRadius: '4px',
+                      border: `1.5px solid ${isRead ? '#16A34A' : '#CBD5E1'}`,
+                      background: isRead ? '#16A34A' : '#FFFFFF',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      flexShrink: 0, fontSize: '10px', color: '#FFFFFF', fontWeight: 800
+                    }}>
+                      {isRead ? '✓' : ''}
+                    </span>
+                    <span style={{
+                      fontSize: '12.5px',
+                      fontWeight: isActive ? 700 : 500,
+                      color: isActive ? '#7B1C6E' : '#0F172A',
+                      whiteSpace: 'nowrap',
+                      textOverflow: 'ellipsis',
+                      overflow: 'hidden'
+                    }}>
+                      {topic.title}
+                    </span>
+                  </div>
+
+                  {hasUnlockedProblem && (
+                    <span style={{
+                      fontSize: '9px',
+                      background: 'rgba(217, 119, 6, 0.1)',
+                      color: '#D97706',
+                      border: '1px solid rgba(217, 119, 6, 0.3)',
+                      padding: '1px 5px',
+                      borderRadius: '4px',
+                      fontWeight: 800,
+                      flexShrink: 0
+                    }}>
+                      LAB OPEN
+                    </span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        ))
+      )}
+    </>
+  );
+
   return (
     <div className="app-container">
       {/* =========================================================================
-          SIDEBAR NAVIGATION WITH SEARCH & FILTERS
+          DESKTOP SIDEBAR NAVIGATION (Hidden on mobile)
           ========================================================================= */}
-      <aside className="app-sidebar" style={{ background: '#FFFFFF' }}>
-        {/* Track Header with Switch button */}
-        <div style={{
-          padding: '14px 16px',
-          borderBottom: '1px solid var(--border-subtle)',
-          background: 'linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%)',
-          marginBottom: '12px',
-          borderRadius: 'var(--radius-md)'
-        }}>
-          {onBackToCourses && (
-            <button
-              className="btn-secondary"
-              onClick={onBackToCourses}
-              style={{
-                width: '100%',
-                padding: '6px 10px',
-                fontSize: '11.5px',
-                marginBottom: '10px',
-                justifyContent: 'center',
-                gap: '6px',
-                borderRadius: 'var(--radius-full)'
-              }}
-            >
-              <ArrowLeft size={13} /> Switch Subject Track
-            </button>
-          )}
-          <div style={{ fontSize: '10px', color: 'var(--text-tertiary)', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.08em' }}>
-            Current Subject Track
-          </div>
-          <div style={{ fontSize: '14.5px', fontWeight: 800, color: 'var(--blue-primary)', marginTop: '2px', lineHeight: 1.3 }}>
-            {currentSubject?.name || 'Django Full Stack Mastery'}
-          </div>
+      <aside className="app-sidebar desktop-sidebar" style={{ background: '#FFFFFF' }}>
+        {renderSidebarContent(false)}
+      </aside>
 
-          {/* Track Progress Bar */}
-          <div style={{ marginTop: '12px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '4px' }}>
-              <span>Curriculum Mastery</span>
-              <span style={{ color: '#7B1C6E' }}>{completedCount} / {flatTopics.length} ({progressPct}%)</span>
-            </div>
-            <div style={{ width: '100%', height: '6px', background: '#F0E2EE', borderRadius: '3px', overflow: 'hidden' }}>
-              <div style={{ width: `${progressPct}%`, height: '100%', background: 'linear-gradient(90deg, #7B1C6E, #FDC029)', borderRadius: '3px', transition: 'width 0.4s ease' }} />
-            </div>
-          </div>
-        </div>
-
-        {/* Search Bar in Sidebar */}
-        <div style={{ padding: '0 4px 12px' }}>
-          <div style={{ position: 'relative', marginBottom: '8px' }}>
-            <Search size={13} color="#94A3B8" style={{ position: 'absolute', left: '10px', top: '10px' }} />
-            <input
-              type="text"
-              placeholder="Search syllabus..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '7px 28px 7px 30px',
-                fontSize: '12px',
-                borderRadius: 'var(--radius-full)',
-                border: '1px solid #CBD5E1',
-                background: '#F8FAFC',
-                outline: 'none'
-              }}
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery('')}
-                style={{ position: 'absolute', right: '8px', top: '8px', border: 'none', background: 'transparent', cursor: 'pointer', color: '#94A3B8' }}
-              >
-                <X size={13} />
-              </button>
-            )}
-          </div>
-
-          {/* Level Filter Pills */}
-          <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
-            {['all', 'beginner', 'intermediate', 'advanced', 'lab_open'].map(lvl => (
-              <button
-                key={lvl}
-                onClick={() => setLevelFilter(lvl)}
-                style={{
-                  padding: '3px 8px',
-                  fontSize: '10px',
-                  fontWeight: 700,
-                  borderRadius: 'var(--radius-full)',
-                  border: '1px solid',
-                  borderColor: levelFilter === lvl ? '#7B1C6E' : '#E2E8F0',
-                  background: levelFilter === lvl ? 'rgba(123, 28, 110, 0.1)' : '#FFFFFF',
-                  color: levelFilter === lvl ? '#7B1C6E' : '#64748B',
-                  cursor: 'pointer',
-                  textTransform: 'capitalize'
-                }}
-              >
-                {lvl === 'all' ? 'All' : lvl === 'lab_open' ? '⚡ Lab Open' : lvl}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Topic List */}
-        {filteredCurriculum.length === 0 ? (
-          <div style={{ padding: '24px 12px', textAlign: 'center', color: '#94A3B8', fontSize: '12.5px' }}>
-            No topics matched your search filter.
-          </div>
-        ) : (
-          filteredCurriculum.map(mod => (
-            <div key={mod.id} className="module-group" style={{ marginBottom: '16px' }}>
-              <div className="module-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <span>{mod.name}</span>
-                <span style={{ fontSize: '9.5px', padding: '1px 6px', borderRadius: '4px', background: 'rgba(123, 28, 110, 0.08)', color: '#7B1C6E', fontWeight: 800 }}>
-                  {mod.level.toUpperCase()}
+      {/* =========================================================================
+          MOBILE LESSONS SLIDE-OVER SHEET DRAWER
+          ========================================================================= */}
+      {mobileLessonsOpen && (
+        <div
+          className="mobile-sheet-overlay"
+          onClick={() => setMobileLessonsOpen(false)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(15, 23, 42, 0.65)',
+            backdropFilter: 'blur(6px)',
+            zIndex: 1100,
+            animation: 'fadeIn 0.2s ease forwards'
+          }}
+        >
+          <div
+            className="mobile-sheet-drawer left-drawer"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              bottom: 0,
+              width: '88%',
+              maxWidth: '360px',
+              background: '#FFFFFF',
+              zIndex: 1101,
+              boxShadow: '10px 0 30px rgba(0, 0, 0, 0.18)',
+              display: 'flex',
+              flexDirection: 'column',
+              animation: 'slideInLeft 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards'
+            }}
+          >
+            {/* Drawer Header */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '16px 20px',
+              borderBottom: '1px solid #F1F5F9',
+              background: '#FAFAFA'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <BookOpen size={18} color="#7B1C6E" />
+                <span style={{ fontWeight: 800, fontSize: '15px', color: '#0F172A' }}>
+                  Course Syllabus ({flatTopics.length})
                 </span>
               </div>
-              {mod.filteredTopics.map(topic => {
-                const isActive = topic.topic_id === activeTopicId;
-                const isRead = !!readTopics[topic.topic_id];
-                const hasUnlockedProblem = (topic.problems || []).some(p => p.access_control?.is_active_now);
-
-                return (
-                  <div
-                    key={topic.id}
-                    className={`topic-row ${isActive ? 'active' : ''}`}
-                    onClick={() => {
-                      setActiveTopicId(topic.topic_id);
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      padding: '8px 12px',
-                      borderRadius: 'var(--radius-md)',
-                      cursor: 'pointer',
-                      background: isActive ? 'rgba(123, 28, 110, 0.08)' : 'transparent',
-                      borderLeft: isActive ? '3px solid #7B1C6E' : '3px solid transparent'
-                    }}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', overflow: 'hidden' }}>
-                      <span style={{
-                        width: '16px', height: '16px', borderRadius: '4px',
-                        border: `1.5px solid ${isRead ? '#16A34A' : '#CBD5E1'}`,
-                        background: isRead ? '#16A34A' : '#FFFFFF',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        flexShrink: 0, fontSize: '10px', color: '#FFFFFF', fontWeight: 800
-                      }}>
-                        {isRead ? '✓' : ''}
-                      </span>
-                      <span style={{
-                        fontSize: '12.5px',
-                        fontWeight: isActive ? 700 : 500,
-                        color: isActive ? '#7B1C6E' : '#0F172A',
-                        whiteSpace: 'nowrap',
-                        textOverflow: 'ellipsis',
-                        overflow: 'hidden'
-                      }}>
-                        {topic.title}
-                      </span>
-                    </div>
-
-                    {hasUnlockedProblem && (
-                      <span style={{
-                        fontSize: '9px',
-                        background: 'rgba(217, 119, 6, 0.1)',
-                        color: '#D97706',
-                        border: '1px solid rgba(217, 119, 6, 0.3)',
-                        padding: '1px 5px',
-                        borderRadius: '4px',
-                        fontWeight: 800,
-                        flexShrink: 0
-                      }}>
-                        LAB OPEN
-                      </span>
-                    )}
-                  </div>
-                );
-              })}
+              <button
+                onClick={() => setMobileLessonsOpen(false)}
+                style={{
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '50%',
+                  background: '#F1F5F9',
+                  border: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  color: '#64748B'
+                }}
+              >
+                <X size={16} />
+              </button>
             </div>
-          ))
-        )}
-      </aside>
+
+            {/* Scrollable Curriculum in Drawer */}
+            <div style={{ padding: '14px 16px', overflowY: 'auto', flex: 1 }}>
+              {renderSidebarContent(true)}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* =========================================================================
           MAIN LESSON & LABS WORKBENCH
           ========================================================================= */}
-      <main className="app-main" style={{ background: '#F8FAFC', padding: '32px' }}>
+      <main className="app-main" style={{ background: '#F8FAFC' }}>
+        {/* Mobile Sticky Lessons Bar */}
+        <div className="mobile-lessons-topbar">
+          <button
+            onClick={() => setMobileLessonsOpen(true)}
+            className="mobile-browse-lessons-btn"
+          >
+            <BookOpen size={14} /> Browse Lessons ({flatTopics.length})
+          </button>
+
+          <div className="mobile-topic-indicator">
+            <span className="mobile-topic-pill">#{activeIdx + 1}/{flatTopics.length}</span>
+            <span className="mobile-topic-name">{activeTopic?.title}</span>
+          </div>
+
+          <div className="mobile-prev-next-nav">
+            {prevTopic && (
+              <button
+                onClick={() => { setActiveTopicId(prevTopic.topic_id); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                className="mobile-nav-arrow-btn"
+                title="Previous Lesson"
+              >
+                <ArrowLeft size={13} />
+              </button>
+            )}
+            {nextTopic && (
+              <button
+                onClick={() => { setActiveTopicId(nextTopic.topic_id); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                className="mobile-nav-arrow-btn"
+                title="Next Lesson"
+              >
+                <ArrowRight size={13} />
+              </button>
+            )}
+          </div>
+        </div>
         {activeTopic ? (
           <div>
             {/* Topic Hero Header with Badges */}
