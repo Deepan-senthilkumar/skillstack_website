@@ -2445,4 +2445,58 @@ input:checked + .slider:before {
   }
 }
 
+/* ==========================================================================
+   SECURE TEST PORTAL - MOBILE & DESKTOP ANTI-CHEATING LOCKDOWN STYLES
+   ========================================================================== */
+.secure-exam-locked {
+  -webkit-touch-callout: none !important; /* iOS Safari touch long-press menu */
+  -webkit-user-select: none !important;   /* Safari / Chrome */
+  -khtml-user-select: none !important;    /* Konqueror HTML */
+  -moz-user-select: none !important;       /* Firefox */
+  -ms-user-select: none !important;        /* IE/Edge */
+  user-select: none !important;            /* Standard */
+  -webkit-tap-highlight-color: transparent !important;
+  touch-action: pan-y !important;          /* Prevent pinch-to-zoom & split-screen swipe gestures */
+}
+
+/* Mobile & Desktop Secure Code Editor */
+.secure-code-editor {
+  -webkit-touch-callout: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+.secure-code-editor::selection {
+  background: transparent !important;
+}
+
+.secure-code-editor::-moz-selection {
+  background: transparent !important;
+}
+
+/* Security Warning Floating Banner */
+.security-active-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(225, 29, 72, 0.12);
+  border: 1px solid rgba(225, 29, 72, 0.3);
+  color: #BE123C;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(0.98); }
+}
+
+.pulse-warning {
+  animation: pulse-subtle 2s infinite ease-in-out;
+}
+
+
 

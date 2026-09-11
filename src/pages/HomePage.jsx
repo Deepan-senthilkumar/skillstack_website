@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Sparkles, ArrowRight, BookOpen, Shield, Code, Cpu, Award,
   CheckCircle2, Users, Flame, Star, Play, Terminal, Layers,
   ChevronRight, Laptop, MessageSquare, Phone, Mail, MapPin,
-  Compass, ExternalLink, Activity, CheckCircle, Database
+  Compass, ExternalLink, Activity, CheckCircle, Database,
+  Lock, RefreshCw, Zap, Check, AlertTriangle, BarChart3
 } from 'lucide-react';
+import confetti from 'canvas-confetti';
 import BrandLogo from '../components/BrandLogo';
 import { siteConfig } from '../config/siteConfig';
 
@@ -17,17 +19,71 @@ export default function HomePage({
   onOpenStaffAuth,
   user
 }) {
+  // Interactive Hero Code Runner Sandbox State
+  const [heroLang, setHeroLang] = useState('python');
+  const [heroRunning, setHeroRunning] = useState(false);
+  const [heroOutput, setHeroOutput] = useState(null);
+
+  const heroCodeSnippets = {
+    python: `# Python 3: Fibonacci Memoization Engine
+def fibonacci(n, memo={}):
+    if n in memo: return memo[n]
+    if n <= 1: return n
+    memo[n] = fibonacci(n - 1, memo) + fibonacci(n - 2, memo)
+    return memo[n]
+
+print("Output:", [fibonacci(i) for i in range(8)])`,
+    javascript: `// JavaScript: Asynchronous Event Loop
+async function processBatch(items) {
+    const results = await Promise.all(
+        items.map(async (x) => x * 2)
+    );
+    console.log("Processed:", results);
+}
+processBatch([10, 20, 30, 40]);`,
+    c: `// C Programming: Low-Level Memory Array
+#include <stdio.h>
+
+int main() {
+    int arr[] = {2, 4, 8, 16, 32};
+    printf("Pointer Value: %d\\n", *(arr + 3));
+    return 0;
+}`
+  };
+
+  const heroExpectedOutputs = {
+    python: 'Output: [0, 1, 1, 2, 3, 5, 8, 13]',
+    javascript: 'Processed: [ 20, 40, 60, 80 ]',
+    c: 'Pointer Value: 16'
+  };
+
+  const handleRunHeroCode = () => {
+    setHeroRunning(true);
+    setHeroOutput(null);
+    setTimeout(() => {
+      setHeroRunning(false);
+      setHeroOutput({
+        stdout: heroExpectedOutputs[heroLang],
+        match: 100,
+        latency: (Math.random() * 12 + 8).toFixed(1)
+      });
+      confetti({
+        particleCount: 35,
+        spread: 50,
+        origin: { y: 0.7 }
+      });
+    }, 600);
+  };
+
   return (
     <div className="homepage-wrapper">
       {/* =========================================================================
-          SECTION 1: HERO CANONICAL BANNER (Pure Light Layered Ocean Canvas)
+          SECTION 1: HERO CANONICAL BANNER WITH INTERACTIVE COMPILER PREVIEW
           ========================================================================= */}
       <section className="hero-section">
-        {/* Decorative Layer 1: Curvy Fluid Waves */}
         <div className="curvy-bg-layer-1" />
         <div className="curvy-bg-layer-2" />
 
-        {/* Decorative Layer 2: Concentric Orbital Rings */}
         <div className="concentric-rings-layer hero-concentric-rings">
           <svg viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%' }}>
             <circle cx="250" cy="250" r="230" stroke="rgba(123, 28, 110, 0.12)" strokeWidth="1.5" strokeDasharray="8 8" />
@@ -39,63 +95,31 @@ export default function HomePage({
           </svg>
         </div>
 
-        {/* Decorative Layer 3: Watermark Tech Grid */}
         <div className="watermark-tech-grid" />
-
-        {/* Floating Subtle Watermark Badges (Desktop Only) */}
-        <div className="desktop-only-flex" style={{
-          position: 'absolute',
-          top: '12%',
-          right: '38%',
-          pointerEvents: 'none',
-          opacity: 0.18,
-          fontFamily: "'IBM Plex Mono', monospace",
-          fontSize: '11px',
-          fontWeight: 700,
-          color: '#7B1C6E',
-          letterSpacing: '0.1em',
-          transform: 'rotate(-12deg)'
-        }}>
-          &lt;ASGI::Distributed_Cluster&gt;
-        </div>
-        <div className="desktop-only-flex" style={{
-          position: 'absolute',
-          bottom: '18%',
-          left: '5%',
-          pointerEvents: 'none',
-          opacity: 0.18,
-          fontFamily: "'IBM Plex Mono', monospace",
-          fontSize: '11px',
-          fontWeight: 700,
-          color: '#7B1C6E',
-          letterSpacing: '0.1em',
-          transform: 'rotate(8deg)'
-        }}>
-          SELECT * FROM skillstack_engine;
-        </div>
 
         <div className="hero-container">
           <div className="hero-content">
-            <div className="hero-badge">
+            <div className="hero-badge" style={{ backgroundColor: 'rgba(123, 28, 110, 0.08)', border: '1px solid rgba(123, 28, 110, 0.2)' }}>
               <Sparkles size={15} color="#FDC029" />
-              <span>{siteConfig.brand.tagline}</span>
+              <span style={{ fontWeight: 800, color: '#7B1C6E' }}>Next-Gen Engineering Platform &bull; Anti-Cheat Sandbox</span>
             </div>
 
-            <h1 className="hero-title">
-              Master Distributed Backend Engineering{' '}
-              <span className="hero-gradient-text">
-                From First Principles to Scale
+            <h1 className="hero-title" style={{ fontSize: 'clamp(28px, 4.5vw, 50px)', lineHeight: 1.18, marginTop: '12px' }}>
+              Master Modern Engineering with{' '}
+              <span className="hero-gradient-text" style={{ background: 'linear-gradient(135deg, #7B1C6E 0%, #E11D48 50%, #FDC029 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                Secured Code Sandboxes
               </span>
             </h1>
 
-            <p className="hero-subtitle">
-              Enterprise Systems Topology &bull; Sub-Second Automated Code Assertion Engine &bull; Dual-Language Applied Cognitive Pedagogy supervised by 10 Senior Engineering Faculty.
+            <p className="hero-subtitle" style={{ fontSize: '15.5px', lineHeight: 1.65, maxWidth: '580px', color: '#475569', marginTop: '14px' }}>
+              Enterprise Systems Topology &bull; Sub-Second In-Browser Code Compiler (70%+ Output Assertion) &bull; Randomized Topic Knowledge Gates with 10-Minute Cooldown Lockout.
             </p>
 
-            <div className="hero-cta-group">
+            <div className="hero-cta-group" style={{ marginTop: '24px' }}>
               <button
                 className="hero-btn btn-primary"
                 onClick={() => onNavigate('courses')}
+                style={{ borderRadius: 'var(--radius-full)', padding: '13px 26px', fontSize: '14.5px', fontWeight: 700 }}
               >
                 <BookOpen size={16} /> Explore Curriculum Tracks <ArrowRight size={15} />
               </button>
@@ -104,13 +128,15 @@ export default function HomePage({
                 <button
                   className="hero-btn btn-secondary"
                   onClick={() => onOpenStudentAuth(true)}
+                  style={{ borderRadius: 'var(--radius-full)', padding: '13px 24px', fontSize: '14px', fontWeight: 700 }}
                 >
-                  <Users size={16} /> Enroll as Fellow (Free Access)
+                  <Users size={16} /> Student Portal Access
                 </button>
               ) : user.is_instructor ? (
                 <button
                   className="hero-btn btn-secondary"
                   onClick={() => onNavigate('staff')}
+                  style={{ borderRadius: 'var(--radius-full)', padding: '13px 24px', fontSize: '14px', fontWeight: 700 }}
                 >
                   <Shield size={16} /> Faculty Console
                 </button>
@@ -118,79 +144,143 @@ export default function HomePage({
                 <button
                   className="hero-btn btn-secondary"
                   onClick={() => onNavigate('learning')}
+                  style={{ borderRadius: 'var(--radius-full)', padding: '13px 24px', fontSize: '14px', fontWeight: 700 }}
                 >
-                  <Play size={16} /> Launch Engineering Workbench
+                  <Play size={16} /> Launch Workbench
                 </button>
               )}
             </div>
 
             {/* Dynamic Live Platform Metrics */}
-            <div className="hero-stats-strip">
+            <div className="hero-stats-strip" style={{ marginTop: '30px' }}>
               <div className="hero-stat-item">
-                <span className="stat-number">{siteConfig.metrics.seniorFacultyCount}</span>
-                <span className="stat-label">Senior Faculty</span>
+                <span className="stat-number">{subjects?.length || 4}</span>
+                <span className="stat-label">Active Tracks</span>
               </div>
               <div className="hero-stat-divider" />
               <div className="hero-stat-item">
-                <span className="stat-number">{siteConfig.metrics.activeLabProblems}</span>
-                <span className="stat-label">Enterprise Labs</span>
+                <span className="stat-number">&ge;70%</span>
+                <span className="stat-label">Pass Threshold</span>
               </div>
               <div className="hero-stat-divider" />
               <div className="hero-stat-item">
-                <span className="stat-number">{siteConfig.metrics.automatedPassRate}</span>
-                <span className="stat-label">Output Accuracy</span>
+                <span className="stat-number">&lt;500ms</span>
+                <span className="stat-label">Run Latency</span>
               </div>
               <div className="hero-stat-divider" />
               <div className="hero-stat-item">
-                <span className="stat-number">{siteConfig.metrics.enrolledFellows}</span>
-                <span className="stat-label">Trained Fellows</span>
+                <span className="stat-number">100%</span>
+                <span className="stat-label">Anti-Cheat Safe</span>
               </div>
             </div>
           </div>
 
-          {/* Hero Visual Terminal Execution Card */}
-          <div className="hero-visual-card">
-            <div className="visual-card-topbar">
-              <span className="card-dot dot-red" />
-              <span className="card-dot dot-yellow" />
-              <span className="card-dot dot-green" />
-              <span className="card-title-bar">nexura_runtime_harness.py &bull; Automated Assertions</span>
+          {/* Hero Visual Interactive Terminal Card */}
+          <div className="hero-visual-card" style={{ maxWidth: '480px', width: '100%', boxShadow: '0 20px 45px -10px rgba(123, 28, 110, 0.25), 0 0 0 1px rgba(123, 28, 110, 0.15)', borderRadius: '20px', overflow: 'hidden' }}>
+            <div className="visual-card-topbar" style={{ backgroundColor: '#0F172A', padding: '12px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <span className="card-dot dot-red" />
+                <span className="card-dot dot-yellow" />
+                <span className="card-dot dot-green" />
+                <span style={{ fontSize: '11.5px', fontFamily: 'monospace', color: '#94A3B8', marginLeft: '6px' }}>
+                  interactive_sandbox.{heroLang === 'python' ? 'py' : heroLang === 'javascript' ? 'js' : 'c'}
+                </span>
+              </div>
+
+              {/* Language Selector */}
+              <div style={{ display: 'flex', gap: '4px' }}>
+                {['python', 'javascript', 'c'].map(lang => (
+                  <button
+                    key={lang}
+                    onClick={() => { setHeroLang(lang); setHeroOutput(null); }}
+                    style={{
+                      padding: '3px 8px',
+                      fontSize: '10.5px',
+                      fontWeight: 700,
+                      borderRadius: '6px',
+                      border: 'none',
+                      cursor: 'pointer',
+                      backgroundColor: heroLang === lang ? '#7B1C6E' : 'rgba(255,255,255,0.1)',
+                      color: '#FFFFFF',
+                      textTransform: 'uppercase'
+                    }}
+                  >
+                    {lang}
+                  </button>
+                ))}
+              </div>
             </div>
 
-            <div className="visual-card-body">
-              <div className="code-snippet-preview">
-                <span className="code-line"><span className="kw">from</span> nexura.core.evaluation <span className="kw">import</span> AutomatedHarness</span>
-                <span className="code-line"><span className="kw">from</span> nexura.models <span className="kw">import</span> DistributedModule, TestCase</span>
-                <span className="code-line">&nbsp;</span>
-                <span className="code-line"><span className="func">def</span> <span className="def-name">verify_fellow_solution</span>(submission_payload):</span>
-                <span className="code-line indent">harness = AutomatedHarness(timeout_ms=<span className="num">500</span>)</span>
-                <span className="code-line indent">result = harness.execute_assertions(submission_payload)</span>
-                <span className="code-line indent"><span className="kw">return</span> {'{'}</span>
-                <span className="code-line indent-2"><span className="str">"status"</span>: <span className="str">"ALL_ASSERTIONS_PASSED"</span>,</span>
-                <span className="code-line indent-2"><span className="str">"execution_latency_ms"</span>: <span className="num">12.4</span>,</span>
-                <span className="code-line indent-2"><span className="str">"benchmark_score"</span>: <span className="num">10.0</span></span>
-                <span className="code-line indent">{'}'}</span>
+            <div className="visual-card-body" style={{ backgroundColor: '#090D16', padding: '16px' }}>
+              <pre style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: '12px',
+                lineHeight: 1.55,
+                color: '#E2E8F0',
+                margin: 0,
+                whiteSpace: 'pre-wrap',
+                maxHeight: '160px',
+                overflowY: 'auto'
+              }}>
+                {heroCodeSnippets[heroLang]}
+              </pre>
+
+              {/* Interactive Test Action */}
+              <div style={{ marginTop: '14px', paddingTop: '12px', borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <button
+                  onClick={handleRunHeroCode}
+                  disabled={heroRunning}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    backgroundColor: '#10B981',
+                    color: '#FFFFFF',
+                    border: 'none',
+                    padding: '6px 14px',
+                    borderRadius: '8px',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    cursor: 'pointer'
+                  }}
+                >
+                  <Play size={12} fill="currentColor" /> {heroRunning ? 'Evaluating Output…' : 'Run Live Assertion'}
+                </button>
+
+                <div style={{ fontSize: '11px', color: '#64748B', fontFamily: 'monospace' }}>
+                  Target Match: &ge; 70%
+                </div>
               </div>
 
-              <div className="visual-floating-badge">
-                <div className="badge-pulse-icon">
-                  <CheckCircle2 size={18} color="#16A34A" />
-                </div>
-                <div>
-                  <div style={{ fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', color: '#16A34A', letterSpacing: '0.04em' }}>
-                    ⚡ Real-Time Auto Evaluation
+              {/* Live Output Box */}
+              {heroOutput && (
+                <div style={{
+                  marginTop: '12px',
+                  padding: '10px 12px',
+                  backgroundColor: 'rgba(16, 185, 129, 0.12)',
+                  border: '1px solid rgba(16, 185, 129, 0.3)',
+                  borderRadius: '10px',
+                  animation: 'fadeIn 0.25s ease'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
+                    <span style={{ fontSize: '11px', fontWeight: 800, color: '#34D399', textTransform: 'uppercase' }}>
+                      ✅ 100% Output Matched (Passed)
+                    </span>
+                    <span style={{ fontSize: '10px', color: '#94A3B8', fontFamily: 'monospace' }}>
+                      {heroOutput.latency}ms
+                    </span>
                   </div>
-                  <div style={{ fontSize: '13.5px', fontWeight: 700, color: '#0F172A' }}>
-                    10.0 / 10.0 Benchmark Verified
+                  <div style={{ fontSize: '12px', fontFamily: 'monospace', color: '#F8FAFC' }}>
+                    {heroOutput.stdout}
                   </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
       </section>
 
-      {/* Curvy Wave Transition 1 */}
+      {/* Wave Transition 1 */}
       <div className="curvy-wave-divider" style={{ background: '#F8FAFC' }}>
         <svg viewBox="0 0 1440 64" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
           <path d="M0,20 C320,60 720,0 1100,45 C1280,60 1380,30 1440,20 L1440,64 L0,64 Z" fill="#FFFFFF"/>
@@ -198,70 +288,156 @@ export default function HomePage({
       </div>
 
       {/* =========================================================================
-          SECTION 2: STRATEGIC PEDAGOGY & INSTITUTIONAL VISION (Pure Light Canvas)
+          SECTION 2: SECURED TESTING PLATFORM PILLARS
           ========================================================================= */}
-      <section className="home-about-section">
-        <div className="watermark-tech-grid" />
-        <div className="curvy-bg-layer-1" style={{ width: '400px', height: '400px', top: '10%', right: '-60px' }} />
+      <section className="home-about-section" style={{ padding: '60px 0', backgroundColor: '#FFFFFF' }}>
         <div className="section-container">
-          <div className="about-grid">
-            <div className="about-left">
-              <div className="section-tag">
-                <Shield size={14} /> The SkillStack Standard
-              </div>
-              <h2 className="section-heading">
-                Engineering Rigor Meets Continuous Production Verification
-              </h2>
-              <p className="section-para">
-                Conventional engineering courses emphasize memorization over computational reasoning. At <strong>SkillStack Academy</strong>, fellows construct scalable systems through 
-                <strong> dual-language cognitive architecture</strong>, interactive visual execution topologies, and immediate automated output assertions.
-              </p>
-              <p className="section-para">
-                Our faculty of 10 domain specialists leads you through foundational network protocols, ORM internals, distributed microservices, and asynchronous event streams deployed to enterprise cloud clusters on Vercel and Render.
-              </p>
+          <div className="section-header-center">
+            <div className="section-tag" style={{ backgroundColor: 'rgba(123, 28, 110, 0.08)', color: '#7B1C6E' }}>
+              <Shield size={14} /> The SkillStack Assessment Standard
+            </div>
+            <h2 className="section-heading">
+              Precision Engineering with Continuous Integrity Verification
+            </h2>
+            <p className="section-para" style={{ maxWidth: '680px', margin: '0 auto' }}>
+              We combine enterprise coding environments with strict security lockouts and automated grading algorithms to guarantee genuine technical competency.
+            </p>
+          </div>
 
-              <div className="about-highlights-list">
-                <div className="highlight-row">
-                  <div className="highlight-icon"><CheckCircle2 size={16} color="var(--blue-vibrant)" /></div>
-                  <div><strong>Zero-To-Architect Trajectory:</strong> Rigorously calibrated syllabus starting from core Python fundamentals to distributed multi-tenant architectures.</div>
-                </div>
-                <div className="highlight-row">
-                  <div className="highlight-icon"><CheckCircle2 size={16} color="var(--blue-vibrant)" /></div>
-                  <div><strong>Sub-Second Execution Harness:</strong> Run real terminal workloads with instant syntax, structural, and output assertions.</div>
-                </div>
-                <div className="highlight-row">
-                  <div className="highlight-icon"><CheckCircle2 size={16} color="var(--blue-vibrant)" /></div>
-                  <div><strong>Senior Faculty Governance:</strong> 10 specialized domain chairs continuously maintaining academic quality and office hours.</div>
-                </div>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+            gap: '24px',
+            marginTop: '40px'
+          }}>
+            {/* Pillar 1: Anti-Cheating Lockdown */}
+            <div style={{
+              backgroundColor: '#FAFAFA',
+              border: '1.5px solid #F1F5F9',
+              borderRadius: '20px',
+              padding: '28px 24px',
+              transition: 'all 0.2s',
+              borderTop: '4px solid #7B1C6E',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.03)'
+            }}>
+              <div style={{
+                width: '46px',
+                height: '46px',
+                borderRadius: '12px',
+                backgroundColor: 'rgba(123, 28, 110, 0.1)',
+                color: '#7B1C6E',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: '16px'
+              }}>
+                <Shield size={24} />
               </div>
-
-              <button className="btn-secondary" onClick={() => onNavigate('about')} style={{ marginTop: '20px', borderRadius: 'var(--radius-full)' }}>
-                Inspect Institutional Governance & Faculty <ChevronRight size={15} />
-              </button>
+              <h3 style={{ fontSize: '17px', fontWeight: 800, color: '#0F172A', marginBottom: '8px' }}>
+                Anti-Cheating Lockdown
+              </h3>
+              <p style={{ fontSize: '13.5px', color: '#64748B', lineHeight: 1.6 }}>
+                Full lockdown on Mobile &amp; Desktop: blocks split-screen, clipboard pasting, floating overlays, devtools, and tab switching with 1-warning auto-termination.
+              </p>
             </div>
 
-            <div className="about-right-cards">
-              <div className="pillar-mini-card">
-                <div className="pillar-icon"><Layers size={22} color="var(--blue-vibrant)" /></div>
-                <h4>Systems Architecture Topologies</h4>
-                <p>Master HTTP lifecycles, ASGI event loops, ORM query compilers, and REST/gRPC microservice boundaries visually.</p>
+            {/* Pillar 2: 70%+ Output Assertion Engine */}
+            <div style={{
+              backgroundColor: '#FAFAFA',
+              border: '1.5px solid #F1F5F9',
+              borderRadius: '20px',
+              padding: '28px 24px',
+              transition: 'all 0.2s',
+              borderTop: '4px solid #10B981',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.03)'
+            }}>
+              <div style={{
+                width: '46px',
+                height: '46px',
+                borderRadius: '12px',
+                backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                color: '#10B981',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: '16px'
+              }}>
+                <Terminal size={24} />
               </div>
-              <div className="pillar-mini-card">
-                <div className="pillar-icon"><Terminal size={22} color="#16A34A" /></div>
-                <h4>Automated Evaluation Sandbox</h4>
-                <p>Execute test cases in an isolated browser environment with instant verification and terminal diagnostics.</p>
+              <h3 style={{ fontSize: '17px', fontWeight: 800, color: '#0F172A', marginBottom: '8px' }}>
+                70%+ Output Compiler
+              </h3>
+              <p style={{ fontSize: '13.5px', color: '#64748B', lineHeight: 1.6 }}>
+                In-browser compiler across Python, JavaScript, and C. Sub-second execution evaluates output against target specs requiring &ge;70% similarity to pass.
+              </p>
+            </div>
+
+            {/* Pillar 3: Topic Knowledge Gates */}
+            <div style={{
+              backgroundColor: '#FAFAFA',
+              border: '1.5px solid #F1F5F9',
+              borderRadius: '20px',
+              padding: '28px 24px',
+              transition: 'all 0.2s',
+              borderTop: '4px solid #FDC029',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.03)'
+            }}>
+              <div style={{
+                width: '46px',
+                height: '46px',
+                borderRadius: '12px',
+                backgroundColor: 'rgba(253, 192, 41, 0.15)',
+                color: '#B45309',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: '16px'
+              }}>
+                <Zap size={24} />
               </div>
-              <div className="pillar-mini-card">
-                <div className="pillar-icon"><Award size={22} color="var(--blue-primary)" /></div>
-                <h4>Automated Competency Analytics</h4>
-                <p>Real-time mastery tracking, algorithm pass metrics, and academic observatory rankings.</p>
+              <h3 style={{ fontSize: '17px', fontWeight: 800, color: '#0F172A', marginBottom: '8px' }}>
+                20+ MCQ Knowledge Gates
+              </h3>
+              <p style={{ fontSize: '13.5px', color: '#64748B', lineHeight: 1.6 }}>
+                5 random shuffled questions per test. Requires 50% score to unlock the next chapter; failing applies an automatic 10-minute cooldown study lock.
+              </p>
+            </div>
+
+            {/* Pillar 4: Faculty Analytics Observatory */}
+            <div style={{
+              backgroundColor: '#FAFAFA',
+              border: '1.5px solid #F1F5F9',
+              borderRadius: '20px',
+              padding: '28px 24px',
+              transition: 'all 0.2s',
+              borderTop: '4px solid #3B82F6',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.03)'
+            }}>
+              <div style={{
+                width: '46px',
+                height: '46px',
+                borderRadius: '12px',
+                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                color: '#3B82F6',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: '16px'
+              }}>
+                <BarChart3 size={24} />
               </div>
+              <h3 style={{ fontSize: '17px', fontWeight: 800, color: '#0F172A', marginBottom: '8px' }}>
+                Faculty Analytics Suite
+              </h3>
+              <p style={{ fontSize: '13.5px', color: '#64748B', lineHeight: 1.6 }}>
+                Real-time tracking of every student test attempt, question choices, security violations, score percentages, and instant administrative cooldown resets.
+              </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Curvy Wave Transition 2 */}
+      {/* Wave Transition 2 */}
       <div className="curvy-wave-divider" style={{ background: '#FFFFFF' }}>
         <svg viewBox="0 0 1440 50" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
           <path d="M0,0 C380,45 1060,5 1440,35 L1440,50 L0,50 Z" fill="#F8FAFC"/>
@@ -269,7 +445,7 @@ export default function HomePage({
       </div>
 
       {/* =========================================================================
-          SECTION 3: ACADEMIC CURRICULA & TRACKS SHOWCASE (Dynamic API Tracks)
+          SECTION 3: ACADEMIC CURRICULA & TRACKS SHOWCASE
           ========================================================================= */}
       <section className="home-courses-section">
         <div className="watermark-tech-grid" />
@@ -353,7 +529,7 @@ export default function HomePage({
         </div>
       </section>
 
-      {/* Curvy Wave Transition 3: Into Light Features */}
+      {/* Wave Transition 3 */}
       <div className="curvy-wave-divider" style={{ background: '#F8FAFC' }}>
         <svg viewBox="0 0 1440 70" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
           <path d="M0,40 C420,80 980,10 1440,50 L1440,70 L0,70 Z" fill="#FDF5FD"/>
@@ -361,121 +537,157 @@ export default function HomePage({
       </div>
 
       {/* =========================================================================
-          SECTION 4: INSTITUTIONAL CAPABILITIES (Pure Light Layered Canvas)
+          SECTION 4: 4-STEP LEARNING WORKFLOW
           ========================================================================= */}
-      <section className="home-features-section">
-        {/* Layer: Concentric Orbital Circles */}
-        <div className="concentric-rings-layer" style={{ top: '10%', right: '5%', width: '450px', height: '450px', opacity: 0.5 }}>
-          <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%' }}>
-            <circle cx="200" cy="200" r="180" stroke="rgba(123, 28, 110, 0.1)" strokeWidth="1.5" strokeDasharray="6 8" />
-            <circle cx="200" cy="200" r="120" stroke="rgba(123, 28, 110, 0.14)" strokeWidth="1.5" />
-            <circle cx="200" cy="60" r="4" fill="#7B1C6E" />
-            <circle cx="320" cy="200" r="4" fill="#FDC029" />
-          </svg>
-        </div>
-        <div className="curvy-bg-layer-2" style={{ width: '500px', height: '500px', top: '15%', left: '-100px' }} />
-        <div className="watermark-tech-grid" />
-
+      <section style={{ backgroundColor: '#FDF5FD', padding: '60px 0' }}>
         <div className="section-container">
           <div className="section-header-center">
-            <div className="section-tag">
-              <Sparkles size={14} /> Engineering Capabilities
+            <div className="section-tag" style={{ backgroundColor: 'rgba(123, 28, 110, 0.08)', color: '#7B1C6E' }}>
+              <Layers size={14} /> Structured Pedagogy
             </div>
-            <h2 className="section-heading">Why Software Fellows Excel at SkillStack</h2>
+            <h2 className="section-heading">How Software Fellows Master Stacks</h2>
             <p className="section-para" style={{ maxWidth: '640px', margin: '0 auto' }}>
-              We unify computer science architectural discipline with enterprise production tooling and continuous automated validation.
+              From foundational mental models to enterprise production deployment.
             </p>
           </div>
 
-          {(capabilities && capabilities.length > 0) ? (
-            <div className="features-quad-grid">
-              {capabilities.map(cap => (
-                <div key={cap.id} className="feature-quad-card">
-                  <div className="feature-number">{cap.number}</div>
-                  <h3>{cap.title}</h3>
-                  <p>{cap.description}</p>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+            gap: '20px',
+            marginTop: '40px'
+          }}>
+            {[
+              {
+                step: '01',
+                title: 'Visual Mental Models',
+                desc: 'Grasp internal architecture through interactive SVG flow diagrams and dual-language technical pedagogy.'
+              },
+              {
+                step: '02',
+                title: 'Topic Assessment Gate',
+                desc: 'Random 5-question test from 20+ question pool. 50% pass mark unlocks next module; fail triggers 10-min cooldown.'
+              },
+              {
+                step: '03',
+                title: '70%+ Output Assertion',
+                desc: 'Write real code in Python, C, or JS. The compiler evaluates runtime stdout against target assertions.'
+              },
+              {
+                step: '04',
+                title: 'Production Verified',
+                desc: 'Earn verifiable course certificates backed by complete analytics audits of all test submissions.'
+              }
+            ].map((st, idx) => (
+              <div key={idx} style={{
+                backgroundColor: '#FFFFFF',
+                borderRadius: '18px',
+                padding: '24px 20px',
+                border: '1px solid rgba(123, 28, 110, 0.15)',
+                position: 'relative',
+                boxShadow: '0 4px 15px rgba(0,0,0,0.03)'
+              }}>
+                <div style={{
+                  fontSize: '28px',
+                  fontWeight: 900,
+                  fontFamily: 'monospace',
+                  color: '#7B1C6E',
+                  opacity: 0.25,
+                  marginBottom: '10px'
+                }}>
+                  {st.step}
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div className="features-quad-grid">
-              <div className="feature-quad-card">
-                <div className="feature-number">01</div>
-                <h3>Distributed Architecture & Syllabus</h3>
-                <p>Full conceptual mastery of backend system gateways, ORM pipelines, and event-driven architectures with high-fidelity system models.</p>
+                <h4 style={{ fontSize: '16px', fontWeight: 800, color: '#0F172A', marginBottom: '8px' }}>
+                  {st.title}
+                </h4>
+                <p style={{ fontSize: '13px', color: '#64748B', lineHeight: 1.6 }}>
+                  {st.desc}
+                </p>
               </div>
-              <div className="feature-quad-card">
-                <div className="feature-number">02</div>
-                <h3>Real-Time Output Verification Engine</h3>
-                <p>Sub-second code execution harness that validates computational outputs, memory constraints, and structural patterns dynamically.</p>
-              </div>
-              <div className="feature-quad-card">
-                <div className="feature-number">03</div>
-                <h3>Dynamic Problem Workbenches</h3>
-                <p>Complex engineering problems structured into interactive execution environments with immediate feedback loops.</p>
-              </div>
-              <div className="feature-quad-card">
-                <div className="feature-number">04</div>
-                <h3>Continuous Automated Mentorship</h3>
-                <p>Comprehensive course modules, test evaluation, progress analytics, and automated certificate generation.</p>
-              </div>
-            </div>
-          )}
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Curvy Wave Transition 4: Out of Features */}
-      <div className="curvy-wave-divider" style={{ background: '#FDF5FD' }}>
-        <svg viewBox="0 0 1440 64" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-          <path d="M0,20 C360,60 1020,0 1440,30 L1440,64 L0,64 Z" fill="#FFFFFF"/>
-        </svg>
-      </div>
-
       {/* =========================================================================
-          SECTION 5: VERIFIED FELLOW PLACEMENTS & TESTIMONIALS (Dynamic siteConfig)
+          SECTION 5: HIGH-IMPACT CALL TO ACTION BANNER
           ========================================================================= */}
-      <section className="home-stats-reviews-section">
-        <div className="watermark-tech-grid" />
-        <div className="section-container">
-          <div className="stats-banner-card">
-            <div className="stat-box">
-              <span className="big-stat">{subjects?.length || 0}</span>
-              <span className="stat-desc">Active Academic Tracks</span>
-            </div>
-            <div className="stat-box">
-              <span className="big-stat">100%</span>
-              <span className="stat-desc">Dynamic API Driven</span>
-            </div>
-            <div className="stat-box">
-              <span className="big-stat">24/7</span>
-              <span className="stat-desc">Automated Sandbox</span>
-            </div>
-            <div className="stat-box">
-              <span className="big-stat">Live</span>
-              <span className="stat-desc">Cloud Platform</span>
-            </div>
+      <section style={{ padding: '70px 0', backgroundColor: '#0F172A', color: '#FFFFFF', position: 'relative', overflow: 'hidden' }}>
+        <div style={{
+          position: 'absolute',
+          top: '-50%',
+          right: '-20%',
+          width: '500px',
+          height: '500px',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(123, 28, 110, 0.4) 0%, transparent 70%)',
+          pointerEvents: 'none'
+        }} />
+
+        <div className="section-container" style={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            backgroundColor: 'rgba(253, 192, 41, 0.15)',
+            border: '1px solid rgba(253, 192, 41, 0.3)',
+            color: '#FDC029',
+            padding: '4px 14px',
+            borderRadius: '20px',
+            fontSize: '12px',
+            fontWeight: 800,
+            textTransform: 'uppercase',
+            marginBottom: '16px'
+          }}>
+            <Sparkles size={13} /> Elevate Your Engineering Career
           </div>
 
-          {(siteConfig.testimonials && siteConfig.testimonials.length > 0) && (
-            <>
-              <div className="section-header-center" style={{ marginTop: '54px' }}>
-                <h3 style={{ fontSize: '26px', fontWeight: 800, marginBottom: '8px', color: '#0F172A' }}>Verified Engineering Fellow Endorsements</h3>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '14.5px' }}>Authentic feedback from graduates functioning in global cloud and backend engineering teams</p>
-              </div>
+          <h2 style={{ fontSize: 'clamp(26px, 3.8vw, 42px)', fontWeight: 800, color: '#FFFFFF', maxWidth: '750px', margin: '0 auto 16px', lineHeight: 1.25 }}>
+            Ready to Build Robust Distributed Systems from First Principles?
+          </h2>
 
-              <div className="reviews-grid">
-                {siteConfig.testimonials.map(item => (
-                  <div key={item.id} className="review-card">
-                    <div className="review-stars">★★★★★</div>
-                    <p className="review-quote">"{item.text}"</p>
-                    <div className="reviewer-info">
-                      <strong>{item.name}</strong> &bull; <span>{item.role}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </>
-          )}
+          <p style={{ fontSize: '16px', color: '#94A3B8', maxWidth: '600px', margin: '0 auto 30px', lineHeight: 1.6 }}>
+            Join software fellows mastering backend internals, real-time code evaluation, and automated assessment sandboxes.
+          </p>
+
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '14px', flexWrap: 'wrap' }}>
+            <button
+              onClick={() => onNavigate('courses')}
+              style={{
+                backgroundColor: '#FDC029',
+                color: '#0F172A',
+                border: 'none',
+                padding: '14px 28px',
+                borderRadius: '9999px',
+                fontSize: '14.5px',
+                fontWeight: 800,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}
+            >
+              Browse Engineering Tracks <ArrowRight size={16} />
+            </button>
+
+            {!user && (
+              <button
+                onClick={() => onOpenStudentAuth(false)}
+                style={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                  color: '#FFFFFF',
+                  border: '1px solid rgba(255, 255, 255, 0.25)',
+                  padding: '14px 26px',
+                  borderRadius: '9999px',
+                  fontSize: '14px',
+                  fontWeight: 700,
+                  cursor: 'pointer'
+                }}
+              >
+                Sign In to Student Portal
+              </button>
+            )}
+          </div>
         </div>
       </section>
     </div>

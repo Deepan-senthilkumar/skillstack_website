@@ -363,6 +363,22 @@ class ApiClient {
     });
   }
 
+  // Topic Quiz & Secured Knowledge Gate (Student)
+  async startTopicQuiz(topicId) {
+    return this.request(`/curriculum/topics/${topicId}/quiz/start/`);
+  }
+
+  async submitTopicQuiz(topicId, payload) {
+    return this.request(`/curriculum/topics/${topicId}/quiz/submit/`, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  async getMyTopicProgress() {
+    return this.request('/my-topic-progress/');
+  }
+
   // Subject Management (Staff / Admin)
   async createSubject(data) {
     return this.request('/staff/subjects/', {
@@ -386,3 +402,4 @@ class ApiClient {
 }
 
 export const api = new ApiClient();
+
