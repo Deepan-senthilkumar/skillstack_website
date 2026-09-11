@@ -3,16 +3,20 @@ import {
   CheckCircle2, Lock, Unlock, Clock, ArrowRight, ArrowLeft,
   Copy, Check, Award, Play, Sparkles, BookOpen, Layers, Code,
   Terminal, Search, Filter, Edit3, Save, Zap, X, HelpCircle,
-  ExternalLink, RotateCcw, CheckCircle, FileText
+  ExternalLink, RotateCcw, CheckCircle, FileText, Shield, AlertTriangle
 } from 'lucide-react';
 import CountdownTimer from '../components/CountdownTimer';
 import ProblemWorkbenchModal from '../components/ProblemWorkbenchModal';
+import SecureQuizModal from '../components/SecureQuizModal';
 import RichContentRenderer from '../components/RichContentRenderer';
+import { api } from '../api';
 
 export default function StudentPortal({ curriculum, user, onRefresh, currentSubject, onBackToCourses }) {
   const [activeTopicId, setActiveTopicId] = useState(null);
   const [copiedIndex, setCopiedIndex] = useState(null);
   const [selectedProblem, setSelectedProblem] = useState(null);
+  const [secureQuizTopic, setSecureQuizTopic] = useState(null);
+  const [topicProgressMap, setTopicProgressMap] = useState({});
   const [activeTab, setActiveTab] = useState('notes_content'); // 'notes_content' | 'code' | 'notes' | 'labs'
   const [mobileLessonsOpen, setMobileLessonsOpen] = useState(false);
   
@@ -45,6 +49,51 @@ export default function StudentPortal({ curriculum, user, onRefresh, currentSubj
     });
   });
 
+  // Fetch student topic progress from backend
+  const loadTopicProgress = async () => {
+    if (!user) return;
+    try {
+      const data = await api.getMyTopicProgress();
+      const map = {};
+      const list = Array.isArray(data) ? data : (data?.results || []);
+      list.forEach(p => {
+        if (p.topic) {
+          map[String(p.topic)] = p;
+        }
+      });
+      setTopicProgressMap(map);
+    } catch (e) {
+      console.warn('Failed to load topic progress records', e);
+    }
+  };
+
+  useEffect(() => {
+    loadTopicProgress();
+  }, [user, currentSubject?.id]);
+
+  // Real-time cooldown countdown ticker
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTopicProgressMap(prev => {
+        let changed = false;
+        const next = { ...prev };
+        Object.keys(next).forEach(k => {
+          if (next[k]?.cooldown_seconds_remaining > 0) {
+            const rem = next[k].cooldown_seconds_remaining - 1;
+            next[k] = {
+              ...next[k],
+              cooldown_seconds_remaining: rem,
+              is_in_cooldown: rem > 0
+            };
+            changed = true;
+          }
+        });
+        return changed ? next : prev;
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
   // Set default active topic on initial load
   useEffect(() => {
     if (flatTopics.length > 0) {
@@ -58,6 +107,11 @@ export default function StudentPortal({ curriculum, user, onRefresh, currentSubj
   const activeIdx = flatTopics.findIndex(t => t.topic_id === activeTopicId);
   const prevTopic = activeIdx > 0 ? flatTopics[activeIdx - 1] : null;
   const nextTopic = activeIdx < flatTopics.length - 1 ? flatTopics[activeIdx + 1] : null;
+
+  // Active topic progress data
+  const activeProgress = activeTopic ? (topicProgressMap[String(activeTopic.id)] || activeTopic.user_progress) : null;
+  const isTopicCompleted = Boolean(activeProgress?.is_completed || (activeTopic && readTopics[activeTopic.topic_id]));
+  const isTopicInCooldown = Boolean(activeProgress?.is_in_cooldown && activeProgress?.cooldown_seconds_remaining > 0);
 
   // Load saved notes when topic changes
   useEffect(() => {
@@ -86,10 +140,8 @@ export default function StudentPortal({ curriculum, user, onRefresh, currentSubj
     saveNotes(notes + template);
   };
 
-  const toggleTopicRead = (tid) => {
-    const updated = { ...readTopics, [tid]: !readTopics[tid] };
-    setReadTopics(updated);
-    localStorage.setItem('kalari_read_topics', JSON.stringify(updated));
+  const handleStartTopicAssessment = (topicObj) => {
+    setSecureQuizTopic(topicObj);
   };
 
   const copyCode = (code, idx) => {
@@ -142,7 +194,10 @@ export default function StudentPortal({ curriculum, user, onRefresh, currentSubj
     return { ...mod, filteredTopics: matchingTopics };
   }).filter(mod => mod.filteredTopics.length > 0);
 
-  const completedCount = flatTopics.filter(t => readTopics[t.topic_id]).length;
+  const completedCount = flatTopics.filter(t => {
+    const p = topicProgressMap[String(t.id)] || t.user_progress;
+    return p?.is_completed || readTopics[t.topic_id];
+  }).length;
   const progressPct = flatTopics.length > 0 ? Math.round((completedCount / flatTopics.length) * 100) : 0;
 
   // Render Sidebar Content (Shared between Desktop Sidebar and Mobile Sheet Drawer)
@@ -265,8 +320,10 @@ export default function StudentPortal({ curriculum, user, onRefresh, currentSubj
             </div>
             {mod.filteredTopics.map(topic => {
               const isActive = topic.topic_id === activeTopicId;
-              const isRead = !!readTopics[topic.topic_id];
-              const hasUnlockedProblem = (topic.problems || []).some(p => p.access_control?.is_active_now);
+              const p = topicProgressMap[String(topic.id)] || topic.user_progress;
+              const isRead = Boolean(p?.is_completed || readTopics[topic.topic_id]);
+              const inCooldown = Boolean(p?.is_in_cooldown && p?.cooldown_seconds_remaining > 0);
+              const hasUnlockedProblem = (topic.problems || []).some(pr => pr.access_control?.is_active_now);
 
               return (
                 <div
@@ -291,12 +348,12 @@ export default function StudentPortal({ curriculum, user, onRefresh, currentSubj
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', overflow: 'hidden' }}>
                     <span style={{
                       width: '16px', height: '16px', borderRadius: '4px',
-                      border: `1.5px solid ${isRead ? '#16A34A' : '#CBD5E1'}`,
-                      background: isRead ? '#16A34A' : '#FFFFFF',
+                      border: `1.5px solid ${isRead ? '#16A34A' : inCooldown ? '#D97706' : '#CBD5E1'}`,
+                      background: isRead ? '#16A34A' : inCooldown ? '#FEF3C7' : '#FFFFFF',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      flexShrink: 0, fontSize: '10px', color: '#FFFFFF', fontWeight: 800
+                      flexShrink: 0, fontSize: '10px', color: isRead ? '#FFFFFF' : '#D97706', fontWeight: 800
                     }}>
-                      {isRead ? '✓' : ''}
+                      {isRead ? '✓' : inCooldown ? '⏳' : ''}
                     </span>
                     <span style={{
                       fontSize: '12.5px',
@@ -310,20 +367,36 @@ export default function StudentPortal({ curriculum, user, onRefresh, currentSubj
                     </span>
                   </div>
 
-                  {hasUnlockedProblem && (
-                    <span style={{
-                      fontSize: '9px',
-                      background: 'rgba(217, 119, 6, 0.1)',
-                      color: '#D97706',
-                      border: '1px solid rgba(217, 119, 6, 0.3)',
-                      padding: '1px 5px',
-                      borderRadius: '4px',
-                      fontWeight: 800,
-                      flexShrink: 0
-                    }}>
-                      LAB OPEN
-                    </span>
-                  )}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    {inCooldown && (
+                      <span style={{
+                        fontSize: '9px',
+                        background: 'rgba(217, 119, 6, 0.1)',
+                        color: '#D97706',
+                        padding: '1px 5px',
+                        borderRadius: '4px',
+                        fontWeight: 800,
+                        fontFamily: 'monospace'
+                      }}>
+                        {Math.floor(p.cooldown_seconds_remaining / 60)}m
+                      </span>
+                    )}
+
+                    {hasUnlockedProblem && (
+                      <span style={{
+                        fontSize: '9px',
+                        background: 'rgba(217, 119, 6, 0.1)',
+                        color: '#D97706',
+                        border: '1px solid rgba(217, 119, 6, 0.3)',
+                        padding: '1px 5px',
+                        borderRadius: '4px',
+                        fontWeight: 800,
+                        flexShrink: 0
+                      }}>
+                        LAB OPEN
+                      </span>
+                    )}
+                  </div>
                 </div>
               );
             })}
@@ -506,22 +579,81 @@ export default function StudentPortal({ curriculum, user, onRefresh, currentSubj
                     <Zap size={13} /> Cheat Sheet
                   </button>
 
-                  <button
-                    className={`btn-secondary ${readTopics[activeTopic.topic_id] ? 'active-read' : ''}`}
-                    onClick={() => toggleTopicRead(activeTopic.topic_id)}
-                    style={{
-                      fontSize: '12px',
-                      fontWeight: 700,
-                      padding: '6px 14px',
-                      borderRadius: 'var(--radius-full)',
-                      borderColor: readTopics[activeTopic.topic_id] ? '#16A34A' : '#CBD5E1',
-                      color: readTopics[activeTopic.topic_id] ? '#16A34A' : '#0F172A',
-                      background: readTopics[activeTopic.topic_id] ? 'rgba(22, 163, 74, 0.08)' : '#FFFFFF'
-                    }}
-                  >
-                    <CheckCircle2 size={14} color={readTopics[activeTopic.topic_id] ? '#16A34A' : 'currentColor'} />
-                    {readTopics[activeTopic.topic_id] ? 'Completed' : 'Mark Complete'}
-                  </button>
+                  {isTopicCompleted ? (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <span
+                        style={{
+                          fontSize: '12px',
+                          fontWeight: 800,
+                          padding: '6px 14px',
+                          borderRadius: 'var(--radius-full)',
+                          border: '1.5px solid #16A34A',
+                          color: '#166534',
+                          background: 'rgba(22, 163, 74, 0.1)',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '6px'
+                        }}
+                      >
+                        <CheckCircle2 size={14} color="#16A34A" /> Passed &amp; Completed
+                      </span>
+                      <button
+                        className="btn-secondary"
+                        onClick={() => handleStartTopicAssessment(activeTopic)}
+                        style={{
+                          fontSize: '11px',
+                          fontWeight: 700,
+                          padding: '5px 10px',
+                          borderRadius: 'var(--radius-full)',
+                          color: '#64748B'
+                        }}
+                        title="Retake 5-question assessment"
+                      >
+                        Retake
+                      </button>
+                    </div>
+                  ) : isTopicInCooldown ? (
+                    <div
+                      style={{
+                        fontSize: '12px',
+                        fontWeight: 800,
+                        padding: '6px 14px',
+                        borderRadius: 'var(--radius-full)',
+                        border: '1.5px solid #F59E0B',
+                        color: '#92400E',
+                        background: '#FEF3C7',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        fontFamily: 'monospace'
+                      }}
+                    >
+                      <Clock size={13} />
+                      <span>Cooldown: {Math.floor(activeProgress.cooldown_seconds_remaining / 60)}m {activeProgress.cooldown_seconds_remaining % 60}s</span>
+                    </div>
+                  ) : (
+                    <button
+                      className="btn-primary"
+                      onClick={() => handleStartTopicAssessment(activeTopic)}
+                      style={{
+                        fontSize: '12px',
+                        fontWeight: 800,
+                        padding: '7px 16px',
+                        borderRadius: 'var(--radius-full)',
+                        background: 'linear-gradient(135deg, #7B1C6E 0%, #4338CA 100%)',
+                        color: '#FFFFFF',
+                        border: 'none',
+                        boxShadow: '0 4px 12px rgba(123, 28, 110, 0.25)',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      <Shield size={13} />
+                      <span>Take 5-Q Test (Mark Complete)</span>
+                    </button>
+                  )}
                 </div>
               </div>
 
@@ -959,24 +1091,64 @@ export default function StudentPortal({ curriculum, user, onRefresh, currentSubj
                 </button>
               ) : <div />}
 
-              <button
-                className="btn-primary"
-                onClick={() => {
-                  toggleTopicRead(activeTopic.topic_id);
-                  if (nextTopic) {
-                    setActiveTopicId(nextTopic.topic_id);
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }
-                }}
-                style={{
-                  borderRadius: 'var(--radius-full)',
-                  padding: '9px 22px',
-                  fontSize: '13px',
-                  background: 'linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%)'
-                }}
-              >
-                <CheckCircle2 size={15} /> Mark Done & Continue to Next Topic
-              </button>
+              {isTopicCompleted ? (
+                <button
+                  className="btn-primary"
+                  onClick={() => {
+                    if (nextTopic) {
+                      setActiveTopicId(nextTopic.topic_id);
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                  }}
+                  style={{
+                    borderRadius: 'var(--radius-full)',
+                    padding: '9px 22px',
+                    fontSize: '13px',
+                    background: 'linear-gradient(135deg, #16A34A 0%, #059669 100%)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}
+                >
+                  <CheckCircle2 size={15} /> Topic Passed &bull; Continue to Next
+                </button>
+              ) : isTopicInCooldown ? (
+                <button
+                  className="btn-secondary"
+                  disabled
+                  style={{
+                    borderRadius: 'var(--radius-full)',
+                    padding: '9px 22px',
+                    fontSize: '13px',
+                    backgroundColor: '#FEF3C7',
+                    borderColor: '#F59E0B',
+                    color: '#92400E',
+                    cursor: 'not-allowed',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    fontFamily: 'monospace'
+                  }}
+                >
+                  <Clock size={15} /> Cooldown: {Math.floor(activeProgress.cooldown_seconds_remaining / 60)}m {activeProgress.cooldown_seconds_remaining % 60}s
+                </button>
+              ) : (
+                <button
+                  className="btn-primary"
+                  onClick={() => handleStartTopicAssessment(activeTopic)}
+                  style={{
+                    borderRadius: 'var(--radius-full)',
+                    padding: '9px 22px',
+                    fontSize: '13px',
+                    background: 'linear-gradient(135deg, #7B1C6E 0%, #4338CA 100%)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}
+                >
+                  <Shield size={15} /> Take 5-Q Assessment (Mark Done)
+                </button>
+              )}
 
               {nextTopic && (
                 <button
@@ -999,8 +1171,6 @@ export default function StudentPortal({ curriculum, user, onRefresh, currentSubj
         )}
       </main>
 
-
-
       {/* Problem Workbench Modal */}
       {selectedProblem && (
         <ProblemWorkbenchModal
@@ -1008,6 +1178,32 @@ export default function StudentPortal({ curriculum, user, onRefresh, currentSubj
           onClose={() => setSelectedProblem(null)}
           onSubmitted={() => {
             setSelectedProblem(null);
+            if (onRefresh) onRefresh();
+          }}
+        />
+      )}
+
+      {/* Secure Topic Quiz Assessment Modal */}
+      {secureQuizTopic && (
+        <SecureQuizModal
+          topic={secureQuizTopic}
+          onClose={() => setSecureQuizTopic(null)}
+          onPassed={(res) => {
+            setTopicProgressMap(prev => ({
+              ...prev,
+              [String(secureQuizTopic.id)]: {
+                is_completed: true,
+                attempts_count: (prev[String(secureQuizTopic.id)]?.attempts_count || 0) + 1,
+                last_score: res.score,
+                last_percentage: res.percentage,
+                is_in_cooldown: false,
+                cooldown_seconds_remaining: 0
+              }
+            }));
+            const updated = { ...readTopics, [secureQuizTopic.topic_id]: true };
+            setReadTopics(updated);
+            localStorage.setItem('kalari_read_topics', JSON.stringify(updated));
+            loadTopicProgress();
             if (onRefresh) onRefresh();
           }}
         />
