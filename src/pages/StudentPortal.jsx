@@ -542,7 +542,7 @@ export default function StudentPortal({ curriculum, user, onRefresh, currentSubj
               marginBottom: '28px'
             }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', marginBottom: '12px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '12px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '12px', flexWrap: 'wrap' }}>
                   <span style={{
                     padding: '3px 10px',
                     borderRadius: 'var(--radius-full)',
@@ -666,37 +666,37 @@ export default function StudentPortal({ curriculum, user, onRefresh, currentSubj
             </div>
 
             {/* Content Tabs */}
-            <div className="content-tabs" style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '24px' }}>
+            <div className="content-tabs">
               <button
                 className={`content-tab-btn ${activeTab === 'notes_content' ? 'active' : ''}`}
                 onClick={() => setActiveTab('notes_content')}
-                style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '9px 18px', borderRadius: 'var(--radius-full)', fontSize: '13px', fontWeight: 700 }}
               >
-                <BookOpen size={14} color="#D97706" /> Study Notes
+                <BookOpen size={14} color={activeTab === 'notes_content' ? '#FFFFFF' : '#D97706'} />
+                <span>Study Notes</span>
               </button>
 
               <button
                 className={`content-tab-btn ${activeTab === 'code' ? 'active' : ''}`}
                 onClick={() => setActiveTab('code')}
-                style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '9px 18px', borderRadius: 'var(--radius-full)', fontSize: '13px', fontWeight: 700 }}
               >
-                <Code size={14} color="#7B1C6E" /> Practical Code ({activeTopic.examples?.length || 0})
+                <Code size={14} color={activeTab === 'code' ? '#FFFFFF' : '#7B1C6E'} />
+                <span>Practical Code ({activeTopic.examples?.length || 0})</span>
               </button>
 
               <button
                 className={`content-tab-btn ${activeTab === 'notes' ? 'active' : ''}`}
                 onClick={() => setActiveTab('notes')}
-                style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '9px 18px', borderRadius: 'var(--radius-full)', fontSize: '13px', fontWeight: 700 }}
               >
-                <Edit3 size={14} color="#8B5CF6" /> My Notes
+                <Edit3 size={14} color={activeTab === 'notes' ? '#FFFFFF' : '#8B5CF6'} />
+                <span>My Notes</span>
               </button>
 
               <button
                 className={`content-tab-btn ${activeTab === 'labs' ? 'active' : ''}`}
                 onClick={() => setActiveTab('labs')}
-                style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '9px 18px', borderRadius: 'var(--radius-full)', fontSize: '13px', fontWeight: 700 }}
               >
-                <Layers size={14} color="#16A34A" /> Practice Labs ({activeTopic.problems?.length || 0})
+                <Layers size={14} color={activeTab === 'labs' ? '#FFFFFF' : '#16A34A'} />
+                <span>Practice Labs ({activeTopic.problems?.length || 0})</span>
               </button>
             </div>
 

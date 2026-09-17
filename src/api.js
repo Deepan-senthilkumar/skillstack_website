@@ -209,13 +209,14 @@ class ApiClient {
     });
   }
 
-  async testRunCode(problemId, code, language = 'python', expectedOutput = '') {
+  async testRunCode(problemId, code, language = 'python', expectedOutput = '', customInput = null) {
     return this.request(`/problems/${problemId}/test-run/`, {
       method: 'POST',
       body: JSON.stringify({
         code,
         language,
         expected_output: expectedOutput,
+        custom_input: customInput,
       }),
     });
   }

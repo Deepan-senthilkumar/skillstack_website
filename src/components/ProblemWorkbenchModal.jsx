@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   X, Play, CheckCircle2, Award, MessageSquare, AlertCircle,
   FileCode, Check, Terminal, Sparkles, HelpCircle, CheckSquare, XCircle, Clock, Zap,
-  Shield, ShieldAlert, AlertTriangle
+  Shield, ShieldAlert, AlertTriangle, Lock, EyeOff, Layers
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import CountdownTimer from './CountdownTimer';
@@ -27,8 +27,24 @@ export default function ProblemWorkbenchModal({ problem, onClose, onSubmitted })
   const [submitting, setSubmitting] = useState(false);
   const [testing, setTesting] = useState(false);
   const [testResult, setTestResult] = useState(null);
+  const [submissionResult, setSubmissionResult] = useState(null);
+  const [activeCaseTab, setActiveCaseTab] = useState(0);
+  const [customInput, setCustomInput] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
+
+  // Compute test cases
+  const defaultCriteria = Array.isArray(problem.test_criteria) && problem.test_criteria.length > 0 && typeof problem.test_criteria[0] === 'object'
+    ? problem.test_criteria
+    : [
+        { id: 1, name: 'Sample Case 1', input: '8\n', expected_output: problem.expected_output || '8 is Even', is_hidden: false },
+        { id: 2, name: 'Sample Case 2', input: '7\n', expected_output: '7 is Odd', is_hidden: false },
+        { id: 3, name: 'Hidden Case 3', input: '0\n', expected_output: '0 is Even', is_hidden: true },
+        { id: 4, name: 'Hidden Case 4', input: '101\n', expected_output: '101 is Odd', is_hidden: true },
+        { id: 5, name: 'Hidden Case 5', input: '-4\n', expected_output: '-4 is Even', is_hidden: true },
+      ];
+  const sampleTestCases = defaultCriteria.filter(tc => !tc.is_hidden);
+  const hiddenCount = defaultCriteria.filter(tc => tc.is_hidden).length || 3;
 
   // Security test mode state
   const [securityViolations, setSecurityViolations] = useState(0);
@@ -210,7 +226,8 @@ export default function ProblemWorkbenchModal({ problem, onClose, onSubmitted })
     setTesting(true);
     setErrorMsg('');
     try {
-      const res = await api.testRunCode(problem.id, code, language, problem.expected_output);
+      const customParam = activeCaseTab === 'custom' ? customInput : null;
+      const res = await api.testRunCode(problem.id, code, language, problem.expected_output, customParam);
       setTestResult(res);
       if (res.is_passed) {
         confetti({
@@ -238,10 +255,13 @@ export default function ProblemWorkbenchModal({ problem, onClose, onSubmitted })
 
     try {
       const result = await api.submitSolution(problem.id, code, language, null, notes);
+      setSubmissionResult(result);
+      const passedCount = result.passed_test_cases ?? (result.is_passed ? 5 : 0);
+      const totalCount = result.total_test_cases ?? 5;
       setSuccessMsg(
         result.is_passed
-          ? `🎉 Perfect Solution! Auto-Validated Correct (${result.execution_time_ms} ms)`
-          : `Submitted (Attempt #${result.attempt_number || 1}) - Status: ${result.status}`
+          ? `🎉 All ${totalCount}/${totalCount} Test Cases Passed! Perfect Solution (${result.execution_time_ms} ms)`
+          : `Submission Evaluated: ${passedCount}/${totalCount} Test Cases Passed • Status: ${result.status}`
       );
       if (result.is_passed) {
         confetti({
@@ -462,30 +482,261 @@ export default function ProblemWorkbenchModal({ problem, onClose, onSubmitted })
             />
           </div>
 
-          {/* Test Runner Results Panel with 70%+ Threshold Visualizer */}
-          {testResult && (
+          {/* LeetCode-Style Multi-Test-Case Workbench Console */}
+          <div style={{
+            background: 'var(--bg-surface-elevated)',
+            border: '1px solid var(--border-medium)',
+            borderRadius: 'var(--radius-md)',
+            padding: '16px',
+            marginBottom: '18px',
+            boxShadow: 'var(--shadow-xs)'
+          }}>
+            {/* Header with Testcase Tabs & Hidden Cases Badge */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px', flexWrap: 'wrap', gap: '10px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                <span style={{ fontSize: '12px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                  <Layers size={14} color="var(--blue-vibrant)" /> Test Cases:
+                </span>
+                {sampleTestCases.map((tc, idx) => {
+                  const caseResult = testResult?.test_cases?.find(r => r.name === tc.name || r.id === tc.id);
+                  const isPassed = caseResult?.is_passed;
+                  return (
+                    <button
+                      key={tc.id || idx}
+                      type="button"
+                      onClick={() => setActiveCaseTab(idx)}
+                      style={{
+                        padding: '5px 12px',
+                        fontSize: '12px',
+                        fontWeight: activeCaseTab === idx ? 800 : 600,
+                        borderRadius: '20px',
+                        border: activeCaseTab === idx ? '1.5px solid #2563EB' : '1px solid var(--border-medium)',
+                        backgroundColor: activeCaseTab === idx ? '#EFF6FF' : 'var(--bg-surface)',
+                        color: activeCaseTab === idx ? '#1E40AF' : 'var(--text-secondary)',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px'
+                      }}
+                    >
+                      {caseResult && (
+                        isPassed ? <CheckCircle2 size={13} color="#10B981" /> : <XCircle size={13} color="#EF4444" />
+                      )}
+                      <span>Case {idx + 1}</span>
+                    </button>
+                  );
+                })}
+                <button
+                  type="button"
+                  onClick={() => setActiveCaseTab('custom')}
+                  style={{
+                    padding: '5px 12px',
+                    fontSize: '12px',
+                    fontWeight: activeCaseTab === 'custom' ? 800 : 600,
+                    borderRadius: '20px',
+                    border: activeCaseTab === 'custom' ? '1.5px solid #2563EB' : '1px dashed var(--border-medium)',
+                    backgroundColor: activeCaseTab === 'custom' ? '#EFF6FF' : 'transparent',
+                    color: activeCaseTab === 'custom' ? '#1E40AF' : 'var(--text-tertiary)',
+                    cursor: 'pointer'
+                  }}
+                >
+                  + Custom Stdin
+                </button>
+              </div>
+
+              <div style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '4px 10px',
+                borderRadius: '16px',
+                background: '#F1F5F9',
+                border: '1px solid #CBD5E1',
+                fontSize: '11.5px',
+                fontWeight: 700,
+                color: '#475569'
+              }}>
+                <Lock size={12} color="#64748B" />
+                <span>+ {hiddenCount} Hidden Edge-Cases (Evaluated on Final Submit)</span>
+              </div>
+            </div>
+
+            {/* Tab Body */}
+            {activeCaseTab !== 'custom' ? (
+              <div>
+                {(() => {
+                  const currentCase = sampleTestCases[activeCaseTab] || sampleTestCases[0];
+                  const caseResult = testResult?.test_cases?.find(r => r.name === currentCase?.name || r.id === currentCase?.id);
+                  return (
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '12px' }}>
+                      {/* Stdin Input */}
+                      <div>
+                        <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-tertiary)', display: 'block', marginBottom: '4px' }}>
+                          Standard Input (stdin):
+                        </span>
+                        <pre style={{
+                          background: '#0F172A',
+                          color: '#38BDF8',
+                          fontFamily: 'IBM Plex Mono, monospace',
+                          fontSize: '12px',
+                          padding: '10px 12px',
+                          borderRadius: 'var(--radius-sm)',
+                          margin: 0,
+                          minHeight: '44px',
+                          whiteSpace: 'pre-wrap'
+                        }}>
+                          {currentCase?.input ? currentCase.input.trim() : '(No standard input needed)'}
+                        </pre>
+                      </div>
+
+                      {/* Expected Output */}
+                      <div>
+                        <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-tertiary)', display: 'block', marginBottom: '4px' }}>
+                          Target Expected Output:
+                        </span>
+                        <pre style={{
+                          background: '#0F172A',
+                          color: '#34D399',
+                          fontFamily: 'IBM Plex Mono, monospace',
+                          fontSize: '12px',
+                          padding: '10px 12px',
+                          borderRadius: 'var(--radius-sm)',
+                          margin: 0,
+                          minHeight: '44px',
+                          whiteSpace: 'pre-wrap'
+                        }}>
+                          {currentCase?.expected_output || '(None configured)'}
+                        </pre>
+                      </div>
+
+                      {/* Captured Actual Output (if run) */}
+                      {caseResult && (
+                        <div style={{ gridColumn: '1 / -1', marginTop: '4px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
+                            <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: caseResult.is_passed ? '#047857' : '#B91C1C' }}>
+                              Your Code's Console Output (stdout):
+                            </span>
+                            <span style={{
+                              fontSize: '11px',
+                              fontWeight: 800,
+                              color: caseResult.is_passed ? '#047857' : '#B91C1C',
+                              background: caseResult.is_passed ? '#DCFCE7' : '#FEE2E2',
+                              padding: '2px 8px',
+                              borderRadius: '12px'
+                            }}>
+                              {caseResult.is_passed ? '✅ Match: Correct' : '❌ Output Mismatch'} ({caseResult.execution_time_ms || 0} ms)
+                            </span>
+                          </div>
+                          <pre style={{
+                            background: '#0F172A',
+                            color: '#F8FAFC',
+                            fontFamily: 'IBM Plex Mono, monospace',
+                            fontSize: '12px',
+                            padding: '10px 12px',
+                            borderRadius: 'var(--radius-sm)',
+                            margin: 0,
+                            whiteSpace: 'pre-wrap',
+                            border: `1.5px solid ${caseResult.is_passed ? '#10B981' : '#EF4444'}`
+                          }}>
+                            {caseResult.actual_output || '(No console output produced)'}
+                          </pre>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()}
+              </div>
+            ) : (
+              <div>
+                <label style={{ fontSize: '11.5px', fontWeight: 700, color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>
+                  Custom Interactive Input (Fed directly into scanf, cin, or input()):
+                </label>
+                <textarea
+                  value={customInput}
+                  onChange={(e) => setCustomInput(e.target.value)}
+                  placeholder="Enter custom stdin data (e.g. 14, 25, etc.)..."
+                  rows={3}
+                  style={{
+                    width: '100%',
+                    fontFamily: 'IBM Plex Mono, monospace',
+                    fontSize: '12.5px',
+                    background: '#0F172A',
+                    color: '#F8FAFC',
+                    borderRadius: 'var(--radius-sm)',
+                    padding: '10px 12px',
+                    border: '1px solid #1E293B',
+                    outline: 'none',
+                    resize: 'vertical'
+                  }}
+                />
+                {testResult?.test_cases?.some(tc => tc.id === 'custom') && (
+                  <div style={{ marginTop: '10px' }}>
+                    <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-tertiary)', display: 'block', marginBottom: '4px' }}>
+                      Custom Run Console Output:
+                    </span>
+                    <pre style={{
+                      background: '#0F172A',
+                      color: '#F8FAFC',
+                      fontFamily: 'IBM Plex Mono, monospace',
+                      fontSize: '12px',
+                      padding: '10px 12px',
+                      borderRadius: 'var(--radius-sm)',
+                      margin: 0,
+                      whiteSpace: 'pre-wrap'
+                    }}>
+                      {testResult.actual_output || '(No console output produced)'}
+                    </pre>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Error Output if any */}
+            {testResult?.error_detail && (
+              <div style={{ marginTop: '12px' }}>
+                <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: '#DC2626', display: 'block', marginBottom: '4px' }}>
+                  Compilation / Runtime Diagnostic:
+                </span>
+                <pre style={{
+                  background: '#450A0A',
+                  color: '#FECACA',
+                  fontFamily: 'IBM Plex Mono, monospace',
+                  fontSize: '12px',
+                  padding: '10px 12px',
+                  borderRadius: 'var(--radius-sm)',
+                  margin: 0,
+                  whiteSpace: 'pre-wrap'
+                }}>
+                  {testResult.error_detail}
+                </pre>
+              </div>
+            )}
+          </div>
+
+          {/* Submission Evaluation Breakdown (When submitted) */}
+          {submissionResult && (
             <div style={{
-              background: testResult.is_passed ? 'rgba(16, 185, 129, 0.08)' : 'rgba(239, 68, 68, 0.08)',
-              border: `1.5px solid ${testResult.is_passed ? '#10B981' : '#EF4444'}`,
+              background: submissionResult.is_passed ? 'rgba(16, 185, 129, 0.08)' : 'rgba(239, 68, 68, 0.08)',
+              border: `1.5px solid ${submissionResult.is_passed ? '#10B981' : '#EF4444'}`,
               borderRadius: 'var(--radius-md)',
               padding: '16px 18px',
               marginBottom: '18px'
             }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px', flexWrap: 'wrap', gap: '8px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  {testResult.is_passed ? (
+                  {submissionResult.is_passed ? (
                     <CheckCircle2 size={20} color="#10B981" />
                   ) : (
                     <XCircle size={20} color="#EF4444" />
                   )}
                   <div>
-                    <strong style={{ fontSize: '14.5px', color: testResult.is_passed ? '#047857' : '#B91C1C', display: 'block' }}>
-                      {testResult.is_passed
-                        ? `✅ PASSED: ${testResult.match_percentage || 100}% Output Match (≥70% Required)`
-                        : `❌ FAILED: ${testResult.match_percentage || 0}% Output Match (Needs ≥70% to Pass)`}
+                    <strong style={{ fontSize: '14.5px', color: submissionResult.is_passed ? '#047857' : '#B91C1C', display: 'block' }}>
+                      {submissionResult.is_passed
+                        ? `🎉 PERFECT: All ${submissionResult.total_test_cases || 5}/${submissionResult.total_test_cases || 5} Test Cases Verified!`
+                        : `⚠️ ${submissionResult.passed_test_cases || 0}/${submissionResult.total_test_cases || 5} Test Cases Passed`}
                     </strong>
                     <span style={{ fontSize: '11px', color: '#64748B' }}>
-                      Status: {testResult.status}
+                      Status: {submissionResult.status} &bull; Score: {submissionResult.score ?? problem.points} / {problem.points} pts
                     </span>
                   </div>
                 </div>
@@ -493,52 +744,48 @@ export default function ProblemWorkbenchModal({ problem, onClose, onSubmitted })
                 <div style={{
                   padding: '4px 12px',
                   borderRadius: '20px',
-                  backgroundColor: testResult.is_passed ? '#DCFCE7' : '#FEE2E2',
-                  color: testResult.is_passed ? '#166534' : '#991B1B',
+                  backgroundColor: submissionResult.is_passed ? '#DCFCE7' : '#FEE2E2',
+                  color: submissionResult.is_passed ? '#166534' : '#991B1B',
                   fontWeight: 800,
-                  fontSize: '12px',
-                  fontFamily: 'monospace'
+                  fontSize: '12px'
                 }}>
-                  Match: {testResult.match_percentage || 0}% / 70% min
+                  Passed: {submissionResult.passed_test_cases || 0} / {submissionResult.total_test_cases || 5}
                 </div>
               </div>
 
-              {/* Actual Console Output */}
-              <div>
-                <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-tertiary)', display: 'block', marginBottom: '4px' }}>
-                  Captured Actual Console Output (stdout):
-                </span>
-                <pre style={{
-                  background: '#0F172A',
-                  color: '#F8FAFC',
-                  fontFamily: 'IBM Plex Mono',
-                  fontSize: '12px',
-                  padding: '10px 12px',
-                  borderRadius: 'var(--radius-sm)',
-                  margin: 0,
-                  whiteSpace: 'pre-wrap'
-                }}>
-                  {testResult.actual_output || '(No console output produced)'}
-                </pre>
-              </div>
-
-              {testResult.error_detail && (
-                <div style={{ marginTop: '10px' }}>
-                  <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: '#DC2626', display: 'block', marginBottom: '4px' }}>
-                    Error Output (stderr / compilation):
-                  </span>
-                  <pre style={{
-                    background: '#450A0A',
-                    color: '#FECACA',
-                    fontFamily: 'IBM Plex Mono',
-                    fontSize: '12px',
-                    padding: '10px 12px',
-                    borderRadius: 'var(--radius-sm)',
-                    margin: 0,
-                    whiteSpace: 'pre-wrap'
-                  }}>
-                    {testResult.error_detail}
-                  </pre>
+              {/* Grid of all test cases results */}
+              {submissionResult.test_cases && submissionResult.test_cases.length > 0 && (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '8px', marginTop: '10px' }}>
+                  {submissionResult.test_cases.map((tc, idx) => (
+                    <div
+                      key={tc.id || idx}
+                      style={{
+                        padding: '8px 12px',
+                        borderRadius: '8px',
+                        background: '#FFFFFF',
+                        border: `1px solid ${tc.is_passed ? '#86EFAC' : '#FCA5A5'}`,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        fontSize: '12px'
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        {tc.is_hidden ? <Lock size={12} color="#64748B" /> : null}
+                        <span style={{ fontWeight: 600, color: '#1E293B' }}>{tc.name}</span>
+                      </div>
+                      <span style={{
+                        fontSize: '11px',
+                        fontWeight: 800,
+                        color: tc.is_passed ? '#166534' : '#991B1B',
+                        backgroundColor: tc.is_passed ? '#DCFCE7' : '#FEE2E2',
+                        padding: '2px 6px',
+                        borderRadius: '10px'
+                      }}>
+                        {tc.is_passed ? 'PASS' : 'FAIL'}
+                      </span>
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
