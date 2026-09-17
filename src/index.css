@@ -364,41 +364,43 @@ button, input, select, textarea {
 }
 
 /* Section Navigation Tabs */
+/* Section Navigation Tabs */
 .content-tabs {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
-  margin-bottom: 28px;
-  background: #FFFFFF;
-  padding: 4px;
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border-subtle);
-  width: fit-content;
-  box-shadow: var(--shadow-sm);
+  margin-bottom: 24px;
+  width: 100%;
+  max-width: 100%;
 }
 
 .content-tab-btn {
   padding: 9px 18px;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-full);
   font-size: 13px;
-  font-weight: 600;
-  border: none;
-  background: transparent;
+  font-weight: 700;
+  border: 1.5px solid rgba(123, 28, 110, 0.15);
+  background: #FFFFFF;
   color: var(--text-secondary);
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
-  transition: all 0.2s;
+  gap: 7px;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
 }
 
 .content-tab-btn:hover {
-  color: var(--text-primary);
+  color: #7B1C6E;
+  border-color: rgba(123, 28, 110, 0.35);
+  background: rgba(123, 28, 110, 0.03);
 }
 
 .content-tab-btn.active {
-  background: var(--blue-gradient);
+  background: linear-gradient(135deg, #7B1C6E 0%, #D97706 100%);
   color: #FFFFFF;
-  box-shadow: 0 4px 14px var(--blue-glow);
+  border-color: transparent;
+  box-shadow: 0 4px 14px rgba(123, 28, 110, 0.3);
 }
 
 /* Architecture Flow Diagram Container */
@@ -2372,14 +2374,19 @@ input:checked + .slider:before {
     font-size: 22px !important;
   }
 
-  /* Content Tabs on Mobile */
+  /* Content Tabs on Mobile - 2x2 Clean Balanced Responsive Grid */
   .content-tabs {
-    flex-wrap: nowrap !important;
-    overflow-x: auto !important;
-    padding-bottom: 6px !important;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    gap: 6px !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+    margin-bottom: 20px !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
   }
 
   .content-tabs::-webkit-scrollbar {
@@ -2387,10 +2394,23 @@ input:checked + .slider:before {
   }
 
   .content-tab-btn {
-    padding: 8px 14px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    padding: 10px 8px !important;
     font-size: 12px !important;
+    font-weight: 700 !important;
     white-space: nowrap !important;
-    flex-shrink: 0 !important;
+    text-align: center !important;
+    box-sizing: border-box !important;
+    border-radius: var(--radius-full) !important;
+    gap: 5px !important;
+  }
+
+  .explain-card {
+    padding: 20px 16px !important;
+    border-radius: 20px !important;
   }
 
   /* Catalog / Hero Banners on Mobile */
