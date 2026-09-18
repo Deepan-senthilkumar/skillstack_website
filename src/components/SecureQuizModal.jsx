@@ -159,11 +159,12 @@ export default function SecureQuizModal({ topic, onClose, onPassed }) {
       if (isMobile) {
         // Mobile split-screen (top/bottom or side-by-side) or floating pop-up view
         const activeEl = document.activeElement;
-        const isInputFocused = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA');
+        const isInputFocused = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA' || activeEl.isContentEditable);
 
+        // On mobile, keyboard opening or URL bar hide/show shrinks window height
         const isMobileSplit =
-          window.innerWidth < screenW * 0.78 ||
-          (!isInputFocused && window.innerHeight < screenH * 0.60);
+          window.innerWidth < screenW * 0.62 ||
+          (!isInputFocused && window.innerHeight < screenH * 0.45);
 
         if (isMobileSplit) {
           handleSecurityInfraction('Mobile Split-Screen / Floating Pop-up Window detected');
@@ -171,8 +172,8 @@ export default function SecureQuizModal({ topic, onClose, onPassed }) {
       } else {
         // Desktop split-screen
         const isSplitScreen =
-          window.innerWidth < (screenW * 0.72) ||
-          window.innerHeight < (screenH * 0.65);
+          window.innerWidth < (screenW * 0.68) ||
+          window.innerHeight < (screenH * 0.58);
 
         if (isSplitScreen) {
           handleSecurityInfraction('Split-screen / Multi-window or window resize detected');
@@ -571,9 +572,19 @@ export default function SecureQuizModal({ topic, onClose, onPassed }) {
                 justifyContent: 'space-between',
                 marginBottom: '20px',
                 paddingBottom: '16px',
-                borderBottom: '1px solid #E2E8F0'
+                borderBottom: '1px solid #E2E8F0',
+                flexWrap: 'wrap',
+                gap: '12px'
               }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  overflowX: 'auto',
+                  maxWidth: '100%',
+                  paddingBottom: '4px',
+                  WebkitOverflowScrolling: 'touch'
+                }}>
                   {questions.map((q, idx) => {
                     const isAnswered = Boolean(answers[String(q.id)]);
                     const isCurrent = idx === currentQuestionIdx;
@@ -582,8 +593,8 @@ export default function SecureQuizModal({ topic, onClose, onPassed }) {
                         key={q.id || idx}
                         onClick={() => setCurrentQuestionIdx(idx)}
                         style={{
-                          width: '32px',
-                          height: '32px',
+                          width: '34px',
+                          height: '34px',
                           borderRadius: '10px',
                           border: isCurrent ? '2px solid #7B1C6E' : '1px solid #CBD5E1',
                           backgroundColor: isCurrent ? '#7B1C6E' : isAnswered ? '#DCFCE7' : '#FFFFFF',
@@ -594,7 +605,8 @@ export default function SecureQuizModal({ topic, onClose, onPassed }) {
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
-                          transition: 'all 0.15s ease'
+                          transition: 'all 0.15s ease',
+                          flexShrink: 0
                         }}
                       >
                         {idx + 1}
@@ -603,7 +615,7 @@ export default function SecureQuizModal({ topic, onClose, onPassed }) {
                   })}
                 </div>
 
-                <div style={{ fontSize: '12px', fontWeight: 700, color: '#64748B' }}>
+                <div style={{ fontSize: '12px', fontWeight: 700, color: '#64748B', whiteSpace: 'nowrap' }}>
                   Answered: <strong style={{ color: '#0F172A' }}>{answeredCount} / {questions.length}</strong>
                 </div>
               </div>
@@ -700,7 +712,13 @@ export default function SecureQuizModal({ topic, onClose, onPassed }) {
               </div>
 
               {/* Bottom Actions */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                flexWrap: 'wrap',
+                gap: '12px'
+              }}>
                 <button
                   onClick={() => setCurrentQuestionIdx(prev => Math.max(0, prev - 1))}
                   disabled={currentQuestionIdx === 0}
@@ -708,17 +726,19 @@ export default function SecureQuizModal({ topic, onClose, onPassed }) {
                   style={{
                     display: 'flex',
                     alignItems: 'center',
+                    justifyContent: 'center',
                     gap: '6px',
                     padding: '9px 18px',
                     borderRadius: '12px',
                     fontSize: '12.5px',
+                    minHeight: '44px',
                     opacity: currentQuestionIdx === 0 ? 0.4 : 1
                   }}
                 >
                   <ArrowLeft size={14} /> Previous
                 </button>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
                   {currentQuestionIdx < questions.length - 1 ? (
                     <button
                       onClick={() => setCurrentQuestionIdx(prev => Math.min(questions.length - 1, prev + 1))}
@@ -726,10 +746,12 @@ export default function SecureQuizModal({ topic, onClose, onPassed }) {
                       style={{
                         display: 'flex',
                         alignItems: 'center',
+                        justifyContent: 'center',
                         gap: '6px',
                         padding: '9px 18px',
                         borderRadius: '12px',
-                        fontSize: '12.5px'
+                        fontSize: '12.5px',
+                        minHeight: '44px'
                       }}
                     >
                       Next <ArrowRight size={14} />
@@ -743,13 +765,15 @@ export default function SecureQuizModal({ topic, onClose, onPassed }) {
                     style={{
                       display: 'flex',
                       alignItems: 'center',
+                      justifyContent: 'center',
                       gap: '6px',
                       padding: '9px 24px',
                       borderRadius: '12px',
                       fontSize: '13px',
                       fontWeight: 800,
                       backgroundColor: '#16A34A',
-                      borderColor: '#16A34A'
+                      borderColor: '#16A34A',
+                      minHeight: '44px'
                     }}
                   >
                     {submitting ? <RefreshCw size={14} className="animate-spin" /> : <Check size={14} />}

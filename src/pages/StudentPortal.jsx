@@ -1067,99 +1067,73 @@ export default function StudentPortal({ curriculum, user, onRefresh, currentSubj
             </section>
           )}
 
-            {/* Bottom Topic Navigation with Completion Checklist */}
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              gap: '16px',
-              marginTop: '50px',
-              paddingTop: '24px',
-              borderTop: '1px solid var(--border-subtle)',
-              flexWrap: 'wrap'
-            }}>
+            {/* freeCodeCamp-Style Step-by-Step Bottom Navigation */}
+            <div className="fcc-bottom-nav">
               {prevTopic ? (
                 <button
-                  className="btn-secondary"
+                  className="fcc-nav-btn prev"
                   onClick={() => {
                     setActiveTopicId(prevTopic.topic_id);
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
-                  style={{ borderRadius: 'var(--radius-full)', padding: '9px 18px', fontSize: '13px' }}
+                  title={`Previous: ${prevTopic.title}`}
                 >
-                  <ArrowLeft size={14} /> Previous: {prevTopic.title}
+                  <ArrowLeft size={14} />
+                  <span>Prev Lesson</span>
                 </button>
               ) : <div />}
 
               {isTopicCompleted ? (
                 <button
-                  className="btn-primary"
+                  className="fcc-nav-btn next"
                   onClick={() => {
                     if (nextTopic) {
                       setActiveTopicId(nextTopic.topic_id);
                       window.scrollTo({ top: 0, behavior: 'smooth' });
                     }
                   }}
-                  style={{
-                    borderRadius: 'var(--radius-full)',
-                    padding: '9px 22px',
-                    fontSize: '13px',
-                    background: 'linear-gradient(135deg, #16A34A 0%, #059669 100%)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px'
-                  }}
+                  style={{ background: 'linear-gradient(135deg, #16A34A 0%, #059669 100%)' }}
                 >
-                  <CheckCircle2 size={15} /> Topic Passed &bull; Continue to Next
+                  <CheckCircle2 size={15} />
+                  <span>Topic Passed &bull; Next Challenge</span>
+                  <ArrowRight size={14} />
                 </button>
               ) : isTopicInCooldown ? (
                 <button
-                  className="btn-secondary"
+                  className="fcc-nav-btn action"
                   disabled
                   style={{
-                    borderRadius: 'var(--radius-full)',
-                    padding: '9px 22px',
-                    fontSize: '13px',
                     backgroundColor: '#FEF3C7',
                     borderColor: '#F59E0B',
                     color: '#92400E',
                     cursor: 'not-allowed',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
                     fontFamily: 'monospace'
                   }}
                 >
-                  <Clock size={15} /> Cooldown: {Math.floor(activeProgress.cooldown_seconds_remaining / 60)}m {activeProgress.cooldown_seconds_remaining % 60}s
+                  <Clock size={15} />
+                  <span>Cooldown: {Math.floor(activeProgress.cooldown_seconds_remaining / 60)}m {activeProgress.cooldown_seconds_remaining % 60}s</span>
                 </button>
               ) : (
                 <button
-                  className="btn-primary"
+                  className="fcc-nav-btn next"
                   onClick={() => handleStartTopicAssessment(activeTopic)}
-                  style={{
-                    borderRadius: 'var(--radius-full)',
-                    padding: '9px 22px',
-                    fontSize: '13px',
-                    background: 'linear-gradient(135deg, #7B1C6E 0%, #4338CA 100%)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px'
-                  }}
                 >
-                  <Shield size={15} /> Take 5-Q Assessment (Mark Done)
+                  <Shield size={15} />
+                  <span>Take 5-Q Test (Mark Complete)</span>
                 </button>
               )}
 
               {nextTopic && (
                 <button
-                  className="btn-secondary"
+                  className="fcc-nav-btn prev"
                   onClick={() => {
                     setActiveTopicId(nextTopic.topic_id);
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
-                  style={{ borderRadius: 'var(--radius-full)', padding: '9px 18px', fontSize: '13px' }}
+                  title={`Next: ${nextTopic.title}`}
                 >
-                  Next: {nextTopic.title} <ArrowRight size={14} />
+                  <span>Next Lesson</span>
+                  <ArrowRight size={14} />
                 </button>
               )}
             </div>
