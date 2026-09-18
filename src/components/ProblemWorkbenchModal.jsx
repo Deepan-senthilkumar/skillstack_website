@@ -102,11 +102,13 @@ export default function ProblemWorkbenchModal({ problem, onClose, onSubmitted })
       if (isMobile) {
         // Mobile split-screen (top/bottom or side-by-side) or floating pop-up view
         const activeEl = document.activeElement;
-        const isInputFocused = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA');
+        const isInputFocused = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA' || activeEl.isContentEditable);
 
+        // On mobile, keyboard opening dramatically shrinks innerHeight (by 40-50%+)
+        // True mobile split screen (Samsung / Android split) splits screen width or drops height below 45% without an active input
         const isMobileSplit =
-          window.innerWidth < screenW * 0.78 ||
-          (!isInputFocused && window.innerHeight < screenH * 0.60);
+          window.innerWidth < screenW * 0.62 ||
+          (!isInputFocused && window.innerHeight < screenH * 0.45);
 
         if (isMobileSplit) {
           handleSecurityInfraction('Mobile Split-Screen / Floating Pop-up Window detected');
@@ -114,8 +116,8 @@ export default function ProblemWorkbenchModal({ problem, onClose, onSubmitted })
       } else {
         // Desktop split-screen
         const isSplitScreen =
-          window.innerWidth < (screenW * 0.72) ||
-          window.innerHeight < (screenH * 0.65);
+          window.innerWidth < (screenW * 0.68) ||
+          window.innerHeight < (screenH * 0.58);
 
         if (isSplitScreen) {
           handleSecurityInfraction('Split-screen / Dual window or window resize detected');
@@ -493,8 +495,8 @@ export default function ProblemWorkbenchModal({ problem, onClose, onSubmitted })
           }}>
             {/* Header with Testcase Tabs & Hidden Cases Badge */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px', flexWrap: 'wrap', gap: '10px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                <span style={{ fontSize: '12px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '5px' }}>
+              <div className="test-case-tabs-scroll" style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0, maxWidth: '100%', overflowX: 'auto', paddingBottom: '4px' }}>
+                <span style={{ fontSize: '12px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '5px', flexShrink: 0 }}>
                   <Layers size={14} color="var(--blue-vibrant)" /> Test Cases:
                 </span>
                 {sampleTestCases.map((tc, idx) => {
@@ -516,7 +518,9 @@ export default function ProblemWorkbenchModal({ problem, onClose, onSubmitted })
                         cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '6px'
+                        gap: '6px',
+                        flexShrink: 0,
+                        minHeight: '32px'
                       }}
                     >
                       {caseResult && (
@@ -537,7 +541,9 @@ export default function ProblemWorkbenchModal({ problem, onClose, onSubmitted })
                     border: activeCaseTab === 'custom' ? '1.5px solid #2563EB' : '1px dashed var(--border-medium)',
                     backgroundColor: activeCaseTab === 'custom' ? '#EFF6FF' : 'transparent',
                     color: activeCaseTab === 'custom' ? '#1E40AF' : 'var(--text-tertiary)',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    flexShrink: 0,
+                    minHeight: '32px'
                   }}
                 >
                   + Custom Stdin
@@ -805,8 +811,8 @@ export default function ProblemWorkbenchModal({ problem, onClose, onSubmitted })
         </div>
 
         {/* Footer */}
-        <div className="modal-footer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '10px', padding: '14px 20px', borderTop: '1px solid var(--border-subtle)' }}>
-          <button type="button" className="btn-secondary" onClick={onClose}>
+        <div className="modal-footer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '10px', padding: '14px 20px', borderTop: '1px solid var(--border-subtle)', flexWrap: 'wrap' }}>
+          <button type="button" className="btn-secondary" onClick={onClose} style={{ minHeight: '44px', padding: '8px 18px' }}>
             Close
           </button>
           <button
@@ -814,7 +820,7 @@ export default function ProblemWorkbenchModal({ problem, onClose, onSubmitted })
             className="btn-primary"
             onClick={handleSubmit}
             disabled={submitting || !canSubmit}
-            style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', minHeight: '44px', padding: '8px 20px' }}
           >
             <Sparkles size={15} /> {submitting ? 'Auto-Grading…' : 'Submit for Auto-Validation'}
           </button>

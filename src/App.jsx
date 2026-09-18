@@ -29,16 +29,23 @@ export default function App() {
   const [authModalRegister, setAuthModalRegister] = useState(false);
   const [postAuthCallback, setPostAuthCallback] = useState(null);
 
+  const [isServerWaking, setIsServerWaking] = useState(false);
+
   // Fetch all active subjects
   const fetchSubjects = async () => {
+    const wakingTimer = setTimeout(() => setIsServerWaking(true), 2500);
     try {
       const data = await api.getSubjects();
+      clearTimeout(wakingTimer);
+      setIsServerWaking(false);
       setSubjects(data);
       if (data.length > 0 && !selectedSubject) {
         const djangoSub = data.find(s => s.slug === 'django-fullstack') || data[0];
         setSelectedSubject(djangoSub);
       }
     } catch (err) {
+      clearTimeout(wakingTimer);
+      setIsServerWaking(false);
       console.error('Error fetching subjects', err);
     }
   };
@@ -47,8 +54,10 @@ export default function App() {
     setLoadingCurriculum(true);
     try {
       const slug = subjectSlug || (selectedSubject ? selectedSubject.slug : '');
-      const data = await api.getCurriculum(slug);
-      setCurriculum(data);
+      if (slug) {
+        const data = await api.getCurriculum(slug);
+        setCurriculum(data);
+      }
     } catch (err) {
       console.error('Error fetching curriculum', err);
     } finally {
@@ -84,9 +93,12 @@ export default function App() {
     return () => window.removeEventListener('auth:logout', handleLogoutEvent);
   }, []);
 
+  // Only load detailed curriculum when user actually visits the curriculum, course detail or learning page
   useEffect(() => {
-    if (selectedSubject) fetchCurriculum(selectedSubject.slug);
-  }, [selectedSubject]);
+    if (selectedSubject && ['curriculum', 'course-detail', 'learning'].includes(currentPage)) {
+      fetchCurriculum(selectedSubject.slug);
+    }
+  }, [selectedSubject, currentPage]);
 
   const handleLogout = () => {
     api.clearTokens();
@@ -159,6 +171,29 @@ export default function App() {
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg-main)', color: 'var(--text-primary)' }}>
+      {isServerWaking && (
+        <div style={{
+          position: 'fixed',
+          top: '14px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 99999,
+          background: 'linear-gradient(135deg, #7B1C6E 0%, #A82596 100%)',
+          color: '#FFFFFF',
+          padding: '8px 18px',
+          borderRadius: '999px',
+          boxShadow: '0 8px 24px rgba(123, 28, 110, 0.35)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+          fontSize: '12.5px',
+          fontWeight: 600,
+          pointerEvents: 'none'
+        }}>
+          <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: '#FDC029' }} />
+          ⚡ Server is waking up from standby (Render free tier)... Please wait a moment.
+        </div>
+      )}
       <Navbar
         user={user}
         currentPage={currentPage}
