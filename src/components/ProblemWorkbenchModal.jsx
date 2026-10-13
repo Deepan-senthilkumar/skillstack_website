@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   X, Play, CheckCircle2, Award, MessageSquare, AlertCircle,
   FileCode, Check, Terminal, Sparkles, HelpCircle, CheckSquare, XCircle, Clock, Zap,
-  Shield, ShieldAlert, AlertTriangle, Lock, EyeOff, Layers
+  Shield, ShieldAlert, AlertTriangle, Lock, EyeOff, Layers, Plus, Trash2
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import CountdownTimer from './CountdownTimer';
@@ -30,6 +30,8 @@ export default function ProblemWorkbenchModal({ problem, onClose, onSubmitted })
   const [submissionResult, setSubmissionResult] = useState(null);
   const [activeCaseTab, setActiveCaseTab] = useState(0);
   const [customInput, setCustomInput] = useState('');
+  const [customExpectedOutput, setCustomExpectedOutput] = useState('');
+  const [customTestCases, setCustomTestCases] = useState([]);
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
 
@@ -45,6 +47,26 @@ export default function ProblemWorkbenchModal({ problem, onClose, onSubmitted })
       ];
   const sampleTestCases = defaultCriteria.filter(tc => !tc.is_hidden);
   const hiddenCount = defaultCriteria.filter(tc => tc.is_hidden).length || 3;
+
+  const handleAddCustomTestCase = () => {
+    const nextNum = sampleTestCases.length + customTestCases.length + 1;
+    const newCase = {
+      id: `custom_${Date.now()}`,
+      name: `Case ${nextNum} (Custom)`,
+      input: customInput || '',
+      expected_output: customExpectedOutput || ''
+    };
+    setCustomTestCases(prev => [...prev, newCase]);
+    setActiveCaseTab(newCase.id);
+  };
+
+  const handleRemoveCustomTestCase = (caseId, e) => {
+    if (e && e.stopPropagation) e.stopPropagation();
+    setCustomTestCases(prev => prev.filter(c => c.id !== caseId));
+    if (activeCaseTab === caseId) {
+      setActiveCaseTab(0);
+    }
+  };
 
   // Security test mode state
   const [securityViolations, setSecurityViolations] = useState(0);
@@ -228,8 +250,37 @@ export default function ProblemWorkbenchModal({ problem, onClose, onSubmitted })
     setTesting(true);
     setErrorMsg('');
     try {
-      const customParam = activeCaseTab === 'custom' ? customInput : null;
-      const res = await api.testRunCode(problem.id, code, language, problem.expected_output, customParam);
+      let customParam = null;
+      let targetExpected = problem.expected_output || '';
+      let customExpected = null;
+
+      if (activeCaseTab === 'custom') {
+        customParam = customInput;
+        customExpected = customExpectedOutput.trim() ? customExpectedOutput : null;
+        targetExpected = customExpectedOutput.trim() ? customExpectedOutput : '';
+      } else if (typeof activeCaseTab === 'string' && activeCaseTab.startsWith('custom_')) {
+        const found = customTestCases.find(c => c.id === activeCaseTab);
+        if (found) {
+          customParam = found.input;
+          customExpected = found.expected_output?.trim() ? found.expected_output : null;
+          targetExpected = found.expected_output || '';
+        }
+      } else if (typeof activeCaseTab === 'number') {
+        const curCase = sampleTestCases[activeCaseTab];
+        if (curCase) {
+          customParam = curCase.input || null;
+          targetExpected = curCase.expected_output || problem.expected_output || '';
+        }
+      }
+
+      const res = await api.testRunCode(
+        problem.id,
+        code,
+        language,
+        targetExpected,
+        customParam,
+        customExpected
+      );
       setTestResult(res);
       if (res.is_passed) {
         confetti({
@@ -530,23 +581,69 @@ export default function ProblemWorkbenchModal({ problem, onClose, onSubmitted })
                     </button>
                   );
                 })}
+
+                {/* User-created Custom Test Cases */}
+                {customTestCases.map((ctc, idx) => {
+                  const caseNum = sampleTestCases.length + idx + 1;
+                  const caseResult = testResult?.test_cases?.find(r => r.id === 'custom' || r.id === ctc.id);
+                  const isPassed = caseResult?.is_passed;
+                  return (
+                    <button
+                      key={ctc.id}
+                      type="button"
+                      onClick={() => setActiveCaseTab(ctc.id)}
+                      style={{
+                        padding: '5px 12px',
+                        fontSize: '12px',
+                        fontWeight: activeCaseTab === ctc.id ? 800 : 600,
+                        borderRadius: '20px',
+                        border: activeCaseTab === ctc.id ? '1.5px solid #7B1C6E' : '1px solid var(--border-medium)',
+                        backgroundColor: activeCaseTab === ctc.id ? 'rgba(123, 28, 110, 0.08)' : 'var(--bg-surface)',
+                        color: activeCaseTab === ctc.id ? '#7B1C6E' : 'var(--text-secondary)',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        flexShrink: 0,
+                        minHeight: '32px'
+                      }}
+                    >
+                      {caseResult && (
+                        isPassed ? <CheckCircle2 size={13} color="#10B981" /> : <XCircle size={13} color="#EF4444" />
+                      )}
+                      <span>Case {caseNum} (Custom)</span>
+                      <span
+                        onClick={(e) => handleRemoveCustomTestCase(ctc.id, e)}
+                        title="Remove custom case"
+                        style={{ marginLeft: '3px', opacity: 0.6, fontSize: '13px' }}
+                      >
+                        &times;
+                      </span>
+                    </button>
+                  );
+                })}
+
                 <button
                   type="button"
                   onClick={() => setActiveCaseTab('custom')}
                   style={{
-                    padding: '5px 12px',
+                    padding: '5px 14px',
                     fontSize: '12px',
-                    fontWeight: activeCaseTab === 'custom' ? 800 : 600,
+                    fontWeight: activeCaseTab === 'custom' ? 800 : 700,
                     borderRadius: '20px',
-                    border: activeCaseTab === 'custom' ? '1.5px solid #2563EB' : '1px dashed var(--border-medium)',
-                    backgroundColor: activeCaseTab === 'custom' ? '#EFF6FF' : 'transparent',
-                    color: activeCaseTab === 'custom' ? '#1E40AF' : 'var(--text-tertiary)',
+                    border: activeCaseTab === 'custom' ? '1.5px solid #2563EB' : '1.5px dashed var(--blue-border)',
+                    backgroundColor: activeCaseTab === 'custom' ? '#EFF6FF' : 'rgba(37, 99, 235, 0.04)',
+                    color: activeCaseTab === 'custom' ? '#1E40AF' : 'var(--blue-vibrant)',
                     cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '5px',
                     flexShrink: 0,
                     minHeight: '32px'
                   }}
                 >
-                  + Custom Stdin
+                  <Plus size={13} />
+                  <span>+ Custom Stdin &amp; Output</span>
                 </button>
               </div>
 
@@ -568,7 +665,7 @@ export default function ProblemWorkbenchModal({ problem, onClose, onSubmitted })
             </div>
 
             {/* Tab Body */}
-            {activeCaseTab !== 'custom' ? (
+            {typeof activeCaseTab === 'number' ? (
               <div>
                 {(() => {
                   const currentCase = sampleTestCases[activeCaseTab] || sampleTestCases[0];
@@ -652,34 +749,196 @@ export default function ProblemWorkbenchModal({ problem, onClose, onSubmitted })
                   );
                 })()}
               </div>
+            ) : typeof activeCaseTab === 'string' && activeCaseTab.startsWith('custom_') ? (
+              <div>
+                {(() => {
+                  const curCustom = customTestCases.find(c => c.id === activeCaseTab);
+                  const caseResult = testResult?.test_cases?.find(r => r.id === 'custom' || r.id === curCustom?.id);
+                  return (
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '12px' }}>
+                      <div>
+                        <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-tertiary)', display: 'block', marginBottom: '4px' }}>
+                          Custom Input (stdin):
+                        </span>
+                        <pre style={{
+                          background: '#0F172A',
+                          color: '#38BDF8',
+                          fontFamily: 'IBM Plex Mono, monospace',
+                          fontSize: '12px',
+                          padding: '10px 12px',
+                          borderRadius: 'var(--radius-sm)',
+                          margin: 0,
+                          minHeight: '44px',
+                          whiteSpace: 'pre-wrap'
+                        }}>
+                          {curCustom?.input || '(Empty)'}
+                        </pre>
+                      </div>
+
+                      <div>
+                        <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-tertiary)', display: 'block', marginBottom: '4px' }}>
+                          Custom Expected Output:
+                        </span>
+                        <pre style={{
+                          background: '#0F172A',
+                          color: '#34D399',
+                          fontFamily: 'IBM Plex Mono, monospace',
+                          fontSize: '12px',
+                          padding: '10px 12px',
+                          borderRadius: 'var(--radius-sm)',
+                          margin: 0,
+                          minHeight: '44px',
+                          whiteSpace: 'pre-wrap'
+                        }}>
+                          {curCustom?.expected_output || '(No assertion target configured)'}
+                        </pre>
+                      </div>
+
+                      {caseResult && (
+                        <div style={{ gridColumn: '1 / -1', marginTop: '4px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
+                            <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: caseResult.is_passed ? '#047857' : '#B91C1C' }}>
+                              Console Output Produced (stdout):
+                            </span>
+                            <span style={{
+                              fontSize: '11px',
+                              fontWeight: 800,
+                              color: caseResult.is_passed ? '#047857' : '#B91C1C',
+                              background: caseResult.is_passed ? '#DCFCE7' : '#FEE2E2',
+                              padding: '2px 8px',
+                              borderRadius: '12px'
+                            }}>
+                              {curCustom?.expected_output?.trim()
+                                ? (caseResult.is_passed ? '✅ Match: Correct' : '❌ Output Mismatch')
+                                : '✅ Executed Successfully'} ({caseResult.execution_time_ms || 0} ms)
+                            </span>
+                          </div>
+                          <pre style={{
+                            background: '#0F172A',
+                            color: '#F8FAFC',
+                            fontFamily: 'IBM Plex Mono, monospace',
+                            fontSize: '12px',
+                            padding: '10px 12px',
+                            borderRadius: 'var(--radius-sm)',
+                            margin: 0,
+                            whiteSpace: 'pre-wrap',
+                            border: `1.5px solid ${caseResult.is_passed ? '#10B981' : '#EF4444'}`
+                          }}>
+                            {caseResult.actual_output || '(No console output produced)'}
+                          </pre>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()}
+              </div>
             ) : (
               <div>
-                <label style={{ fontSize: '11.5px', fontWeight: 700, color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>
-                  Custom Interactive Input (Fed directly into scanf, cin, or input()):
-                </label>
-                <textarea
-                  value={customInput}
-                  onChange={(e) => setCustomInput(e.target.value)}
-                  placeholder="Enter custom stdin data (e.g. 14, 25, etc.)..."
-                  rows={3}
-                  style={{
-                    width: '100%',
-                    fontFamily: 'IBM Plex Mono, monospace',
-                    fontSize: '12.5px',
-                    background: '#0F172A',
-                    color: '#F8FAFC',
-                    borderRadius: 'var(--radius-sm)',
-                    padding: '10px 12px',
-                    border: '1px solid #1E293B',
-                    outline: 'none',
-                    resize: 'vertical'
-                  }}
-                />
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '14px', marginBottom: '12px' }}>
+                  {/* Custom Stdin Input */}
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
+                      <label style={{ fontSize: '11.5px', fontWeight: 700, color: 'var(--text-secondary)' }}>
+                        Custom Interactive Input (stdin):
+                      </label>
+                      <span style={{ fontSize: '10.5px', color: 'var(--text-tertiary)' }}>Fed into scanf, cin, or input()</span>
+                    </div>
+                    <textarea
+                      value={customInput}
+                      onChange={(e) => setCustomInput(e.target.value)}
+                      placeholder="Enter custom stdin data (e.g. 9)..."
+                      rows={3}
+                      style={{
+                        width: '100%',
+                        fontFamily: 'IBM Plex Mono, monospace',
+                        fontSize: '12.5px',
+                        background: '#0F172A',
+                        color: '#38BDF8',
+                        borderRadius: 'var(--radius-sm)',
+                        padding: '10px 12px',
+                        border: '1px solid #1E293B',
+                        outline: 'none',
+                        resize: 'vertical'
+                      }}
+                    />
+                  </div>
+
+                  {/* Custom Expected Output */}
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
+                      <label style={{ fontSize: '11.5px', fontWeight: 700, color: 'var(--text-secondary)' }}>
+                        Custom Expected Output:
+                      </label>
+                      <span style={{ fontSize: '10.5px', color: '#10B981', fontWeight: 700 }}>Target Output to Validate</span>
+                    </div>
+                    <textarea
+                      value={customExpectedOutput}
+                      onChange={(e) => setCustomExpectedOutput(e.target.value)}
+                      placeholder="Enter target expected output (e.g. 9 is Odd)..."
+                      rows={3}
+                      style={{
+                        width: '100%',
+                        fontFamily: 'IBM Plex Mono, monospace',
+                        fontSize: '12.5px',
+                        background: '#0F172A',
+                        color: '#34D399',
+                        borderRadius: 'var(--radius-sm)',
+                        padding: '10px 12px',
+                        border: '1px solid #1E293B',
+                        outline: 'none',
+                        resize: 'vertical'
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Save Custom Test Case Button Strip */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px', marginBottom: '12px' }}>
+                  <button
+                    type="button"
+                    onClick={handleAddCustomTestCase}
+                    disabled={!customInput.trim() && !customExpectedOutput.trim()}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '6px 14px',
+                      borderRadius: '20px',
+                      fontSize: '11.5px',
+                      fontWeight: 700,
+                      background: (!customInput.trim() && !customExpectedOutput.trim()) ? '#F1F5F9' : 'linear-gradient(135deg, #7B1C6E, #2563EB)',
+                      color: (!customInput.trim() && !customExpectedOutput.trim()) ? '#94A3B8' : '#FFFFFF',
+                      border: 'none',
+                      cursor: (!customInput.trim() && !customExpectedOutput.trim()) ? 'not-allowed' : 'pointer'
+                    }}
+                  >
+                    <Plus size={13} /> Save as Case {sampleTestCases.length + customTestCases.length + 1} (Custom)
+                  </button>
+                  <span style={{ fontSize: '11px', color: 'var(--text-tertiary)' }}>
+                    💡 You can test directly using "Run Test Cases" or save as a permanent test tab.
+                  </span>
+                </div>
+
+                {/* Output if test run on custom */}
                 {testResult?.test_cases?.some(tc => tc.id === 'custom') && (
                   <div style={{ marginTop: '10px' }}>
-                    <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-tertiary)', display: 'block', marginBottom: '4px' }}>
-                      Custom Run Console Output:
-                    </span>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
+                      <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: testResult.is_passed ? '#047857' : '#B91C1C' }}>
+                        Console Output Produced:
+                      </span>
+                      <span style={{
+                        fontSize: '11px',
+                        fontWeight: 800,
+                        color: testResult.is_passed ? '#047857' : '#B91C1C',
+                        background: testResult.is_passed ? '#DCFCE7' : '#FEE2E2',
+                        padding: '2px 8px',
+                        borderRadius: '12px'
+                      }}>
+                        {customExpectedOutput.trim()
+                          ? (testResult.is_passed ? '✅ Match: Correct' : '❌ Output Mismatch')
+                          : '✅ Executed Successfully'} ({testResult.execution_time_ms || 0} ms)
+                      </span>
+                    </div>
                     <pre style={{
                       background: '#0F172A',
                       color: '#F8FAFC',
@@ -688,7 +947,8 @@ export default function ProblemWorkbenchModal({ problem, onClose, onSubmitted })
                       padding: '10px 12px',
                       borderRadius: 'var(--radius-sm)',
                       margin: 0,
-                      whiteSpace: 'pre-wrap'
+                      whiteSpace: 'pre-wrap',
+                      border: `1.5px solid ${testResult.is_passed ? '#10B981' : '#EF4444'}`
                     }}>
                       {testResult.actual_output || '(No console output produced)'}
                     </pre>
@@ -738,12 +998,17 @@ export default function ProblemWorkbenchModal({ problem, onClose, onSubmitted })
                   <div>
                     <strong style={{ fontSize: '14.5px', color: submissionResult.is_passed ? '#047857' : '#B91C1C', display: 'block' }}>
                       {submissionResult.is_passed
-                        ? `🎉 PERFECT: All ${submissionResult.total_test_cases || 5}/${submissionResult.total_test_cases || 5} Test Cases Verified!`
-                        : `⚠️ ${submissionResult.passed_test_cases || 0}/${submissionResult.total_test_cases || 5} Test Cases Passed`}
+                        ? `🎉 100% PERFECT: All ${submissionResult.total_test_cases || 5}/${submissionResult.total_test_cases || 5} Test Cases Verified!`
+                        : `📊 Evaluated: ${submissionResult.passed_test_cases || 0}/${submissionResult.total_test_cases || 5} Test Cases Passed`}
                     </strong>
                     <span style={{ fontSize: '11px', color: '#64748B' }}>
-                      Status: {submissionResult.status} &bull; Score: {submissionResult.score ?? problem.points} / {problem.points} pts
+                      Status: {submissionResult.status} &bull; Score: <strong style={{ color: submissionResult.is_passed ? '#166534' : '#B45309' }}>{submissionResult.score ?? (submissionResult.is_passed ? problem.points : 0)} / {problem.points} pts</strong> ({submissionResult.score_percentage ?? (submissionResult.is_passed ? 100 : 0)}%)
                     </span>
+                    {submissionResult.score_breakdown && (
+                      <div style={{ fontSize: '11px', color: '#475569', marginTop: '3px' }}>
+                        💡 {submissionResult.score_breakdown}
+                      </div>
+                    )}
                   </div>
                 </div>
 

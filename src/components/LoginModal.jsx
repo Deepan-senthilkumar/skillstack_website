@@ -184,39 +184,6 @@ export default function LoginModal({
           </button>
         </div>
 
-        {/* Faculty Console redirect notice */}
-        <div style={{
-          background: 'var(--bg-main)',
-          border: '1px solid var(--border-subtle)',
-          borderRadius: '16px',
-          padding: '10px 14px',
-          marginBottom: '16px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: '10px'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: 'var(--text-secondary)' }}>
-            <Shield size={14} color="var(--blue-primary)" />
-            <span>Faculty or Domain Chair?</span>
-          </div>
-          <a
-            href={import.meta.env.VITE_ADMIN_URL || 'http://localhost:5174'}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              fontSize: '12px', fontWeight: 700, color: 'var(--blue-primary)',
-              textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px',
-              padding: '5px 12px', borderRadius: 'var(--radius-full)',
-              border: '1.5px solid var(--blue-border)',
-              background: 'white', whiteSpace: 'nowrap'
-            }}
-          >
-            Open Faculty Console →
-          </a>
-        </div>
-
-
         {/* ================= STUDENT TAB CONTENT ================= */}
         {activeTab === 'student' && (
           <div>

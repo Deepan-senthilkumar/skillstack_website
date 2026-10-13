@@ -65,7 +65,15 @@ class ApiClient {
 
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {
-        const error = new Error(data.detail || data.error || 'Request failed');
+        let errorMsg = data.detail || data.error || data.message;
+        if (!errorMsg && typeof data === 'object' && data !== null) {
+          const keys = Object.keys(data);
+          if (keys.length > 0) {
+            const val = data[keys[0]];
+            errorMsg = Array.isArray(val) ? `${keys[0]}: ${val.join(', ')}` : String(val);
+          }
+        }
+        const error = new Error(errorMsg || `Request failed (${response.status})`);
         error.status = response.status;
         error.data = data;
         throw error;
@@ -209,7 +217,7 @@ class ApiClient {
     });
   }
 
-  async testRunCode(problemId, code, language = 'python', expectedOutput = '', customInput = null) {
+  async testRunCode(problemId, code, language = 'python', expectedOutput = '', customInput = null, customExpectedOutput = null) {
     return this.request(`/problems/${problemId}/test-run/`, {
       method: 'POST',
       body: JSON.stringify({
@@ -217,6 +225,7 @@ class ApiClient {
         language,
         expected_output: expectedOutput,
         custom_input: customInput,
+        custom_expected_output: customExpectedOutput,
       }),
     });
   }
@@ -380,6 +389,45 @@ class ApiClient {
     return this.request('/my-topic-progress/');
   }
 
+  // Course Enrollments & Certifications
+  async getMyEnrollments() {
+    return this.request('/my-enrollments/');
+  }
+
+  async enrollCourse(subjectIdOrSlug) {
+    const payload = (typeof subjectIdOrSlug === 'number' || (!isNaN(Number(subjectIdOrSlug)) && typeof subjectIdOrSlug !== 'object'))
+      ? { subject_id: Number(subjectIdOrSlug) }
+      : (typeof subjectIdOrSlug === 'object' && subjectIdOrSlug?.id)
+      ? { subject_id: Number(subjectIdOrSlug.id), subject_slug: subjectIdOrSlug.slug }
+      : (typeof subjectIdOrSlug === 'object' && (subjectIdOrSlug?.subject_id || subjectIdOrSlug?.subject_slug))
+      ? subjectIdOrSlug
+      : { subject_slug: String(subjectIdOrSlug) };
+    return this.request('/enroll/', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  async getMyCertificates() {
+    return this.request('/my-certificates/');
+  }
+
+  async getCertificate(certificateId) {
+    return this.request(`/certificates/${certificateId}/`);
+  }
+
+  async generateCertificate(subjectIdOrPayload) {
+    const body = (typeof subjectIdOrPayload === 'number' || (typeof subjectIdOrPayload === 'string' && !isNaN(Number(subjectIdOrPayload))))
+      ? { subject_id: Number(subjectIdOrPayload) }
+      : (typeof subjectIdOrPayload === 'object' && subjectIdOrPayload?.subject_id)
+      ? subjectIdOrPayload
+      : { subject_id: subjectIdOrPayload };
+    return this.request('/generate-certificate/', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+  }
+
   // Subject Management (Staff / Admin)
   async createSubject(data) {
     return this.request('/staff/subjects/', {
@@ -398,6 +446,46 @@ class ApiClient {
   async deleteSubject(id) {
     return this.request(`/staff/subjects/${id}/`, {
       method: 'DELETE',
+    });
+  }
+
+  // Staff Enrollments & Certificates Management
+  async getStaffEnrollments() {
+    return this.request('/staff/enrollments/');
+  }
+
+  async deleteStaffEnrollment(id) {
+    return this.request(`/staff/enrollments/${id}/`, {
+      method: 'DELETE',
+    });
+  }
+
+  async getStaffCertificates() {
+    return this.request('/staff/certificates/');
+  }
+
+  async updateStaffCertificate(id, data) {
+    return this.request(`/staff/certificates/${id}/`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteStaffCertificate(id) {
+    return this.request(`/staff/certificates/${id}/`, {
+      method: 'DELETE',
+    });
+  }
+
+  // Topic Doubts & 1-on-1 Trainer Clarification
+  async getTopicDoubts(topicId) {
+    return this.request(`/curriculum/topics/${topicId}/doubts/`);
+  }
+
+  async askTopicDoubt(topicId, question) {
+    return this.request(`/curriculum/topics/${topicId}/doubts/`, {
+      method: 'POST',
+      body: JSON.stringify({ question }),
     });
   }
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Sparkles, ArrowRight, BookOpen, Shield, Code, Cpu, Award,
   CheckCircle2, Users, Flame, Star, Play, Terminal, Layers,
@@ -9,6 +9,7 @@ import {
 import confetti from 'canvas-confetti';
 import BrandLogo from '../components/BrandLogo';
 import { siteConfig } from '../config/siteConfig';
+import { api } from '../api';
 
 export default function HomePage({
   subjects,
@@ -23,6 +24,20 @@ export default function HomePage({
   const [heroLang, setHeroLang] = useState('python');
   const [heroRunning, setHeroRunning] = useState(false);
   const [heroOutput, setHeroOutput] = useState(null);
+  const [enrollments, setEnrollments] = useState([]);
+
+  useEffect(() => {
+    if (user || api.getToken()) {
+      api.getMyEnrollments()
+        .then(data => {
+          const list = Array.isArray(data) ? data : (data?.results || []);
+          setEnrollments(list);
+        })
+        .catch(() => setEnrollments([]));
+    } else {
+      setEnrollments([]);
+    }
+  }, [user]);
 
   const heroCodeSnippets = {
     python: `# Python 3: Fibonacci Memoization Engine
@@ -454,71 +469,170 @@ int main() {
             <div className="section-tag">
               <BookOpen size={14} /> Official Curricula
             </div>
-            <h2 className="section-heading">Academic Tracks Supervised by Domain Faculty</h2>
+            <h2 className="section-heading">Featured Curriculum &amp; Engineering Tracks</h2>
             <p className="section-para" style={{ maxWidth: '680px', margin: '0 auto' }}>
               Select an engineering track to inspect the modular syllabus breakdown, visual mental models, and access interactive practice workbenches.
             </p>
           </div>
 
           <div className="subjects-cards-grid">
-            {subjects.map(subject => (
-              <div
-                key={subject.id}
-                className="subject-card"
-                onClick={() => onSelectSubject(subject)}
-              >
-                <div>
-                  <div className="subject-card-header">
-                    <div className="subject-icon-box">
-                      {subject.icon === 'django' ? (
-                        <span style={{ fontWeight: 800, fontSize: '18px', color: 'var(--blue-primary)', fontFamily: 'IBM Plex Mono' }}>&lt;dj&gt;</span>
-                      ) : subject.icon === 'python' ? (
-                        <Code size={20} color="var(--blue-primary)" />
-                      ) : (
-                        <Cpu size={20} color="var(--blue-primary)" />
-                      )}
+            {subjects.map(subject => {
+              const enrollment = enrollments.find(e =>
+                String(e.subject || e.subject_id) === String(subject.id) ||
+                e.subject_slug === subject.slug ||
+                (e.subject_name && subject.name && e.subject_name.toLowerCase() === subject.name.toLowerCase())
+              );
+              const isCompleted = Boolean(enrollment && (enrollment.status === 'COMPLETED' || (enrollment.progress_percentage || 0) >= 100));
+              const isEnrolled = Boolean(enrollment && !isCompleted);
+              const progress = enrollment?.progress_percentage ? Math.round(enrollment.progress_percentage) : 0;
+
+              return (
+                <div
+                  key={subject.id}
+                  className="subject-card"
+                  onClick={() => onSelectSubject(subject)}
+                >
+                  <div>
+                    <div className="subject-card-header">
+                      <div className="subject-icon-box">
+                        {subject.icon === 'django' ? (
+                          <span style={{ fontWeight: 900, fontSize: '13px', color: '#15803D', fontFamily: 'IBM Plex Mono' }}>&lt;dj&gt;</span>
+                        ) : subject.icon === 'python' ? (
+                          <span style={{ fontWeight: 900, fontSize: '14px', color: '#16A34A', fontFamily: 'IBM Plex Mono' }}>PY</span>
+                        ) : subject.icon === 'c' ? (
+                          <span style={{ fontWeight: 900, fontSize: '16px', color: '#2563EB', fontFamily: 'IBM Plex Mono' }}>C</span>
+                        ) : subject.icon === 'cpp' ? (
+                          <span style={{ fontWeight: 900, fontSize: '14px', color: '#0284C7', fontFamily: 'IBM Plex Mono' }}>C++</span>
+                        ) : subject.icon === 'java' ? (
+                          <span style={{ fontWeight: 900, fontSize: '13px', color: '#DC2626', fontFamily: 'IBM Plex Mono' }}>JAVA</span>
+                        ) : subject.icon === 'dart' ? (
+                          <span style={{ fontWeight: 900, fontSize: '13px', color: '#0284C7', fontFamily: 'IBM Plex Mono' }}>DART</span>
+                        ) : subject.icon === 'javascript' || subject.icon === 'js' ? (
+                          <span style={{ fontWeight: 900, fontSize: '15px', color: '#D97706', fontFamily: 'IBM Plex Mono' }}>JS</span>
+                        ) : subject.icon === 'html' ? (
+                          <span style={{ fontWeight: 900, fontSize: '13px', color: '#EA580C', fontFamily: 'IBM Plex Mono' }}>HTML</span>
+                        ) : subject.icon === 'sql' || subject.icon === 'database' ? (
+                          <span style={{ fontWeight: 900, fontSize: '14px', color: '#0284C7', fontFamily: 'IBM Plex Mono' }}>SQL</span>
+                        ) : subject.icon === 'dsa' ? (
+                          <span style={{ fontWeight: 900, fontSize: '14px', color: '#7C3AED', fontFamily: 'IBM Plex Mono' }}>DSA</span>
+                        ) : subject.icon === 'react' ? (
+                          <span style={{ fontWeight: 900, fontSize: '13px', color: '#06B6D4', fontFamily: 'IBM Plex Mono' }}>REACT</span>
+                        ) : (
+                          <Code size={20} color="var(--blue-primary)" />
+                        )}
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        {isCompleted ? (
+                          <span style={{
+                            fontSize: '11px',
+                            fontWeight: 800,
+                            padding: '3px 10px',
+                            borderRadius: '20px',
+                            background: '#DCFCE7',
+                            color: '#15803D',
+                            border: '1px solid #86EFAC',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '4px'
+                          }}>
+                            <CheckCircle2 size={12} color="#16A34A" /> Completed 🎓
+                          </span>
+                        ) : isEnrolled ? (
+                          <span style={{
+                            fontSize: '11px',
+                            fontWeight: 800,
+                            padding: '3px 10px',
+                            borderRadius: '20px',
+                            background: 'rgba(253, 192, 41, 0.2)',
+                            color: '#B45309',
+                            border: '1px solid rgba(253, 192, 41, 0.5)',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '4px'
+                          }}>
+                            ⚡ {progress}% Done
+                          </span>
+                        ) : null}
+                        <span className="subject-level-badge">{subject.level}</span>
+                      </div>
                     </div>
-                    <span className="subject-level-badge">{subject.level}</span>
+
+                    <h3 className="subject-title">{subject.name}</h3>
+                    <p className="subject-desc">
+                      {subject.short_description || (subject.description && subject.description.trim() !== '...' ? subject.description : 'Comprehensive curriculum track with structured modules, visual architecture models, and automated engineering workbenches.')}
+                    </p>
                   </div>
 
-                  <h3 className="subject-title">{subject.name}</h3>
-                  <p className="subject-desc">
-                    {subject.short_description || (subject.description && subject.description.trim() !== '...' ? subject.description : 'Comprehensive curriculum track with structured modules, visual architecture models, and automated engineering workbenches.')}
-                  </p>
-                </div>
+                  <div>
+                    <div className="subject-meta-strip">
+                      <div>
+                        <span className="meta-label">Track Lead</span>
+                        <span className="meta-value" title={subject.instructor_name}>{subject.instructor_name?.split('&')[0]?.trim() || subject.instructor_name || 'Prof. Deepan'}</span>
+                      </div>
+                      <div>
+                        <span className="meta-label">Duration</span>
+                        <span className="meta-value">{subject.duration || '6-8 Weeks Track'}</span>
+                      </div>
+                      <div>
+                        <span className="meta-label">Modules</span>
+                        <span className="meta-value">{subject.module_count ?? subject.modules?.length ?? 0} Chapters</span>
+                      </div>
+                      <div>
+                        <span className="meta-label">Topics</span>
+                        <span className="meta-value">{subject.topic_count ?? 0} Topics</span>
+                      </div>
+                    </div>
 
-                <div>
-                  <div className="subject-meta-strip">
-                    <div>
-                      <span className="meta-label">Domain Faculty</span>
-                      <span className="meta-value">{subject.instructor_name || 'Senior Staff Faculty'}</span>
-                    </div>
-                    <div>
-                      <span className="meta-label">Duration</span>
-                      <span className="meta-value">{subject.duration || '6-8 Weeks Track'}</span>
-                    </div>
-                    <div>
-                      <span className="meta-label">Modules</span>
-                      <span className="meta-value">{subject.module_count ?? subject.modules?.length ?? 0} Chapters</span>
-                    </div>
-                    <div>
-                      <span className="meta-label">Topics</span>
-                      <span className="meta-value">{subject.topic_count ?? 0} Topics</span>
-                    </div>
+                    {isCompleted ? (
+                      <button
+                        className="subject-cta-btn"
+                        style={{
+                          background: 'linear-gradient(135deg, #16A34A 0%, #15803D 100%)',
+                          color: '#FFFFFF',
+                          boxShadow: '0 4px 14px rgba(22, 163, 74, 0.3)',
+                          border: 'none'
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onSelectSubject(subject);
+                        }}
+                      >
+                        <CheckCircle2 size={14} color="#FFFFFF" />
+                        <span>Completed 🎓 (Review Workbench)</span>
+                      </button>
+                    ) : isEnrolled ? (
+                      <button
+                        className="subject-cta-btn"
+                        style={{
+                          background: 'linear-gradient(135deg, #7B1C6E 0%, #D97706 100%)',
+                          color: '#FFFFFF',
+                          boxShadow: '0 4px 14px rgba(123, 28, 110, 0.3)',
+                          border: 'none'
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onSelectSubject(subject);
+                        }}
+                      >
+                        <Play size={13} fill="currentColor" />
+                        <span>Resume Learning 🚀 {progress > 0 ? `(${progress}%)` : ''}</span>
+                      </button>
+                    ) : (
+                      <button
+                        className="subject-cta-btn"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onSelectSubject(subject);
+                        }}
+                      >
+                        <span>Start Learning 🚀</span>
+                        <ArrowRight size={14} />
+                      </button>
+                    )}
                   </div>
-
-                  <button
-                    className="subject-cta-btn"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onSelectSubject(subject);
-                    }}
-                  >
-                    View Syllabus & Launch Workbench <ArrowRight size={14} />
-                  </button>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           <div style={{ textAlign: 'center', marginTop: '40px' }}>

@@ -15,6 +15,29 @@ export default function SubjectDetailPage({
   const [curriculumData, setCurriculumData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [expandedModule, setExpandedModule] = useState(null);
+  const [enrollments, setEnrollments] = useState([]);
+
+  useEffect(() => {
+    if (user || api.getToken()) {
+      api.getMyEnrollments()
+        .then(data => {
+          const list = Array.isArray(data) ? data : (data?.results || []);
+          setEnrollments(list);
+        })
+        .catch(() => setEnrollments([]));
+    } else {
+      setEnrollments([]);
+    }
+  }, [user]);
+
+  const currentEnrollment = enrollments.find(e =>
+    String(e.subject || e.subject_id) === String(subject?.id) ||
+    e.subject_slug === subject?.slug ||
+    (e.subject_name && subject?.name && e.subject_name.toLowerCase() === subject.name.toLowerCase())
+  );
+  const isCompleted = Boolean(currentEnrollment && (currentEnrollment.status === 'COMPLETED' || (currentEnrollment.progress_percentage || 0) >= 100));
+  const isEnrolled = Boolean(currentEnrollment && !isCompleted);
+  const progress = currentEnrollment?.progress_percentage ? Math.round(currentEnrollment.progress_percentage) : 0;
 
   useEffect(() => {
     if (subject) {
@@ -75,54 +98,74 @@ export default function SubjectDetailPage({
         <ArrowLeft size={14} /> Back to Courses Catalog
       </button>
 
-      {/* CURVY & DOTTED HERO HEADER CARD (Light Layered Theme) */}
+      {/* MODERN HIGH-TECH SUBJECT HEADER CARD */}
       <div className="catalog-hero-banner" style={{
-        background: 'linear-gradient(135deg, #FDF5FD 0%, #FDF5FD 50%, #FFFFFF 100%)',
-        border: '1.5px solid rgba(123, 28, 110, 0.16)',
-        padding: '44px 38px',
-        borderRadius: '32px',
-        marginBottom: '32px',
-        position: 'relative',
-        boxShadow: '0 16px 40px rgba(0, 60, 160, 0.08)'
+        padding: '42px 38px',
+        borderRadius: '28px',
+        marginBottom: '32px'
       }}>
+        {/* Subtle Ambient Glow */}
+        <div style={{
+          position: 'absolute',
+          top: '-50px',
+          right: '-40px',
+          width: '320px',
+          height: '320px',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(168, 85, 247, 0.22) 0%, transparent 70%)',
+          filter: 'blur(40px)',
+          pointerEvents: 'none'
+        }} />
+        <div style={{
+          position: 'absolute',
+          bottom: '-50px',
+          left: '10%',
+          width: '260px',
+          height: '260px',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(253, 192, 41, 0.14) 0%, transparent 70%)',
+          filter: 'blur(35px)',
+          pointerEvents: 'none'
+        }} />
+
         <div className="watermark-tech-grid" />
         <div style={{ position: 'relative', zIndex: 2 }}>
           <div style={{
             display: 'flex',
             alignItems: 'center',
             gap: '10px',
-            marginBottom: '14px',
+            marginBottom: '16px',
             flexWrap: 'wrap'
           }}>
             <span style={{
               display: 'inline-block',
-              padding: '4px 14px',
+              padding: '5px 14px',
               borderRadius: 'var(--radius-full)',
-              background: 'rgba(123, 28, 110, 0.08)',
-              border: '1px solid rgba(123, 28, 110, 0.2)',
-              color: '#7B1C6E',
-              fontSize: '11px',
+              background: 'linear-gradient(135deg, rgba(123, 28, 110, 0.4), rgba(253, 192, 41, 0.3))',
+              border: '1px solid rgba(253, 192, 41, 0.35)',
+              color: '#FDC029',
+              fontSize: '11.5px',
               fontWeight: 800,
               textTransform: 'uppercase',
               letterSpacing: '0.06em'
             }}>
               {subject.level}
             </span>
-            <span style={{ fontSize: '13px', color: '#CBD5E1' }}>&bull;</span>
-            <span style={{ fontSize: '13px', color: '#475569', fontWeight: 600 }}>
+            <span style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.25)' }}>&bull;</span>
+            <span style={{ fontSize: '13px', color: '#CBD5E1', fontWeight: 600 }}>
               ⏱ {subject.duration || '8 Weeks Track'}
             </span>
-            <span style={{ fontSize: '13px', color: '#CBD5E1' }}>&bull;</span>
-            <span style={{ fontSize: '13px', color: '#7B1C6E', fontWeight: 700 }}>
-              ⚡ 100% Automated Output Evaluation
+            <span style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.25)' }}>&bull;</span>
+            <span style={{ fontSize: '13px', color: '#38BDF8', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+              ⚡ 100% Automated Output Assertion
             </span>
           </div>
 
-          <h1 style={{ fontSize: 'clamp(28px, 3.5vw, 42px)', fontWeight: 800, marginBottom: '14px', color: '#0A192F', lineHeight: 1.2 }}>
+          <h1 style={{ fontSize: 'clamp(28px, 3.6vw, 42px)', fontWeight: 850, marginBottom: '14px', color: '#FFFFFF', lineHeight: 1.2, letterSpacing: '-0.02em' }}>
             {subject.name}
           </h1>
 
-          <p style={{ fontSize: '15.5px', color: '#334155', lineHeight: 1.75, maxWidth: '850px', marginBottom: '28px' }}>
+          <p style={{ fontSize: '15.5px', color: '#94A3B8', lineHeight: 1.75, maxWidth: '850px', marginBottom: '28px' }}>
             {subject.description}
           </p>
 
@@ -134,17 +177,17 @@ export default function SubjectDetailPage({
             flexWrap: 'wrap',
             gap: '20px',
             paddingTop: '24px',
-            borderTop: '1px solid #E2E8F0'
+            borderTop: '1px solid rgba(255, 255, 255, 0.1)'
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '24px', fontSize: '13.5px', color: '#475569', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '24px', fontSize: '13.5px', color: '#94A3B8', flexWrap: 'wrap' }}>
               <div>
-                <span style={{ color: '#64748B', fontSize: '11px', textTransform: 'uppercase', display: 'block', fontWeight: 700 }}>Domain Faculty</span>
-                <strong style={{ color: '#0F172A' }}>{subject.instructor_name || 'Prof. Deepan & Faculty Staff'}</strong>
+                <span style={{ color: '#64748B', fontSize: '11px', textTransform: 'uppercase', display: 'block', fontWeight: 700, letterSpacing: '0.04em' }}>Track Lead</span>
+                <strong style={{ color: '#F8FAFC' }}>{subject.instructor_name || 'Deepan S (Lead)'}</strong>
               </div>
-              <div style={{ width: '1px', height: '24px', background: '#CBD5E1' }} />
+              <div style={{ width: '1px', height: '24px', background: 'rgba(255, 255, 255, 0.15)' }} />
               <div>
-                <span style={{ color: '#64748B', fontSize: '11px', textTransform: 'uppercase', display: 'block', fontWeight: 700 }}>Curriculum Scope</span>
-                <strong style={{ color: '#0F172A' }}>{curriculumData.length || subject.total_modules || 8} Comprehensive Modules</strong>
+                <span style={{ color: '#64748B', fontSize: '11px', textTransform: 'uppercase', display: 'block', fontWeight: 700, letterSpacing: '0.04em' }}>Curriculum Scope</span>
+                <strong style={{ color: '#F8FAFC' }}>{curriculumData.length || subject.total_modules || 8} Gated Modules</strong>
               </div>
             </div>
 
@@ -159,11 +202,27 @@ export default function SubjectDetailPage({
                 alignItems: 'center',
                 gap: '10px',
                 borderRadius: 'var(--radius-full)',
-                background: 'linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%)',
-                boxShadow: '0 8px 24px rgba(123, 28, 110, 0.35)'
+                background: isCompleted
+                  ? 'linear-gradient(135deg, #16A34A 0%, #15803D 100%)'
+                  : 'linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%)',
+                boxShadow: isCompleted
+                  ? '0 8px 24px rgba(22, 163, 74, 0.35)'
+                  : '0 8px 24px rgba(123, 28, 110, 0.35)'
               }}
             >
-              <Play size={16} fill="currentColor" /> Start Learning & Enter Lab
+              {isCompleted ? (
+                <>
+                  <CheckCircle2 size={18} color="#FFFFFF" /> Completed 🎓 &bull; Enter Workbench
+                </>
+              ) : isEnrolled ? (
+                <>
+                  <Play size={16} fill="currentColor" /> Resume Learning 🚀 {progress > 0 ? `(${progress}%)` : ''}
+                </>
+              ) : (
+                <>
+                  <Play size={16} fill="currentColor" /> Start Learning & Enter Lab
+                </>
+              )}
             </button>
           </div>
         </div>
