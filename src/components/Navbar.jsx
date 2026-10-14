@@ -65,7 +65,7 @@ export default function Navbar({
         zIndex: 1000,
         background: 'rgba(255, 255, 255, 0.96)',
         backdropFilter: 'blur(16px)',
-        borderBottom: '1px solid rgba(123, 28, 110, 0.12)',
+        borderBottom: '1px solid rgba(124, 58, 237, 0.12)',
         padding: '0 20px',
         height: '64px',
         display: 'flex',
@@ -73,7 +73,7 @@ export default function Navbar({
         alignItems: 'center',
         justifyContent: 'space-between',
         gap: '12px',
-        boxShadow: '0 4px 20px rgba(31, 8, 28, 0.04)',
+        boxShadow: '0 4px 20px rgba(124, 58, 237, 0.04)',
       }}>
         {/* Brand Logo Lockup */}
         <div
@@ -464,7 +464,7 @@ export default function Navbar({
                       alignItems: 'center',
                       justifyContent: 'center',
                       gap: '6px',
-                      boxShadow: '0 4px 12px rgba(123, 28, 110, 0.25)'
+                      boxShadow: '0 4px 12px rgba(124, 58, 237, 0.25)'
                     }}
                   >
                     <Play size={14} /> Open Student Workbench
@@ -513,7 +513,7 @@ export default function Navbar({
                         color: '#7B1C6E',
                         fontWeight: 700,
                         fontSize: '12.5px',
-                        border: '1.5px solid rgba(123, 28, 110, 0.2)',
+                        border: '1.5px solid rgba(124, 58, 237, 0.2)',
                         cursor: 'pointer'
                       }}
                     >
@@ -546,7 +546,7 @@ export default function Navbar({
                         borderRadius: '12px',
                         fontSize: '14px',
                         fontWeight: isActive ? 700 : 600,
-                        background: isActive ? 'rgba(123, 28, 110, 0.08)' : 'transparent',
+                        background: isActive ? 'rgba(124, 58, 237, 0.08)' : 'transparent',
                         color: isActive ? '#7B1C6E' : '#334155',
                         border: 'none',
                         cursor: 'pointer',

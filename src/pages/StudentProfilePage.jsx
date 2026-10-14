@@ -107,7 +107,7 @@ export default function StudentProfilePage({
         width: '320px',
         height: '320px',
         borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(123, 28, 110, 0.12) 0%, transparent 70%)',
+        background: 'radial-gradient(circle, rgba(124, 58, 237, 0.12) 0%, transparent 70%)',
         filter: 'blur(40px)',
         pointerEvents: 'none'
       }} />
@@ -255,7 +255,7 @@ export default function StudentProfilePage({
         flexWrap: 'wrap',
         gap: '12px',
         marginBottom: '28px',
-        borderBottom: '2px solid rgba(123, 28, 110, 0.1)',
+        borderBottom: '2px solid rgba(124, 58, 237, 0.1)',
         paddingBottom: '12px'
       }}>
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
