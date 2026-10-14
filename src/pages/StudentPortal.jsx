@@ -430,10 +430,10 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
         <div style={{ marginTop: '12px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '4px' }}>
             <span>Curriculum Mastery</span>
-            <span style={{ color: '#7B1C6E' }}>{completedCount} / {flatTopics.length} ({progressPct}%)</span>
+            <span style={{ color: '#7C3AED' }}>{completedCount} / {flatTopics.length} ({progressPct}%)</span>
           </div>
           <div style={{ width: '100%', height: '6px', background: '#F0E2EE', borderRadius: '3px', overflow: 'hidden' }}>
-            <div style={{ width: `${progressPct}%`, height: '100%', background: 'linear-gradient(90deg, #7B1C6E, #FDC029)', borderRadius: '3px', transition: 'width 0.4s ease' }} />
+            <div style={{ width: `${progressPct}%`, height: '100%', background: 'linear-gradient(90deg, #7C3AED 0%, #A855F7 50%, #EC4899 100%)', borderRadius: '3px', transition: 'width 0.4s ease' }} />
           </div>
         </div>
       </div>
@@ -479,9 +479,9 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                 fontWeight: 700,
                 borderRadius: 'var(--radius-full)',
                 border: '1px solid',
-                borderColor: levelFilter === lvl ? '#7B1C6E' : '#E2E8F0',
-                background: levelFilter === lvl ? 'rgba(123, 28, 110, 0.1)' : '#FFFFFF',
-                color: levelFilter === lvl ? '#7B1C6E' : '#64748B',
+                borderColor: levelFilter === lvl ? '#7C3AED' : '#E2E8F0',
+                background: levelFilter === lvl ? 'rgba(124, 58, 237, 0.1)' : '#FFFFFF',
+                color: levelFilter === lvl ? '#7C3AED' : '#64748B',
                 cursor: 'pointer',
                 textTransform: 'capitalize'
               }}
@@ -522,8 +522,8 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0, flex: 1 }}>
                   <span style={{
                     width: '20px', height: '20px', borderRadius: '6px',
-                    background: modIsCompleted ? '#DCFCE7' : 'rgba(123, 28, 110, 0.1)',
-                    color: modIsCompleted ? '#166534' : '#7B1C6E',
+                    background: modIsCompleted ? '#DCFCE7' : 'rgba(124, 58, 237, 0.1)',
+                    color: modIsCompleted ? '#166534' : '#7C3AED',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     fontSize: '10px', fontWeight: 800, flexShrink: 0
                   }}>
@@ -595,8 +595,8 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                           borderRadius: '8px',
                           cursor: isUnlocked ? 'pointer' : 'not-allowed',
                           opacity: isUnlocked ? 1 : 0.6,
-                          background: isActive ? 'rgba(123, 28, 110, 0.08)' : 'transparent',
-                          borderLeft: isActive ? '3px solid #7B1C6E' : '3px solid transparent',
+                          background: isActive ? 'rgba(124, 58, 237, 0.08)' : 'transparent',
+                          borderLeft: isActive ? '3px solid #7C3AED' : '3px solid transparent',
                           margin: '2px 4px',
                           transition: 'all 0.15s ease'
                         }}
@@ -615,7 +615,7 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                           <span style={{
                             fontSize: '12.5px',
                             fontWeight: isActive ? 700 : 500,
-                            color: !isUnlocked ? '#94A3B8' : isActive ? '#7B1C6E' : '#1E293B',
+                            color: !isUnlocked ? '#94A3B8' : isActive ? '#7C3AED' : '#1E293B',
                             lineHeight: 1.35,
                             wordBreak: 'break-word'
                           }}>
@@ -701,20 +701,20 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
             left: 0,
             right: 0,
             height: '6px',
-            background: 'linear-gradient(90deg, #7B1C6E 0%, #FDC029 100%)'
+            background: 'linear-gradient(90deg, #7C3AED 0%, #A855F7 50%, #EC4899 100%)'
           }} />
 
           <div style={{
             width: '76px',
             height: '76px',
             borderRadius: '50%',
-            background: 'rgba(123, 28, 110, 0.08)',
-            color: '#7B1C6E',
+            background: 'rgba(124, 58, 237, 0.08)',
+            color: '#7C3AED',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             margin: '0 auto 20px',
-            border: '1.5px solid rgba(123, 28, 110, 0.15)'
+            border: '1.5px solid rgba(124, 58, 237, 0.15)'
           }}>
             <Lock size={36} />
           </div>
@@ -773,7 +773,7 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
             <div style={{ width: '1px', background: '#CBD5E1' }} />
             <div>
               <div style={{ fontSize: '11px', color: '#64748B', fontWeight: 600 }}>Level</div>
-              <div style={{ fontSize: '15px', fontWeight: 800, color: '#7B1C6E' }}>{currentSubject?.level || 'Intermediate'}</div>
+              <div style={{ fontSize: '15px', fontWeight: 800, color: '#7C3AED' }}>{currentSubject?.level || 'Intermediate'}</div>
             </div>
             <div style={{ width: '1px', background: '#CBD5E1' }} />
             <div>
@@ -790,7 +790,7 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
               style={{
                 padding: '14px 28px',
                 borderRadius: '999px',
-                background: 'linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%)',
+                background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 50%, #EC4899 100%)',
                 color: '#FFFFFF',
                 fontWeight: 800,
                 fontSize: '14px',
@@ -799,7 +799,7 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '8px',
-                boxShadow: '0 8px 24px rgba(123, 28, 110, 0.3)',
+                boxShadow: '0 8px 24px rgba(124, 58, 237, 0.3)',
                 opacity: enrolling ? 0.7 : 1
               }}
             >
@@ -866,7 +866,7 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
               style={{
                 borderRadius: '999px',
                 padding: '12px 28px',
-                background: 'linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%)',
+                background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 50%, #EC4899 100%)',
                 color: '#fff',
                 border: 'none',
                 fontWeight: 700,
@@ -937,7 +937,7 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
               background: '#FAFAFA'
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <BookOpen size={18} color="#7B1C6E" />
+                <BookOpen size={18} color="#7C3AED" />
                 <span style={{ fontWeight: 800, fontSize: '15px', color: '#0F172A' }}>
                   Course Syllabus ({flatTopics.length})
                 </span>
@@ -1051,7 +1051,7 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <div style={{
                 width: '42px', height: '42px', borderRadius: '50%',
-                background: 'linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%)',
+                background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 50%, #EC4899 100%)',
                 color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center'
               }}>
                 <Award size={22} />
@@ -1093,7 +1093,7 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
             {/* Topic Hero Header with Badges */}
             <div className="topic-hero" style={{
               background: '#FFFFFF',
-              border: '1.5px solid rgba(123, 28, 110, 0.14)',
+              border: '1.5px solid rgba(124, 58, 237, 0.14)',
               borderRadius: '24px',
               padding: '28px 32px',
               boxShadow: '0 10px 30px rgba(0, 60, 160, 0.05)',
@@ -1104,8 +1104,8 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                   <span style={{
                     padding: '3px 10px',
                     borderRadius: 'var(--radius-full)',
-                    background: 'rgba(123, 28, 110, 0.08)',
-                    color: levelColor[activeTopic.level] || '#7B1C6E',
+                    background: 'rgba(124, 58, 237, 0.08)',
+                    color: levelColor[activeTopic.level] || '#7C3AED',
                     fontWeight: 800,
                     textTransform: 'uppercase'
                   }}>
@@ -1129,9 +1129,9 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                       fontWeight: 700,
                       padding: '6px 14px',
                       borderRadius: 'var(--radius-full)',
-                      borderColor: 'rgba(123, 28, 110, 0.2)',
-                      color: '#7B1C6E',
-                      background: 'rgba(123, 28, 110, 0.04)'
+                      borderColor: 'rgba(124, 58, 237, 0.2)',
+                      color: '#7C3AED',
+                      background: 'rgba(124, 58, 237, 0.04)'
                     }}
                   >
                     <Zap size={13} /> Cheat Sheet
@@ -1303,9 +1303,9 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                       fontWeight: 700,
                       padding: '6px 14px',
                       borderRadius: 'var(--radius-full)',
-                      color: '#7B1C6E',
-                      borderColor: 'rgba(123, 28, 110, 0.25)',
-                      background: 'rgba(123, 28, 110, 0.04)',
+                      color: '#7C3AED',
+                      borderColor: 'rgba(124, 58, 237, 0.25)',
+                      background: 'rgba(124, 58, 237, 0.04)',
                       display: 'inline-flex',
                       alignItems: 'center',
                       gap: '5px'
@@ -1374,7 +1374,7 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                 className={`content-tab-btn ${activeTab === 'notes_content' ? 'active' : ''}`}
                 onClick={() => setActiveTab('notes_content')}
               >
-                <BookOpen size={14} color={activeTab === 'notes_content' ? '#FFFFFF' : '#7B1C6E'} />
+                <BookOpen size={14} color={activeTab === 'notes_content' ? '#FFFFFF' : '#7C3AED'} />
                 <span>Theory &amp; Notes</span>
               </button>
 
@@ -1436,7 +1436,7 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
             {activeTab === 'notes_content' && (
               <div className="explain-card" style={{
                 background: '#FFFFFF',
-                border: '1.5px solid rgba(123, 28, 110, 0.12)',
+                border: '1.5px solid rgba(124, 58, 237, 0.12)',
                 borderRadius: '24px',
                 padding: '28px 32px',
                 boxShadow: '0 8px 24px rgba(0, 0, 0, 0.04)',
@@ -1445,8 +1445,8 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                 {/* Core Architecture & Concept Highlights (from topic.explain) */}
                 {Array.isArray(activeTopic.explain) && activeTopic.explain.length > 0 && (
                   <div style={{
-                    background: 'linear-gradient(135deg, rgba(123, 28, 110, 0.04) 0%, rgba(253, 192, 41, 0.06) 100%)',
-                    border: '1.5px solid rgba(123, 28, 110, 0.16)',
+                    background: 'linear-gradient(135deg, rgba(124, 58, 237, 0.04) 0%, rgba(253, 192, 41, 0.06) 100%)',
+                    border: '1.5px solid rgba(124, 58, 237, 0.16)',
                     borderRadius: '16px',
                     padding: '20px 24px',
                     marginBottom: '26px'
@@ -1454,13 +1454,13 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                     <div style={{
                       fontSize: '14px',
                       fontWeight: 800,
-                      color: '#7B1C6E',
+                      color: '#7C3AED',
                       marginBottom: '12px',
                       display: 'flex',
                       alignItems: 'center',
                       gap: '8px'
                     }}>
-                      <Sparkles size={16} color="#7B1C6E" />
+                      <Sparkles size={16} color="#7C3AED" />
                       <span>Core Architecture &amp; Key Concepts</span>
                     </div>
                     <ul style={{ margin: 0, paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -1479,7 +1479,7 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                     marginBottom: '24px',
                     borderRadius: '16px',
                     overflow: 'hidden',
-                    border: '1.5px solid rgba(123, 28, 110, 0.14)',
+                    border: '1.5px solid rgba(124, 58, 237, 0.14)',
                     background: '#0F172A',
                     boxShadow: '0 8px 24px rgba(0,0,0,0.06)'
                   }}>
@@ -1529,13 +1529,13 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                 <div style={{
                   display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                   padding: '16px 22px', background: 'linear-gradient(135deg, #FAF5FF 0%, #F5F3FF 100%)',
-                  borderRadius: '16px', border: '1.5px solid rgba(123, 28, 110, 0.16)',
+                  borderRadius: '16px', border: '1.5px solid rgba(124, 58, 237, 0.16)',
                   marginTop: '20px', flexWrap: 'wrap', gap: '12px'
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <div style={{
                       width: '38px', height: '38px', borderRadius: '10px',
-                      background: 'linear-gradient(135deg, #7B1C6E 0%, #A82596 100%)',
+                      background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 50%, #EC4899 100%)',
                       display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FFF'
                     }}>
                       <MessageSquare size={18} />
@@ -1553,7 +1553,7 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                     type="button"
                     onClick={() => setActiveTab('doubts')}
                     style={{
-                      background: '#FFFFFF', color: '#7B1C6E', border: '1.5px solid #7B1C6E',
+                      background: '#FFFFFF', color: '#7C3AED', border: '1.5px solid #7C3AED',
                       padding: '8px 18px', borderRadius: '999px', fontSize: '12px', fontWeight: 800,
                       cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px'
                     }}
@@ -1565,8 +1565,8 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                 {/* Transition to Step 2 */}
                 <div style={{
                   display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                  padding: '18px 24px', background: 'rgba(123, 28, 110, 0.04)',
-                  borderRadius: '16px', border: '1.5px solid rgba(123, 28, 110, 0.12)',
+                  padding: '18px 24px', background: 'rgba(124, 58, 237, 0.04)',
+                  borderRadius: '16px', border: '1.5px solid rgba(124, 58, 237, 0.12)',
                   marginTop: '28px', flexWrap: 'wrap', gap: '12px'
                 }}>
                   <div>
@@ -1578,11 +1578,11 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                     onClick={() => setActiveTab('quiz')}
                     className="btn-primary"
                     style={{
-                      background: 'linear-gradient(135deg, #7B1C6E 0%, #A82596 100%)',
+                      background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 50%, #EC4899 100%)',
                       color: '#FFFFFF', border: 'none', padding: '9px 20px',
                       borderRadius: 'var(--radius-full)', fontSize: '13px', fontWeight: 800,
                       cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px',
-                      boxShadow: '0 4px 14px rgba(123, 28, 110, 0.25)'
+                      boxShadow: '0 4px 14px rgba(124, 58, 237, 0.25)'
                     }}
                   >
                     <span>Next: Practice Topic MCQs →</span>
@@ -1599,10 +1599,10 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                 {/* Header Card */}
                 <div style={{
                   background: 'linear-gradient(135deg, #FFFFFF 0%, #FAF5FF 100%)',
-                  border: '1.5px solid rgba(123, 28, 110, 0.16)',
+                  border: '1.5px solid rgba(124, 58, 237, 0.16)',
                   borderRadius: '20px',
                   padding: '24px 28px',
-                  boxShadow: '0 4px 16px rgba(123, 28, 110, 0.04)',
+                  boxShadow: '0 4px 16px rgba(124, 58, 237, 0.04)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
@@ -1613,7 +1613,7 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
                       <span style={{
                         fontSize: '11px', fontWeight: 800, padding: '3px 10px', borderRadius: 'var(--radius-full)',
-                        background: 'rgba(123, 28, 110, 0.1)', color: '#7B1C6E', textTransform: 'uppercase'
+                        background: 'rgba(124, 58, 237, 0.1)', color: '#7C3AED', textTransform: 'uppercase'
                       }}>
                         Knowledge Gate &bull; Step 2
                       </span>
@@ -1814,7 +1814,7 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                 </div>
                 {activeTopic.examples && activeTopic.examples.length > 0 ? (
                   activeTopic.examples.map((ex, idx) => (
-                    <div key={ex.id || idx} className="code-container" style={{ borderRadius: '20px', overflow: 'hidden', border: '1.5px solid rgba(123, 28, 110, 0.18)', marginBottom: '20px' }}>
+                    <div key={ex.id || idx} className="code-container" style={{ borderRadius: '20px', overflow: 'hidden', border: '1.5px solid rgba(124, 58, 237, 0.18)', marginBottom: '20px' }}>
                       <div className="code-header" style={{ background: '#F1F5F9', padding: '12px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <span style={{ fontWeight: 700, color: '#0F172A', fontSize: '13px' }}>● {ex.label}</span>
                         <button
@@ -1849,7 +1849,7 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                   ))
                 ) : (
 
-                  <div style={{ textAlign: 'center', padding: '40px 0', color: '#94A3B8', background: '#FFFFFF', borderRadius: '20px', border: '1.5px solid rgba(123, 28, 110, 0.12)' }}>
+                  <div style={{ textAlign: 'center', padding: '40px 0', color: '#94A3B8', background: '#FFFFFF', borderRadius: '20px', border: '1.5px solid rgba(124, 58, 237, 0.12)' }}>
                     <div style={{ fontSize: '36px', marginBottom: '12px' }}>💻</div>
                     <div style={{ fontWeight: 700, fontSize: '15px', color: '#64748B' }}>No code examples added yet for this topic.</div>
                   </div>
@@ -1864,7 +1864,7 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
             {activeTab === 'notes' && (
               <div style={{
                 background: '#FFFFFF',
-                border: '1.5px solid rgba(123, 28, 110, 0.18)',
+                border: '1.5px solid rgba(124, 58, 237, 0.18)',
                 borderRadius: '24px',
                 padding: '24px 28px',
                 boxShadow: '0 10px 30px rgba(0, 60, 160, 0.08)',
@@ -1997,7 +1997,7 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                     <div
                       key={problem.id}
                       className={`lab-card ${isUnlocked && !isExpired ? 'active-unlocked' : ''} ${!isUnlocked ? 'locked-state' : ''}`}
-                      style={{ background: '#FFFFFF', border: '1.5px solid rgba(123, 28, 110, 0.12)' }}
+                      style={{ background: '#FFFFFF', border: '1.5px solid rgba(124, 58, 237, 0.12)' }}
                     >
                       <div className="lab-card-top">
                         <div className="lab-title-group">
@@ -2064,7 +2064,7 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                               alignItems: 'center',
                               gap: '6px'
                             }}>
-                              <Terminal size={14} color="#7B1C6E" />
+                              <Terminal size={14} color="#7C3AED" />
                               <span>Code Commands & Starter Implementation:</span>
                             </div>
                             <RichContentRenderer content={problem.starter_code} />
