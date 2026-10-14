@@ -3,6 +3,7 @@ import {
   ArrowLeft, Play, BookOpen, Clock, Award, Users, CheckCircle2,
   ChevronDown, ChevronUp, Sparkles, Terminal, FileCode, Shield, Lock
 } from 'lucide-react';
+import RealAdSlot from '../components/RealAdSlot';
 import { api } from '../api';
 
 export default function SubjectDetailPage({
@@ -295,6 +296,11 @@ export default function SubjectDetailPage({
           <h4>Automatic Marks</h4>
           <p>Pass criteria assertions without waiting days for manual review.</p>
         </div>
+      </div>
+
+      {/* In-Page AdSense Banner */}
+      <div className="my-6">
+        <RealAdSlot slotType="banner" />
       </div>
 
       {/* Syllabus Modules Accordion */}

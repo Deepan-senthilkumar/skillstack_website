@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BookOpen, Search, ArrowRight, Code, Cpu, Award, Users, Filter, Sparkles, Layers, CheckCircle2, Play } from 'lucide-react';
 import { siteConfig } from '../config/siteConfig';
+import RealAdSlot from '../components/RealAdSlot';
 import { api } from '../api';
 
 export default function CoursesPage({ subjects, onSelectSubject, onNavigate, user, onStartLearning, onOpenStudentAuth }) {
@@ -448,6 +449,11 @@ export default function CoursesPage({ subjects, onSelectSubject, onNavigate, use
           })}
         </div>
       )}
+
+      {/* In-Page AdSense Banner */}
+      <div className="mt-8 mb-4">
+        <RealAdSlot slotType="banner" />
+      </div>
     </div>
   );
 }
