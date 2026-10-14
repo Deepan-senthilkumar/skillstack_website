@@ -1,28 +1,56 @@
 import React, { useState, useEffect } from 'react';
 import { BookOpen, Search, ArrowRight, Code, Cpu, Award, Users, Filter, Sparkles, Layers, CheckCircle2, Play } from 'lucide-react';
 import { siteConfig } from '../config/siteConfig';
+import RealAdSlot from '../components/RealAdSlot';
 import { api } from '../api';
 
-export default function CoursesPage({ subjects, onSelectSubject, onNavigate, user, onStartLearning }) {
+export default function CoursesPage({ subjects, onSelectSubject, onNavigate, user, onStartLearning, onOpenStudentAuth }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [levelFilter, setLevelFilter] = useState('ALL');
   const [enrollments, setEnrollments] = useState([]);
+  const [enrollingId, setEnrollingId] = useState(null);
+  const [enrollError, setEnrollError] = useState({});
 
-  useEffect(() => {
+  const fetchEnrollments = async () => {
     if (user || api.getToken()) {
-      api.getMyEnrollments()
-        .then(data => {
-          const list = Array.isArray(data) ? data : (data?.results || []);
-          setEnrollments(list);
-        })
-        .catch(err => {
-          console.error('Error fetching enrollments in CoursesPage', err);
-          setEnrollments([]);
-        });
+      try {
+        const data = await api.getMyEnrollments();
+        const list = Array.isArray(data) ? data : (data?.results || []);
+        setEnrollments(list);
+      } catch (err) {
+        console.error('Error fetching enrollments in CoursesPage', err);
+        setEnrollments([]);
+      }
     } else {
       setEnrollments([]);
     }
+  };
+
+  useEffect(() => {
+    fetchEnrollments();
   }, [user]);
+
+  const handleEnroll = async (subject, e) => {
+    e.stopPropagation();
+    if (!user) {
+      if (onOpenStudentAuth) {
+        onOpenStudentAuth(false, async () => {
+          await fetchEnrollments();
+        });
+      }
+      return;
+    }
+    setEnrollingId(subject.id);
+    setEnrollError(prev => ({ ...prev, [subject.id]: null }));
+    try {
+      await api.enrollCourse(subject.id || subject.slug);
+      await fetchEnrollments();
+    } catch (err) {
+      setEnrollError(prev => ({ ...prev, [subject.id]: err.message || 'Enrollment failed. Please retry.' }));
+    } finally {
+      setEnrollingId(null);
+    }
+  };
 
   const filtered = subjects.filter(sub => {
     const matchesSearch = sub.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -354,7 +382,7 @@ export default function CoursesPage({ subjects, onSelectSubject, onNavigate, use
                       }}
                     >
                       <CheckCircle2 size={15} color="#FFFFFF" />
-                      <span>Completed 🎓 (Review Workbench)</span>
+                      <span>Completed 🎓 • View Syllabus</span>
                     </button>
                   ) : isEnrolled ? (
                     <button
@@ -375,21 +403,43 @@ export default function CoursesPage({ subjects, onSelectSubject, onNavigate, use
                       }}
                     >
                       <Play size={14} fill="currentColor" />
-                      <span>Resume Learning 🚀 {progress > 0 ? `(${progress}%)` : ''}</span>
+                      <span>View Syllabus 🚀 {progress > 0 ? `(${progress}%)` : ''}</span>
                     </button>
+                  ) : user ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                      <button
+                        className="subject-cta-btn"
+                        disabled={enrollingId === subject.id}
+                        style={{
+                          background: 'linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%)',
+                          color: '#FFFFFF',
+                          opacity: enrollingId === subject.id ? 0.7 : 1,
+                          cursor: enrollingId === subject.id ? 'wait' : 'pointer'
+                        }}
+                        onClick={(e) => handleEnroll(subject, e)}
+                      >
+                        <span>{enrollingId === subject.id ? 'Enrolling...' : (enrollError[subject.id] ? 'Retry Enrollment' : 'Enroll Now')}</span>
+                        <ArrowRight size={15} />
+                      </button>
+                      {enrollError[subject.id] && (
+                        <span style={{ fontSize: '11px', color: '#EF4444', textAlign: 'center' }}>
+                          {enrollError[subject.id]}
+                        </span>
+                      )}
+                    </div>
                   ) : (
                     <button
                       className="subject-cta-btn"
                       onClick={(e) => {
                         e.stopPropagation();
-                        if (onStartLearning) {
-                          onStartLearning(subject);
+                        if (onOpenStudentAuth) {
+                          onOpenStudentAuth(false, () => handleEnroll(subject, e));
                         } else {
                           onSelectSubject(subject);
                         }
                       }}
                     >
-                      <span>Start Learning 🚀</span>
+                      <span>Login to Enroll</span>
                       <ArrowRight size={15} />
                     </button>
                   )}
@@ -399,6 +449,11 @@ export default function CoursesPage({ subjects, onSelectSubject, onNavigate, use
           })}
         </div>
       )}
+
+      {/* In-Page AdSense Banner */}
+      <div className="mt-8 mb-4">
+        <RealAdSlot slotType="banner" />
+      </div>
     </div>
   );
 }

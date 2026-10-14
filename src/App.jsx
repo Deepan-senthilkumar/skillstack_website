@@ -13,6 +13,7 @@ import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import TermsPage from './pages/TermsPage';
 import DisclaimerPage from './pages/DisclaimerPage';
 import CookieConsentBanner from './components/CookieConsentBanner';
+import RealAdSlot from './components/RealAdSlot';
 import { api } from './api';
 
 // ADMIN PANEL URL — update this to your deployed admin Vercel URL
@@ -250,6 +251,7 @@ export default function App() {
               setCurrentPage(page);
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
+            onOpenStudentAuth={(isReg, cb) => handleOpenAuth('student', isReg, cb)}
           />
         )}
 
@@ -322,6 +324,13 @@ export default function App() {
             onBackToCourses={() => setCurrentPage('courses')}
             onOpenProfile={() => setCurrentPage('profile')}
           />
+        )}
+
+        {/* Global Google AdSense Display Ad Unit on All Public Pages */}
+        {currentPage !== 'learning' && (
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex justify-center">
+            <RealAdSlot slotType="banner" />
+          </div>
         )}
       </main>
 

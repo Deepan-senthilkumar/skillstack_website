@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import BrandLogo from '../components/BrandLogo';
+import RealAdSlot from '../components/RealAdSlot';
 import { siteConfig } from '../config/siteConfig';
 import { api } from '../api';
 
@@ -457,6 +458,11 @@ int main() {
         <svg viewBox="0 0 1440 50" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
           <path d="M0,0 C380,45 1060,5 1440,35 L1440,50 L0,50 Z" fill="#F8FAFC"/>
         </svg>
+      </div>
+
+      {/* Featured In-Feed AdSense Banner */}
+      <div className="section-container" style={{ padding: '16px 24px' }}>
+        <RealAdSlot slotType="banner" />
       </div>
 
       {/* =========================================================================

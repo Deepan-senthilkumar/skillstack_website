@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import {
   ArrowLeft, Play, BookOpen, Clock, Award, Users, CheckCircle2,
-  ChevronDown, ChevronUp, Sparkles, Terminal, FileCode, Shield
+  ChevronDown, ChevronUp, Sparkles, Terminal, FileCode, Shield, Lock
 } from 'lucide-react';
+import RealAdSlot from '../components/RealAdSlot';
 import { api } from '../api';
 
 export default function SubjectDetailPage({
@@ -14,20 +15,25 @@ export default function SubjectDetailPage({
 }) {
   const [curriculumData, setCurriculumData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [expandedModule, setExpandedModule] = useState(null);
-  const [enrollments, setEnrollments] = useState([]);
+  const [enrolling, setEnrolling] = useState(false);
+  const [enrollError, setEnrollError] = useState(null);
 
-  useEffect(() => {
+  const fetchEnrollments = async () => {
     if (user || api.getToken()) {
-      api.getMyEnrollments()
-        .then(data => {
-          const list = Array.isArray(data) ? data : (data?.results || []);
-          setEnrollments(list);
-        })
-        .catch(() => setEnrollments([]));
+      try {
+        const data = await api.getMyEnrollments();
+        const list = Array.isArray(data) ? data : (data?.results || []);
+        setEnrollments(list);
+      } catch {
+        setEnrollments([]);
+      }
     } else {
       setEnrollments([]);
     }
+  };
+
+  useEffect(() => {
+    fetchEnrollments();
   }, [user]);
 
   const currentEnrollment = enrollments.find(e =>
@@ -61,14 +67,32 @@ export default function SubjectDetailPage({
     );
   }
 
+  const handleEnrollAction = async () => {
+    if (!user) {
+      if (onOpenStudentAuth) {
+        onOpenStudentAuth(false, async () => {
+          await handleEnrollAction();
+        });
+      }
+      return;
+    }
+    setEnrolling(true);
+    setEnrollError(null);
+    try {
+      await api.enrollCourse(subject.id || subject.slug);
+      await fetchEnrollments();
+    } catch (err) {
+      setEnrollError(err.message || 'Enrollment failed. Please retry.');
+    } finally {
+      setEnrolling(false);
+    }
+  };
+
   const handleStart = () => {
-    if (user) {
+    if (isEnrolled || isCompleted) {
       onStartLearning(subject);
     } else {
-      // Prompt user to register or login with PIN
-      onOpenStudentAuth(false, () => {
-        onStartLearning(subject);
-      });
+      handleEnrollAction();
     }
   };
 
@@ -191,39 +215,59 @@ export default function SubjectDetailPage({
               </div>
             </div>
 
-            <button
-              className="btn-primary"
-              onClick={handleStart}
-              style={{
-                padding: '13px 30px',
-                fontSize: '15px',
-                fontWeight: 800,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                borderRadius: 'var(--radius-full)',
-                background: isCompleted
-                  ? 'linear-gradient(135deg, #16A34A 0%, #15803D 100%)'
-                  : 'linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%)',
-                boxShadow: isCompleted
-                  ? '0 8px 24px rgba(22, 163, 74, 0.35)'
-                  : '0 8px 24px rgba(123, 28, 110, 0.35)'
-              }}
-            >
-              {isCompleted ? (
-                <>
-                  <CheckCircle2 size={18} color="#FFFFFF" /> Completed 🎓 &bull; Enter Workbench
-                </>
-              ) : isEnrolled ? (
-                <>
-                  <Play size={16} fill="currentColor" /> Resume Learning 🚀 {progress > 0 ? `(${progress}%)` : ''}
-                </>
-              ) : (
-                <>
-                  <Play size={16} fill="currentColor" /> Start Learning & Enter Lab
-                </>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
+              <button
+                className="btn-primary"
+                onClick={handleStart}
+                disabled={enrolling}
+                style={{
+                  padding: '13px 30px',
+                  fontSize: '15px',
+                  fontWeight: 800,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  borderRadius: 'var(--radius-full)',
+                  background: isCompleted
+                    ? 'linear-gradient(135deg, #16A34A 0%, #15803D 100%)'
+                    : isEnrolled
+                    ? 'linear-gradient(135deg, #7B1C6E 0%, #D97706 100%)'
+                    : 'linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%)',
+                  boxShadow: isCompleted
+                    ? '0 8px 24px rgba(22, 163, 74, 0.35)'
+                    : '0 8px 24px rgba(123, 28, 110, 0.35)',
+                  cursor: enrolling ? 'wait' : 'pointer',
+                  opacity: enrolling ? 0.7 : 1
+                }}
+              >
+                {isCompleted ? (
+                  <>
+                    <CheckCircle2 size={18} color="#FFFFFF" /> Completed 🎓 &bull; View Syllabus
+                  </>
+                ) : isEnrolled ? (
+                  <>
+                    <Play size={16} fill="currentColor" /> View Syllabus 🚀 {progress > 0 ? `(${progress}%)` : ''}
+                  </>
+                ) : enrolling ? (
+                  <>
+                    <Play size={16} fill="currentColor" /> Enrolling into Course...
+                  </>
+                ) : user ? (
+                  <>
+                    <Play size={16} fill="currentColor" /> {enrollError ? 'Retry Enrollment' : 'Enroll Now'}
+                  </>
+                ) : (
+                  <>
+                    <Play size={16} fill="currentColor" /> Login to Enroll
+                  </>
+                )}
+              </button>
+              {enrollError && (
+                <span style={{ fontSize: '11px', color: '#FCA5A5', fontWeight: 600 }}>
+                  {enrollError}
+                </span>
               )}
-            </button>
+            </div>
           </div>
         </div>
       </div>
@@ -254,6 +298,11 @@ export default function SubjectDetailPage({
         </div>
       </div>
 
+      {/* In-Page AdSense Banner */}
+      <div className="my-6">
+        <RealAdSlot slotType="banner" />
+      </div>
+
       {/* Syllabus Modules Accordion */}
       <div>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
@@ -268,13 +317,67 @@ export default function SubjectDetailPage({
           </span>
         </div>
 
+        {/* LOCKED SYLLABUS PREVIEW BANNER */}
+        {!isEnrolled && !isCompleted && (
+          <div style={{
+            background: 'linear-gradient(135deg, rgba(123, 28, 110, 0.08) 0%, rgba(253, 192, 41, 0.06) 100%)',
+            border: '1.5px dashed rgba(123, 28, 110, 0.35)',
+            borderRadius: 'var(--radius-lg)',
+            padding: '18px 22px',
+            marginBottom: '20px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '16px',
+            flexWrap: 'wrap'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+              <div style={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '50%',
+                background: 'rgba(123, 28, 110, 0.15)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#7B1C6E',
+                flexShrink: 0
+              }}>
+                <Lock size={20} />
+              </div>
+              <div>
+                <h4 style={{ margin: '0 0 3px 0', fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)' }}>
+                  Syllabus in Preview Mode
+                </h4>
+                <p style={{ margin: 0, fontSize: '13px', color: 'var(--text-secondary)' }}>
+                  Enroll in {subject.name} to unlock interactive lesson notes, sandboxed code runner, and knowledge gate assessments.
+                </p>
+              </div>
+            </div>
+            <button
+              className="btn-primary"
+              onClick={handleStart}
+              disabled={enrolling}
+              style={{
+                padding: '9px 22px',
+                fontSize: '13.5px',
+                fontWeight: 700,
+                whiteSpace: 'nowrap',
+                background: 'linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%)'
+              }}
+            >
+              {enrolling ? 'Enrolling...' : (user ? 'Enroll Now to Unlock' : 'Login to Enroll')}
+            </button>
+          </div>
+        )}
+
         {loading ? (
           <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-secondary)' }}>
             Loading course syllabus...
           </div>
         ) : curriculumData.length === 0 ? (
           <div style={{ padding: '40px', textAlign: 'center', background: '#FFFFFF', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)', color: 'var(--text-secondary)' }}>
-            Syllabus is being prepared for this track. Click "Start Learning" to begin.
+            Syllabus is being prepared for this track. Click "Enroll Now" to join the cohort.
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
@@ -333,7 +436,7 @@ export default function SubjectDetailPage({
                   {isOpen && (
                     <div style={{ padding: '16px 20px', borderTop: '1px solid var(--border-subtle)', background: '#FAFAFA' }}>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                        {(module.topics || []).map((topic, tIdx) => (
+                        {(module.topics || []).map((topic) => (
                           <div
                             key={topic.id}
                             style={{
@@ -347,15 +450,33 @@ export default function SubjectDetailPage({
                             }}
                           >
                             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                              <CheckCircle2 size={15} color="var(--blue-vibrant)" />
+                              {isEnrolled || isCompleted ? (
+                                <CheckCircle2 size={15} color="var(--blue-vibrant)" />
+                              ) : (
+                                <Lock size={14} color="#94A3B8" />
+                              )}
                               <span style={{ fontSize: '13.5px', fontWeight: 600, color: 'var(--text-primary)' }}>
                                 {topic.title}
                               </span>
                             </div>
 
-                            <span style={{ fontSize: '11px', color: 'var(--text-tertiary)', fontFamily: 'IBM Plex Mono' }}>
-                              {topic.problems?.length || 0} Labs
-                            </span>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                              <span style={{ fontSize: '11px', color: 'var(--text-tertiary)', fontFamily: 'IBM Plex Mono' }}>
+                                {topic.problems?.length || 0} Labs
+                              </span>
+                              {!isEnrolled && !isCompleted && (
+                                <span style={{
+                                  fontSize: '10.5px',
+                                  fontWeight: 700,
+                                  color: '#94A3B8',
+                                  background: '#F1F5F9',
+                                  padding: '2px 8px',
+                                  borderRadius: '999px'
+                                }}>
+                                  Locked
+                                </span>
+                              )}
+                            </div>
                           </div>
                         ))}
                       </div>
@@ -386,9 +507,39 @@ export default function SubjectDetailPage({
         <button
           className="btn-primary"
           onClick={handleStart}
-          style={{ padding: '12px 30px', fontSize: '15px' }}
+          disabled={enrolling}
+          style={{
+            padding: '12px 30px',
+            fontSize: '15px',
+            background: isCompleted
+              ? 'linear-gradient(135deg, #16A34A 0%, #15803D 100%)'
+              : isEnrolled
+              ? 'linear-gradient(135deg, #7B1C6E 0%, #D97706 100%)'
+              : 'linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%)',
+            cursor: enrolling ? 'wait' : 'pointer'
+          }}
         >
-          <Play size={16} fill="currentColor" /> Start Learning Now
+          {isCompleted ? (
+            <>
+              <CheckCircle2 size={16} /> Completed 🎓 &bull; View Syllabus
+            </>
+          ) : isEnrolled ? (
+            <>
+              <Play size={16} fill="currentColor" /> View Syllabus 🚀
+            </>
+          ) : enrolling ? (
+            <>
+              <Play size={16} fill="currentColor" /> Enrolling into Course...
+            </>
+          ) : user ? (
+            <>
+              <Play size={16} fill="currentColor" /> {enrollError ? 'Retry Enrollment' : 'Enroll in Course Now'}
+            </>
+          ) : (
+            <>
+              <Play size={16} fill="currentColor" /> Login to Enroll
+            </>
+          )}
         </button>
       </div>
     </div>
