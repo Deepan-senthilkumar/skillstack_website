@@ -12,17 +12,18 @@ import React, { useEffect, useRef, useState } from 'react';
  *    VITE_ADSENSE_SIDEBAR_SLOT=9876543210
  */
 
-const ADSENSE_CLIENT = import.meta.env.VITE_ADSENSE_CLIENT_ID || '';
-const ADSENSE_BANNER_SLOT = import.meta.env.VITE_ADSENSE_BANNER_SLOT || '';
-const ADSENSE_SIDEBAR_SLOT = import.meta.env.VITE_ADSENSE_SIDEBAR_SLOT || '';
+const ADSENSE_CLIENT = import.meta.env.VITE_ADSENSE_CLIENT_ID || 'ca-pub-6469063098847756';
+const ADSENSE_BANNER_SLOT = import.meta.env.VITE_ADSENSE_BANNER_SLOT || '2336514484';
+const ADSENSE_SIDEBAR_SLOT = import.meta.env.VITE_ADSENSE_SIDEBAR_SLOT || '2336514484';
 
 export default function RealAdSlot({
-  slotType = 'banner', // 'banner' (728x90 responsive) | 'sidebar' (300x250) | 'milestone'
+  slotType = 'banner', // 'banner' (728x90) | 'sidebar' (300x250) | 'milestone'
   adSlot = '',
-  className = ''
+  className = '',
+  forceReal = false
 }) {
   const adRef = useRef(null);
-  const [adLoaded, setAdLoaded] = useState(false);
+  const adPushedRef = useRef(false);
   const isLocalhost = typeof window !== 'undefined' && (
     window.location.hostname === 'localhost' ||
     window.location.hostname === '127.0.0.1'
@@ -30,12 +31,12 @@ export default function RealAdSlot({
 
   const activeSlot = adSlot || (slotType === 'sidebar' ? ADSENSE_SIDEBAR_SLOT : ADSENSE_BANNER_SLOT);
   const activeClient = ADSENSE_CLIENT;
+  const shouldRenderReal = activeClient && (!isLocalhost || forceReal);
 
   useEffect(() => {
-    // Only attempt real AdSense injection if client ID is set and not on localhost
-    if (activeClient && typeof window !== 'undefined' && !isLocalhost) {
+    if (shouldRenderReal && !adPushedRef.current) {
       try {
-        // Dynamically load AdSense script if not already in document
+        // Ensure AdSense script exists in document
         if (!document.querySelector('script[src*="adsbygoogle.js"]')) {
           const script = document.createElement('script');
           script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${activeClient}`;
@@ -44,45 +45,59 @@ export default function RealAdSlot({
           document.head.appendChild(script);
         }
 
-        // Push ad call to Google
-        if (window.adsbygoogle) {
-          (window.adsbygoogle = window.adsbygoogle || []).push({});
-          setAdLoaded(true);
-        }
+        // Push ad unit safely once DOM ins node is ready
+        const timer = setTimeout(() => {
+          try {
+            if (window.adsbygoogle && !adPushedRef.current) {
+              (window.adsbygoogle = window.adsbygoogle || []).push({});
+              adPushedRef.current = true;
+            }
+          } catch (err) {
+            // Suppress duplicate push warnings in dev strict mode
+            console.debug('AdSense push caught:', err);
+          }
+        }, 100);
+
+        return () => clearTimeout(timer);
       } catch (e) {
         console.warn('AdSense ad push error:', e);
       }
     }
-  }, [activeClient, activeSlot, isLocalhost]);
+  }, [activeClient, activeSlot, shouldRenderReal]);
 
   // If real AdSense credentials are configured and running on production domain:
-  if (activeClient && !isLocalhost) {
+  if (shouldRenderReal) {
+    const isBanner = slotType === 'banner' || slotType === 'milestone';
     return (
       <div
         className={`real-ad-wrapper ${className}`}
         style={{
-          margin: slotType === 'sidebar' ? '16px 0' : '24px 0',
+          margin: slotType === 'sidebar' ? '16px 0' : '24px auto',
           textAlign: 'center',
           overflow: 'hidden',
-          borderRadius: '16px',
+          borderRadius: '12px',
           background: '#FAFAFA',
           border: '1px dashed #CBD5E1',
-          padding: '10px'
+          padding: '10px',
+          maxWidth: isBanner ? '760px' : '340px'
         }}
       >
-        <div style={{ fontSize: '10px', color: '#94A3B8', fontWeight: 700, textTransform: 'uppercase', marginBottom: '6px', letterSpacing: '0.05em' }}>
+        <div style={{ fontSize: '9px', color: '#94A3B8', fontWeight: 700, textTransform: 'uppercase', marginBottom: '6px', letterSpacing: '0.06em' }}>
           Advertisement
         </div>
+        {/* skillstackdisplayads */}
         <ins
           ref={adRef}
           className="adsbygoogle"
           style={{
-            display: 'block',
-            minHeight: slotType === 'sidebar' ? '250px' : '90px'
+            display: 'inline-block',
+            width: isBanner ? '728px' : '300px',
+            maxWidth: '100%',
+            height: isBanner ? '90px' : '250px'
           }}
           data-ad-client={activeClient}
-          data-ad-slot={activeSlot || '1234567890'}
-          data-ad-format={slotType === 'sidebar' ? 'rectangle' : 'auto'}
+          data-ad-slot={activeSlot}
+          data-ad-format={isBanner ? undefined : 'rectangle'}
           data-full-width-responsive="true"
         />
       </div>
