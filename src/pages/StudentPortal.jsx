@@ -14,6 +14,7 @@ import RichContentRenderer from '../components/RichContentRenderer';
 import CertificateModal from '../components/CertificateModal';
 import SponsoredTechCard from '../components/SponsoredTechCard';
 import TopicDoubtSection from '../components/TopicDoubtSection';
+import { AcademicIntegrityHiddenTrap } from '../utils/academicIntegrityGuard';
 import { api } from '../api';
 
 export default function StudentPortal({ curriculum = [], user, onRefresh, currentSubject, onBackToCourses, onOpenProfile }) {
@@ -1686,7 +1687,7 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                     ].filter(opt => Boolean(opt.text));
 
                     return (
-                      <div key={q.id || qIdx} className="mcq-card">
+                      <div key={q.id || qIdx} className="mcq-card" data-protected-assessment="true">
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
                           <span style={{
                             fontSize: '11px', fontWeight: 800, padding: '3px 10px',
@@ -1720,6 +1721,7 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
 
                         <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#0F172A', lineHeight: 1.5, margin: '0 0 16px' }}>
                           {q.question_text}
+                          <AcademicIntegrityHiddenTrap />
                         </h3>
 
                         {/* Options Grid */}

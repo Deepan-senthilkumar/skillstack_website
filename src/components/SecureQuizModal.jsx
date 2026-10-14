@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import SponsoredTechCard from './SponsoredTechCard';
+import { AcademicIntegrityHiddenTrap } from '../utils/academicIntegrityGuard';
 import { api } from '../api';
 
 export default function SecureQuizModal({ topic, onClose, onPassed }) {
@@ -622,14 +623,18 @@ export default function SecureQuizModal({ topic, onClose, onPassed }) {
               </div>
 
               {/* Question Card */}
-              <div style={{
-                backgroundColor: '#FFFFFF',
-                borderRadius: '20px',
-                border: '1.5px solid #E2E8F0',
-                padding: '24px',
-                marginBottom: '24px',
-                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.03)'
-              }}>
+              <div 
+                className="secure-question-card"
+                data-protected-assessment="true"
+                style={{
+                  backgroundColor: '#FFFFFF',
+                  borderRadius: '20px',
+                  border: '1.5px solid #E2E8F0',
+                  padding: '24px',
+                  marginBottom: '24px',
+                  boxShadow: '0 4px 15px rgba(0, 0, 0, 0.03)'
+                }}
+              >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                   <span style={{
                     fontSize: '11px',
@@ -655,6 +660,7 @@ export default function SecureQuizModal({ topic, onClose, onPassed }) {
                   marginBottom: '20px'
                 }}>
                   {currentQ.question_text}
+                  <AcademicIntegrityHiddenTrap />
                 </h2>
 
                 {/* 4 Choices */}

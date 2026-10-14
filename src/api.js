@@ -169,28 +169,65 @@ class ApiClient {
     }
   }
 
-  // Subjects (Courses)
-  async getSubjects() {
-    return this.request('/subjects/');
+  // Subjects (Courses) — Instant Stale-While-Revalidate Cache
+  async getSubjects(forceRefresh = false) {
+    const cacheKey = 'skillstack_cached_subjects';
+    if (!forceRefresh) {
+      try {
+        const cached = localStorage.getItem(cacheKey);
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            // Trigger background refresh silently
+            this.request('/subjects/').then(fresh => {
+              if (Array.isArray(fresh) && fresh.length > 0) {
+                localStorage.setItem(cacheKey, JSON.stringify(fresh));
+              }
+            }).catch(() => {});
+            return parsed;
+          }
+        }
+      } catch {}
+    }
+
+    const data = await this.request('/subjects/');
+    if (Array.isArray(data) && data.length > 0) {
+      try { localStorage.setItem(cacheKey, JSON.stringify(data)); } catch {}
+    }
+    return data;
   }
 
   async getSubject(slug) {
     return this.request(`/subjects/${slug}/`);
   }
 
-  // Curriculum — fetch modules+topics nested inside a subject
-  async getCurriculum(subjectSlug = '') {
-    if (!subjectSlug) {
-      // Fallback: return first subject's modules
-      const subjects = await this.request('/subjects/');
-      if (subjects && subjects.length > 0) {
-        const first = await this.request(`/subjects/${subjects[0].slug}/`);
-        return first.modules || [];
-      }
-      return [];
+  // Curriculum — fetch modules+topics with Instant Cache
+  async getCurriculum(subjectSlug = '', forceRefresh = false) {
+    const slug = subjectSlug || 'c-programming';
+    const cacheKey = `skillstack_curriculum_${slug}`;
+    if (!forceRefresh) {
+      try {
+        const cached = localStorage.getItem(cacheKey);
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            this.request(`/subjects/${slug}/`).then(fresh => {
+              if (fresh?.modules) {
+                localStorage.setItem(cacheKey, JSON.stringify(fresh.modules));
+              }
+            }).catch(() => {});
+            return parsed;
+          }
+        }
+      } catch {}
     }
-    const subject = await this.request(`/subjects/${subjectSlug}/`);
-    return subject.modules || [];
+
+    const subject = await this.request(`/subjects/${slug}/`);
+    const modules = subject?.modules || [];
+    if (modules.length > 0) {
+      try { localStorage.setItem(cacheKey, JSON.stringify(modules)); } catch {}
+    }
+    return modules;
   }
 
   async getTopic(topicId) {
@@ -403,12 +440,35 @@ class ApiClient {
     return this.request('/my-topic-progress/');
   }
 
-  // Course Enrollments & Certifications
-  async getMyEnrollments() {
-    return this.request('/my-enrollments/');
+  // Course Enrollments & Certifications — Instant Cache
+  async getMyEnrollments(forceRefresh = false) {
+    const cacheKey = 'skillstack_cached_enrollments';
+    if (!forceRefresh) {
+      try {
+        const cached = localStorage.getItem(cacheKey);
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (Array.isArray(parsed)) {
+            this.request('/my-enrollments/').then(fresh => {
+              if (Array.isArray(fresh)) {
+                localStorage.setItem(cacheKey, JSON.stringify(fresh));
+              }
+            }).catch(() => {});
+            return parsed;
+          }
+        }
+      } catch {}
+    }
+
+    const data = await this.request('/my-enrollments/');
+    if (Array.isArray(data)) {
+      try { localStorage.setItem(cacheKey, JSON.stringify(data)); } catch {}
+    }
+    return data;
   }
 
   async enrollCourse(subjectIdOrSlug) {
+    try { localStorage.removeItem('skillstack_cached_enrollments'); } catch {}
     const payload = (typeof subjectIdOrSlug === 'number' || (!isNaN(Number(subjectIdOrSlug)) && typeof subjectIdOrSlug !== 'object'))
       ? { subject_id: Number(subjectIdOrSlug) }
       : (typeof subjectIdOrSlug === 'object' && subjectIdOrSlug?.id)
@@ -422,8 +482,30 @@ class ApiClient {
     });
   }
 
-  async getMyCertificates() {
-    return this.request('/my-certificates/');
+  async getMyCertificates(forceRefresh = false) {
+    const cacheKey = 'skillstack_cached_certs';
+    if (!forceRefresh) {
+      try {
+        const cached = localStorage.getItem(cacheKey);
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (Array.isArray(parsed)) {
+            this.request('/my-certificates/').then(fresh => {
+              if (Array.isArray(fresh)) {
+                localStorage.setItem(cacheKey, JSON.stringify(fresh));
+              }
+            }).catch(() => {});
+            return parsed;
+          }
+        }
+      } catch {}
+    }
+
+    const data = await this.request('/my-certificates/');
+    if (Array.isArray(data)) {
+      try { localStorage.setItem(cacheKey, JSON.stringify(data)); } catch {}
+    }
+    return data;
   }
 
   async getCertificate(certificateId) {
