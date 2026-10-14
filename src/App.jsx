@@ -23,8 +23,22 @@ export default function App() {
   const [user, setUser] = useState(api.getUser());
   const [currentPage, setCurrentPage] = useState('home');
   // 'home' | 'courses' | 'course-detail' | 'about' | 'contact' | 'learning'
-  const [subjects, setSubjects] = useState([]);
-  const [selectedSubject, setSelectedSubject] = useState(null);
+  const [subjects, setSubjects] = useState(() => {
+    try {
+      const cached = localStorage.getItem('skillstack_cached_subjects');
+      return cached ? JSON.parse(cached) : [];
+    } catch { return []; }
+  });
+  const [selectedSubject, setSelectedSubject] = useState(() => {
+    try {
+      const cached = localStorage.getItem('skillstack_cached_subjects');
+      if (cached) {
+        const list = JSON.parse(cached);
+        return list.find(s => s.slug === 'c-programming') || list[0] || null;
+      }
+    } catch {}
+    return null;
+  });
   const [curriculum, setCurriculum] = useState([]);
   const [loadingCurriculum, setLoadingCurriculum] = useState(false);
   const [capabilities, setCapabilities] = useState([]);
@@ -37,24 +51,28 @@ export default function App() {
 
   const [isServerWaking, setIsServerWaking] = useState(false);
 
-  // Fetch all active subjects
+  // Fetch all active subjects (Cached)
   const fetchSubjects = async () => {
-    const wakingTimer = setTimeout(() => setIsServerWaking(true), 2500);
+    let wakingTimer = null;
+    // Only show server waking banner if we have zero subjects in state & cache
+    if (subjects.length === 0) {
+      wakingTimer = setTimeout(() => setIsServerWaking(true), 6000);
+    }
     try {
       const data = await api.getSubjects();
-      clearTimeout(wakingTimer);
+      if (wakingTimer) clearTimeout(wakingTimer);
       setIsServerWaking(false);
       setSubjects(data);
       if (data.length > 0) {
         const initialSub = (selectedSubject && data.find(s => s.id === selectedSubject.id)) ||
           data.find(s => s.slug === 'c-programming') || data[0];
         setSelectedSubject(initialSub);
-        if (initialSub) {
+        if (initialSub && curriculum.length === 0) {
           fetchCurriculum(initialSub.slug);
         }
       }
     } catch (err) {
-      clearTimeout(wakingTimer);
+      if (wakingTimer) clearTimeout(wakingTimer);
       setIsServerWaking(false);
       console.error('Error fetching subjects', err);
     }
@@ -214,9 +232,8 @@ export default function App() {
         user={user}
         currentPage={currentPage}
         onNavigate={(page) => {
-          if (['courses', 'course-detail', 'learning', 'profile'].includes(page)) {
+          if (subjects.length === 0) {
             fetchSubjects();
-            fetchCurriculum('c-programming');
           }
           setCurrentPage(page);
           window.scrollTo({ top: 0, behavior: 'smooth' });

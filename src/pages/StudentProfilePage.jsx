@@ -14,15 +14,25 @@ export default function StudentProfilePage({
   onNavigate
 }) {
   const [activeTab, setActiveTab] = useState('active'); // 'active' | 'completed' | 'catalog' | 'certificates'
-  const [enrollments, setEnrollments] = useState([]);
-  const [certificates, setCertificates] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [enrollments, setEnrollments] = useState(() => {
+    try {
+      const cached = localStorage.getItem('skillstack_cached_enrollments');
+      return cached ? JSON.parse(cached) : [];
+    } catch { return []; }
+  });
+  const [certificates, setCertificates] = useState(() => {
+    try {
+      const cached = localStorage.getItem('skillstack_cached_certs');
+      return cached ? JSON.parse(cached) : [];
+    } catch { return []; }
+  });
+  const [loading, setLoading] = useState(false);
   const [enrollingSubjectId, setEnrollingSubjectId] = useState(null);
   const [selectedCertificate, setSelectedCertificate] = useState(null);
   const [actionMessage, setActionMessage] = useState(null);
 
-  const fetchStudentData = async () => {
-    setLoading(true);
+  const fetchStudentData = async (silent = true) => {
+    if (!silent) setLoading(true);
     try {
       const [enrollData, certData] = await Promise.allSettled([
         api.getMyEnrollments(),
