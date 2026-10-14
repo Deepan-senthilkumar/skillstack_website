@@ -6,8 +6,13 @@ import SubjectDetailPage from './pages/SubjectDetailPage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import StudentPortal from './pages/StudentPortal';
+import StudentProfilePage from './pages/StudentProfilePage';
 import LoginModal from './components/LoginModal';
 import Footer from './components/Footer';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import TermsPage from './pages/TermsPage';
+import DisclaimerPage from './pages/DisclaimerPage';
+import CookieConsentBanner from './components/CookieConsentBanner';
 import { api } from './api';
 
 // ADMIN PANEL URL — update this to your deployed admin Vercel URL
@@ -39,9 +44,13 @@ export default function App() {
       clearTimeout(wakingTimer);
       setIsServerWaking(false);
       setSubjects(data);
-      if (data.length > 0 && !selectedSubject) {
-        const djangoSub = data.find(s => s.slug === 'django-fullstack') || data[0];
-        setSelectedSubject(djangoSub);
+      if (data.length > 0) {
+        const initialSub = (selectedSubject && data.find(s => s.id === selectedSubject.id)) ||
+          data.find(s => s.slug === 'c-programming') || data[0];
+        setSelectedSubject(initialSub);
+        if (initialSub) {
+          fetchCurriculum(initialSub.slug);
+        }
       }
     } catch (err) {
       clearTimeout(wakingTimer);
@@ -53,10 +62,12 @@ export default function App() {
   const fetchCurriculum = async (subjectSlug) => {
     setLoadingCurriculum(true);
     try {
-      const slug = subjectSlug || (selectedSubject ? selectedSubject.slug : '');
+      const slug = subjectSlug || (selectedSubject ? selectedSubject.slug : 'c-programming');
       if (slug) {
         const data = await api.getCurriculum(slug);
-        setCurriculum(data);
+        if (Array.isArray(data) && data.length > 0) {
+          setCurriculum(data);
+        }
       }
     } catch (err) {
       console.error('Error fetching curriculum', err);
@@ -129,7 +140,7 @@ export default function App() {
       postAuthCallback(authenticatedUser);
       setPostAuthCallback(null);
     } else if (currentPage === 'home') {
-      setCurrentPage('learning');
+      setCurrentPage('profile');
     }
   };
 
@@ -140,10 +151,12 @@ export default function App() {
   };
 
   const handleStartLearning = (subject) => {
-    if (subject) {
-      setSelectedSubject(subject);
-      fetchCurriculum(subject.slug);
+    const targetSub = subject || selectedSubject || subjects.find(s => s.slug === 'c-programming') || subjects[0];
+    if (targetSub) {
+      setSelectedSubject(targetSub);
+      fetchCurriculum(targetSub.slug);
     }
+    fetchSubjects();
     if (!user) {
       handleOpenAuth('student', false, () => {
         setCurrentPage('learning');
@@ -198,6 +211,10 @@ export default function App() {
         user={user}
         currentPage={currentPage}
         onNavigate={(page) => {
+          if (['courses', 'course-detail', 'learning', 'profile'].includes(page)) {
+            fetchSubjects();
+            fetchCurriculum('c-programming');
+          }
           setCurrentPage(page);
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
@@ -226,7 +243,9 @@ export default function App() {
         {currentPage === 'courses' && (
           <CoursesPage
             subjects={subjects}
+            user={user}
             onSelectSubject={handleSelectSubject}
+            onStartLearning={handleStartLearning}
             onNavigate={(page) => {
               setCurrentPage(page);
               window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -255,6 +274,45 @@ export default function App() {
 
         {currentPage === 'contact' && <ContactPage subjects={subjects} />}
 
+        {currentPage === 'privacy-policy' && (
+          <PrivacyPolicyPage
+            onNavigate={(page) => {
+              setCurrentPage(page);
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          />
+        )}
+
+        {currentPage === 'terms' && (
+          <TermsPage
+            onNavigate={(page) => {
+              setCurrentPage(page);
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          />
+        )}
+
+        {currentPage === 'disclaimer' && (
+          <DisclaimerPage
+            onNavigate={(page) => {
+              setCurrentPage(page);
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          />
+        )}
+
+        {currentPage === 'profile' && (
+          <StudentProfilePage
+            user={user}
+            subjects={subjects}
+            onStartLearning={handleStartLearning}
+            onNavigate={(page) => {
+              setCurrentPage(page);
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          />
+        )}
+
         {currentPage === 'learning' && (
           <StudentPortal
             curriculum={curriculum}
@@ -262,6 +320,7 @@ export default function App() {
             onRefresh={() => fetchCurriculum(selectedSubject?.slug)}
             currentSubject={selectedSubject}
             onBackToCourses={() => setCurrentPage('courses')}
+            onOpenProfile={() => setCurrentPage('profile')}
           />
         )}
       </main>
@@ -276,6 +335,14 @@ export default function App() {
           onOpenStaffAuth={() => handleOpenAuth('staff', false)}
         />
       )}
+
+      {/* Cookie & AdSense Consent Banner */}
+      <CookieConsentBanner
+        onNavigate={(page) => {
+          setCurrentPage(page);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+      />
 
       {/* Auth Modal */}
       {authModalOpen && (

@@ -5,6 +5,7 @@ import {
   Sparkles, HelpCircle, Lock, BookOpen, AlertCircle
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import SponsoredTechCard from './SponsoredTechCard';
 import { api } from '../api';
 
 export default function SecureQuizModal({ topic, onClose, onPassed }) {
@@ -859,6 +860,9 @@ export default function SecureQuizModal({ topic, onClose, onPassed }) {
                     <span>Re-attempt available in ~10 minutes</span>
                   </div>
                 )}
+
+                {/* Non-intrusive sponsor card below result score */}
+                <SponsoredTechCard variant="milestone" />
               </div>
 
               {/* Answers & Explanations Review List */}

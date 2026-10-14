@@ -1,37 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import {
-  MessageSquare, Mail, Phone, MapPin, Send, CheckCircle2,
-  Clock, Shield, Sparkles, HelpCircle, ArrowRight
+  MessageSquare, Mail, MapPin, Send, CheckCircle2,
+  Clock, Shield, Sparkles, HelpCircle, ArrowRight,
+  ExternalLink, Globe
 } from 'lucide-react';
 import { siteConfig } from '../config/siteConfig';
 import { api } from '../api';
 
+const GitHubIcon = ({ size = 15 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+  </svg>
+);
+
+const LinkedInIcon = ({ size = 15 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+    <rect x="2" y="9" width="4" height="12" />
+    <circle cx="4" cy="4" r="2" />
+  </svg>
+);
+
+const YouTubeIcon = ({ size = 15, color = "#EF4444" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17" />
+    <polygon points="10 15 15 12 10 9 10 15" fill={color} />
+  </svg>
+);
+
 export default function ContactPage({ subjects = [] }) {
-  const [trackList, setTrackList] = useState(subjects);
+  const { creator } = siteConfig;
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    phone: '',
-    subjectTrack: 'general',
+    subjectCategory: 'feedback',
     message: ''
   });
   const [submitted, setSubmitted] = useState(false);
-
-  useEffect(() => {
-    if (subjects && subjects.length > 0) {
-      setTrackList(subjects);
-      setFormData(prev => ({ ...prev, subjectTrack: subjects[0]?.slug || 'general' }));
-    } else {
-      api.getSubjects()
-        .then(data => {
-          if (Array.isArray(data) && data.length > 0) {
-            setTrackList(data);
-            setFormData(prev => ({ ...prev, subjectTrack: data[0]?.slug || 'general' }));
-          }
-        })
-        .catch(() => {});
-    }
-  }, [subjects]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -44,36 +49,49 @@ export default function ContactPage({ subjects = [] }) {
       <div className="curvy-floating-orb orb-blue" style={{ top: '60px', left: '0px', width: 'min(380px, 80vw)', height: 'min(380px, 80vw)' }} />
       <div className="curvy-floating-orb orb-cyan" style={{ top: '240px', right: '0px', width: 'min(340px, 75vw)', height: 'min(340px, 75vw)' }} />
 
-      {/* CURVY & DOTTED HERO BANNER (Pure Light Theme) */}
-      <div className="catalog-hero-banner" style={{
-        background: 'linear-gradient(135deg, #FDF5FD 0%, #FDF5FD 50%, #FFFFFF 100%)',
-        border: '1.5px solid rgba(123, 28, 110, 0.16)',
-        boxShadow: '0 16px 40px rgba(0, 60, 160, 0.08)'
-      }}>
+      {/* HERO BANNER */}
+      <div className="catalog-hero-banner">
+        <div style={{
+          position: 'absolute',
+          top: '-60px',
+          right: '-40px',
+          width: '360px',
+          height: '360px',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(168, 85, 247, 0.22) 0%, transparent 70%)',
+          filter: 'blur(45px)',
+          pointerEvents: 'none'
+        }} />
+
         <div className="watermark-tech-grid" />
         <div style={{ position: 'relative', zIndex: 2, maxWidth: '820px' }}>
-          <div className="hero-badge" style={{ marginBottom: '16px' }}>
+          <div className="hero-badge">
             <MessageSquare size={14} color="#FDC029" />
-            <span>Admissions & Academic Support Desk</span>
+            <span>Developer Connect & Community Feedback</span>
           </div>
 
-          <h1 style={{ fontSize: 'clamp(28px, 3.5vw, 42px)', fontWeight: 800, color: '#0A192F', marginBottom: '14px', lineHeight: 1.2 }}>
-            Direct Communications with the{' '}
-            <span className="hero-gradient-text">
-              Academic Operations Senate
+          <h1 style={{ fontSize: 'clamp(28px, 3.6vw, 42px)', fontWeight: 850, color: '#FFFFFF', marginBottom: '14px', lineHeight: 1.2, letterSpacing: '-0.02em' }}>
+            Get in Touch with{' '}
+            <span style={{
+              background: 'linear-gradient(135deg, #FDC029 0%, #FB7185 50%, #C084FC 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              display: 'inline'
+            }}>
+              Deepan S
             </span>
           </h1>
 
-          <p style={{ color: '#334155', fontSize: '15.5px', lineHeight: 1.7, marginBottom: '24px' }}>
-            Have questions regarding admissions, domain faculty office hours, automated assertion evaluation criteria, or enterprise team sponsorships? Submit an inquiry to our operations team below.
+          <p style={{ color: '#94A3B8', fontSize: '15.5px', lineHeight: 1.7, marginBottom: '24px' }}>
+            Have feedback on the SkillStack learning experience, found a bug in a compiler sandbox, or want to connect with the developer? Reach out directly using the options below.
           </p>
 
-          <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', alignItems: 'center' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#7B1C6E', fontWeight: 700 }}>
-              <Clock size={16} color="#7B1C6E" /> 24-Hour SLA Response Time
+          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center' }}>
+            <div className="catalog-hero-pill-feature">
+              <Clock size={15} color="#10B981" /> Direct Developer Response
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#7B1C6E', fontWeight: 700 }}>
-              <Shield size={16} color="#7B1C6E" /> Dedicated Faculty Admissions Chair
+            <div className="catalog-hero-pill-feature">
+              <Shield size={15} color="#38BDF8" /> Open Source & Learning Focused
             </div>
           </div>
         </div>
@@ -94,17 +112,17 @@ export default function ContactPage({ subjects = [] }) {
             boxShadow: '0 10px 30px -5px rgba(10, 25, 60, 0.06)'
           }}>
             <h3 style={{ fontSize: '19px', fontWeight: 800, marginBottom: '18px', color: '#0F172A' }}>
-              Institutional Contact Channels
+              Direct Contact Details
             </h3>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              {/* Email */}
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px' }}>
                 <div style={{
                   width: '42px',
                   height: '42px',
                   borderRadius: '12px',
                   background: 'rgba(123, 28, 110, 0.08)',
-                  color: 'var(--blue-primary)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -113,40 +131,24 @@ export default function ContactPage({ subjects = [] }) {
                   <Mail size={18} color="#7B1C6E" />
                 </div>
                 <div>
-                  <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Official Admissions Email</div>
-                  <div style={{ fontSize: '14.5px', fontWeight: 700, color: 'var(--text-primary)' }}>{siteConfig.contact.email}</div>
-                  <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Faculty queries: {siteConfig.contact.facultyDesk}</div>
+                  <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Email Address</div>
+                  <a
+                    href={`mailto:${creator.email}`}
+                    style={{ fontSize: '15px', fontWeight: 700, color: '#7B1C6E', textDecoration: 'none' }}
+                  >
+                    {creator.email}
+                  </a>
+                  <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>Open for queries, feedback, & collaborations</div>
                 </div>
               </div>
 
+              {/* Location */}
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px' }}>
                 <div style={{
                   width: '42px',
                   height: '42px',
                   borderRadius: '12px',
                   background: 'rgba(123, 28, 110, 0.08)',
-                  color: 'var(--blue-primary)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexShrink: 0
-                }}>
-                  <Phone size={18} color="#7B1C6E" />
-                </div>
-                <div>
-                  <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Admissions Direct Line</div>
-                  <div style={{ fontSize: '14.5px', fontWeight: 700, color: 'var(--text-primary)' }}>{siteConfig.contact.phone}</div>
-                  <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Toll-Free Assistance: {siteConfig.contact.tollFree}</div>
-                </div>
-              </div>
-
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px' }}>
-                <div style={{
-                  width: '42px',
-                  height: '42px',
-                  borderRadius: '12px',
-                  background: 'rgba(123, 28, 110, 0.08)',
-                  color: 'var(--blue-primary)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -155,16 +157,71 @@ export default function ContactPage({ subjects = [] }) {
                   <MapPin size={18} color="#7B1C6E" />
                 </div>
                 <div>
-                  <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Academic Campus</div>
-                  <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', lineHeight: 1.5 }}>
-                    {siteConfig.contact.campus}
-                  </div>
+                  <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Based In</div>
+                  <div style={{ fontSize: '14.5px', fontWeight: 700, color: 'var(--text-primary)' }}>{creator.location}</div>
+                  <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>Software developer & creator</div>
+                </div>
+              </div>
+
+              {/* Portfolio */}
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px' }}>
+                <div style={{
+                  width: '42px',
+                  height: '42px',
+                  borderRadius: '12px',
+                  background: 'rgba(123, 28, 110, 0.08)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0
+                }}>
+                  <Globe size={18} color="#7B1C6E" />
+                </div>
+                <div>
+                  <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Official Portfolio</div>
+                  <a
+                    href={creator.portfolioUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ fontSize: '14px', fontWeight: 700, color: '#7B1C6E', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                  >
+                    portfolio-deepan.vercel.app <ExternalLink size={12} />
+                  </a>
+                  <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>Projects, Flutter apps, & experience</div>
+                </div>
+              </div>
+
+              {/* Jerry Edits */}
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px' }}>
+                <div style={{
+                  width: '42px',
+                  height: '42px',
+                  borderRadius: '12px',
+                  background: 'rgba(239, 68, 68, 0.08)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0
+                }}>
+                  <YouTubeIcon size={18} color="#EF4444" />
+                </div>
+                <div>
+                  <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Creative Channel</div>
+                  <a
+                    href={creator.jerryEditsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ fontSize: '14px', fontWeight: 700, color: '#D97706', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                  >
+                    jerry-edits.vercel.app <ExternalLink size={12} />
+                  </a>
+                  <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>Tamil video edits & visual creations</div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Operational Hours */}
+          {/* Social Profiles Pill Card */}
           <div style={{
             background: '#FFFFFF',
             padding: '24px 28px',
@@ -172,31 +229,73 @@ export default function ContactPage({ subjects = [] }) {
             border: '1.5px solid rgba(123, 28, 110, 0.12)',
             display: 'flex',
             alignItems: 'center',
-            gap: '14px'
+            justifyContent: 'space-between',
+            gap: '14px',
+            flexWrap: 'wrap'
           }}>
-            <Clock size={22} color="#7B1C6E" />
             <div>
-              <div style={{ fontSize: '13.5px', fontWeight: 700, color: 'var(--text-primary)' }}>Operational Timings</div>
-              <div style={{ fontSize: '12.5px', color: 'var(--text-secondary)' }}>{siteConfig.contact.workingHours}</div>
+              <div style={{ fontSize: '14px', fontWeight: 800, color: 'var(--text-primary)' }}>Find Deepan Online</div>
+              <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>GitHub & LinkedIn profiles</div>
+            </div>
+
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <a
+                href={creator.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '7px 14px',
+                  borderRadius: '20px',
+                  background: '#F1F5F9',
+                  color: '#0F172A',
+                  fontSize: '12px',
+                  fontWeight: 700,
+                  textDecoration: 'none'
+                }}
+              >
+                <GitHubIcon size={14} /> GitHub
+              </a>
+              <a
+                href={creator.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '7px 14px',
+                  borderRadius: '20px',
+                  background: 'rgba(10, 102, 194, 0.08)',
+                  color: '#0A66C2',
+                  fontSize: '12px',
+                  fontWeight: 700,
+                  textDecoration: 'none'
+                }}
+              >
+                <LinkedInIcon size={14} /> LinkedIn
+              </a>
             </div>
           </div>
         </div>
 
-        {/* Inquiry Form */}
+        {/* Feedback / Message Form */}
         <div style={{
           background: '#FFFFFF',
-          padding: '36px',
+          padding: '36px 32px',
           borderRadius: '28px',
           border: '1.5px solid rgba(123, 28, 110, 0.14)',
           boxShadow: '0 10px 30px -5px rgba(10, 25, 60, 0.06)'
         }}>
           {submitted ? (
-            <div style={{ textAlign: 'center', padding: '40px 20px' }}>
+            <div style={{ textAlign: 'center', padding: '40px 10px' }}>
               <div style={{
-                width: '56px',
-                height: '56px',
+                width: '60px',
+                height: '60px',
                 borderRadius: '50%',
-                background: 'rgba(22, 163, 74, 0.12)',
+                background: '#DCFCE7',
                 color: '#16A34A',
                 display: 'flex',
                 alignItems: 'center',
@@ -205,169 +304,146 @@ export default function ContactPage({ subjects = [] }) {
               }}>
                 <CheckCircle2 size={32} />
               </div>
-              <h3 style={{ fontSize: '22px', fontWeight: 800, marginBottom: '8px', color: '#0F172A' }}>Inquiry Registered</h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '14px', lineHeight: 1.6, marginBottom: '24px' }}>
-                Thank you for contacting SkillStack. An academic advisor has been assigned and will reach out via email or phone within 24 hours.
+              <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#0F172A', marginBottom: '8px' }}>
+                Thank You for Your Feedback!
+              </h3>
+              <p style={{ color: '#64748B', fontSize: '14px', lineHeight: 1.6, maxWidth: '400px', margin: '0 auto 24px' }}>
+                Your message has been received. You can also send an email directly to <strong>{creator.email}</strong> anytime.
               </p>
               <button
+                type="button"
                 className="btn-secondary"
-                onClick={() => {
-                  setSubmitted(false);
-                  setFormData({ name: '', email: '', phone: '', subjectTrack: 'django-fullstack', message: '' });
-                }}
-                style={{ borderRadius: 'var(--radius-full)' }}
+                onClick={() => setSubmitted(false)}
+                style={{ borderRadius: 'var(--radius-full)', padding: '9px 24px', fontSize: '13px' }}
               >
                 Send Another Message
               </button>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
-              <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#0F172A', marginBottom: '4px' }}>
-                Submit Academic Inquiry
+            <div>
+              <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#0F172A', marginBottom: '6px' }}>
+                Send Feedback or Inquiry
               </h3>
-              <p style={{ fontSize: '13.5px', color: 'var(--text-secondary)', marginBottom: '10px' }}>
-                Complete the form below to receive syllabus breakdowns and admissions consultation.
+              <p style={{ color: '#64748B', fontSize: '13.5px', marginBottom: '24px' }}>
+                Have a recommendation for a new course topic or feedback on the interactive compilers? Let us know below.
               </p>
 
-              <div>
-                <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '6px' }}>
-                  Full Name *
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. Anand Kumar"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  style={{
-                    width: '100%',
-                    padding: '11px 14px',
-                    borderRadius: '12px',
-                    border: '1.5px solid var(--border-medium)',
-                    fontSize: '13.5px',
-                    outline: 'none'
-                  }}
-                />
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+              <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '6px' }}>
-                    Email Address *
+                  <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, color: '#334155', marginBottom: '6px' }}>
+                    Your Name
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Deepan S"
+                    value={formData.name}
+                    onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                    style={{
+                      width: '100%',
+                      padding: '11px 14px',
+                      borderRadius: '12px',
+                      border: '1.5px solid #CBD5E1',
+                      fontSize: '14px',
+                      boxSizing: 'border-box',
+                      outline: 'none'
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, color: '#334155', marginBottom: '6px' }}>
+                    Your Email Address
                   </label>
                   <input
                     type="email"
                     required
-                    placeholder="name@example.com"
+                    placeholder="you@example.com"
                     value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
                     style={{
                       width: '100%',
                       padding: '11px 14px',
                       borderRadius: '12px',
-                      border: '1.5px solid var(--border-medium)',
-                      fontSize: '13.5px',
+                      border: '1.5px solid #CBD5E1',
+                      fontSize: '14px',
+                      boxSizing: 'border-box',
                       outline: 'none'
                     }}
                   />
                 </div>
-                <div>
-                  <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '6px' }}>
-                    Mobile Number *
-                  </label>
-                  <input
-                    type="tel"
-                    required
-                    placeholder="+91 98765 43210"
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    style={{
-                      width: '100%',
-                      padding: '11px 14px',
-                      borderRadius: '12px',
-                      border: '1.5px solid var(--border-medium)',
-                      fontSize: '13.5px',
-                      outline: 'none'
-                    }}
-                  />
-                </div>
-              </div>
 
-              <div>
-                <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '6px' }}>
-                  Target Curriculum Track
-                </label>
-                <select
-                  value={formData.subjectTrack}
-                  onChange={(e) => setFormData({ ...formData, subjectTrack: e.target.value })}
+                <div>
+                  <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, color: '#334155', marginBottom: '6px' }}>
+                    Message Category
+                  </label>
+                  <select
+                    value={formData.subjectCategory}
+                    onChange={(e) => setFormData(prev => ({ ...prev, subjectCategory: e.target.value }))}
+                    style={{
+                      width: '100%',
+                      padding: '11px 14px',
+                      borderRadius: '12px',
+                      border: '1.5px solid #CBD5E1',
+                      fontSize: '14px',
+                      boxSizing: 'border-box',
+                      outline: 'none',
+                      background: '#FFF'
+                    }}
+                  >
+                    <option value="feedback">Course Feedback &amp; Suggestions</option>
+                    <option value="compiler">Compiler Sandbox / Bug Report</option>
+                    <option value="collab">Developer Collaboration / Tech Chat</option>
+                    <option value="general">General Question</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, color: '#334155', marginBottom: '6px' }}>
+                    Your Message
+                  </label>
+                  <textarea
+                    required
+                    rows={4}
+                    placeholder="Write your feedback, questions, or comments here..."
+                    value={formData.message}
+                    onChange={(e) => setFormData(prev => ({ ...prev, message: e.target.value }))}
+                    style={{
+                      width: '100%',
+                      padding: '11px 14px',
+                      borderRadius: '12px',
+                      border: '1.5px solid #CBD5E1',
+                      fontSize: '14px',
+                      boxSizing: 'border-box',
+                      outline: 'none',
+                      resize: 'vertical'
+                    }}
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="btn-primary"
                   style={{
-                    width: '100%',
-                    padding: '11px 14px',
-                    borderRadius: '12px',
-                    border: '1.5px solid var(--border-medium)',
-                    fontSize: '13.5px',
-                    outline: 'none',
-                    background: '#FFFFFF'
+                    padding: '12px',
+                    borderRadius: 'var(--radius-full)',
+                    background: 'linear-gradient(135deg, #7B1C6E 0%, #A82596 100%)',
+                    color: '#FFFFFF',
+                    fontWeight: 800,
+                    fontSize: '14px',
+                    border: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
+                    cursor: 'pointer',
+                    marginTop: '4px'
                   }}
                 >
-                  {trackList && trackList.length > 0 ? (
-                    trackList.map(track => (
-                      <option key={track.id || track.slug} value={track.slug}>
-                        {track.name}
-                      </option>
-                    ))
-                  ) : (
-                    <option value="general">General Admissions & Fellowship Inquiries</option>
-                  )}
-                  <option value="general_other">General Inquiries / Support</option>
-                </select>
-              </div>
-
-              <div>
-                <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '6px' }}>
-                  Inquiry Message or Career Background *
-                </label>
-                <textarea
-                  rows={4}
-                  required
-                  placeholder="Describe your current technical background and academic objectives..."
-                  value={formData.message}
-                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  style={{
-                    width: '100%',
-                    padding: '11px 14px',
-                    borderRadius: '12px',
-                    border: '1.5px solid var(--border-medium)',
-                    fontSize: '13.5px',
-                    outline: 'none',
-                    resize: 'vertical'
-                  }}
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="btn-primary"
-                style={{
-                  padding: '13px',
-                  borderRadius: 'var(--radius-full)',
-                  fontSize: '14px',
-                  fontWeight: 800,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '8px',
-                  cursor: 'pointer',
-                  border: 'none',
-                  background: 'linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%)',
-                  color: '#FFFFFF',
-                  boxShadow: '0 4px 14px var(--blue-glow)',
-                  marginTop: '8px'
-                }}
-              >
-                <Send size={16} /> Submit Inquiry to Admissions Desk
-              </button>
-            </form>
+                  <Send size={15} /> Send Message to Developer
+                </button>
+              </form>
+            </div>
           )}
         </div>
       </div>

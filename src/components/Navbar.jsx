@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   Shield, UserCheck, LogOut, Server,
   Play, Users, ExternalLink, Home, BookOpen, Info, Mail,
-  Menu, X, Sparkles, ChevronRight
+  Menu, X, Sparkles, ChevronRight, Award, GraduationCap
 } from 'lucide-react';
 import { api } from '../api';
 import BrandLogo from './BrandLogo';
@@ -48,8 +48,9 @@ export default function Navbar({
   const navLinks = [
     { key: 'home', label: 'Home', icon: <Home size={15} /> },
     { key: 'courses', label: 'Curriculum', icon: <BookOpen size={15} />, matchPages: ['courses', 'course-detail'] },
+    ...(user ? [{ key: 'profile', label: 'My Courses & Certs 🎓', icon: <Award size={15} /> }] : []),
     { key: 'about', label: 'About', icon: <Info size={15} /> },
-    { key: 'contact', label: 'Admissions', icon: <Mail size={15} /> },
+    { key: 'contact', label: 'Contact', icon: <Mail size={15} /> },
   ];
 
   const handleNavClick = (key) => {
@@ -229,16 +230,22 @@ export default function Navbar({
                 <Play size={13} /> Workbench
               </button>
 
-              <div style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '5px 12px',
-                borderRadius: 'var(--radius-full)',
-                background: '#F1F5F9',
-                border: '1px solid #CBD5E1',
-                flexShrink: 0
-              }}>
+              <div
+                onClick={() => handleNavClick('profile')}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '5px 12px',
+                  borderRadius: 'var(--radius-full)',
+                  background: currentPage === 'profile' ? 'rgba(123, 28, 110, 0.12)' : '#F1F5F9',
+                  border: currentPage === 'profile' ? '1.5px solid #7B1C6E' : '1px solid #CBD5E1',
+                  cursor: 'pointer',
+                  flexShrink: 0,
+                  transition: 'all 0.2s ease'
+                }}
+                title="View My Profile, Enrolled Courses & Certificates"
+              >
                 <UserCheck size={13} color="#7B1C6E" />
                 <span style={{ fontWeight: 700, color: '#0F172A', fontSize: '12px' }}>
                   {user.first_name || user.display_name || user.username}
@@ -476,11 +483,11 @@ export default function Navbar({
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                     <Sparkles size={16} color="#7B1C6E" />
                     <span style={{ fontWeight: 800, fontSize: '13.5px', color: '#0F172A' }}>
-                      Learn Django in Tamil
+                      Learn C Programming
                     </span>
                   </div>
                   <p style={{ fontSize: '12px', color: '#64748B', marginBottom: '14px', lineHeight: 1.5 }}>
-                    Master full-stack web development with Tamil audio explanations & practice labs.
+                    Master systems programming, pointers, and memory architecture with automated practice labs.
                   </p>
                   <div style={{ display: 'flex', gap: '8px' }}>
                     <button

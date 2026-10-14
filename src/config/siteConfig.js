@@ -1,56 +1,78 @@
 /**
- * SkillStack — Dynamic Platform Configuration
- * All metrics, faculty rosters, capabilities, and platform metadata
- * are dynamically loaded via the Backend API.
+ * SkillStack — Project & Creator Configuration
+ * Built by Deepan S (Flutter & Full Stack Developer, Chennai)
  */
 
 export const siteConfig = {
   brand: {
     name: "SkillStack",
-    fullName: "SkillStack Learning Platform",
+    fullName: "SkillStack — Engineering Learning Platform",
     shortName: "SkillStack",
     logo: "/skillstack.png",
-    tagline: "Master Software Engineering & Modern Tech Stacks",
-    description: "Interactive technology learning academy featuring hands-on modules, real-time code evaluation, and industry-grade curriculum.",
-    established: 2026,
-    version: "v3.4.0-enterprise",
-    status: "Operational — All Systems Normal",
+    tagline: "Interactive Software Engineering Curriculum & Automated Labs",
+    description: "An educational platform created by Deepan S to learn programming fundamentals, modern tech stacks, and production engineering through interactive theory and automated practical sandboxes.",
+    creator: "Deepan S (Deepan Senthilkumar)",
+    creatorRole: "Flutter & Full Stack Developer",
+    status: "Active Project — Open for Learning",
     dbEngine: "PostgreSQL on Supabase Cloud",
-    deployment: "Vercel Edge & Render Production Clusters"
+    deployment: "Vercel & Render Cloud"
   },
 
-  // Dynamic Live Metrics (Updated via API)
+  creator: {
+    name: "Deepan S",
+    fullName: "Deepan Senthilkumar",
+    role: "Flutter & Full Stack Developer",
+    location: "Chennai, Tamil Nadu, India",
+    company: "Ocean Softwares Pvt Ltd",
+    education: "B.E. — Jai Shriram Engineering College",
+    bio: "Passionate developer crafting high-performance Flutter mobile apps on Google Play Store, responsive full-stack web platforms with React & Python/Django, and interactive learning tools.",
+    portfolioUrl: "https://portfolio-deepan.vercel.app/",
+    jerryEditsUrl: "https://jerry-edits.vercel.app/",
+    email: "deepansenthil098@gmail.com",
+    github: "https://github.com/Deepan-senthilkumar",
+    linkedin: "https://linkedin.com/in/deepan49",
+    youtube: "https://youtube.com/@jerryedits4"
+  },
+
   metrics: {
-    enrolledFellows: "0",
-    activeLabProblems: "0",
-    seniorFacultyCount: "0",
     automatedPassRate: "100%",
-    codeEvaluationsToday: "0",
-    partnerEnterprises: "0"
   },
 
-  // Dynamic Capabilities (Managed via Admin / API)
-  capabilities: [],
+  capabilities: [
+    {
+      id: "practical-labs",
+      title: "Interactive Compiler Sandboxes",
+      desc: "Hands-on coding directly in browser terminal sandboxes with automated test assertion and instant scoring."
+    },
+    {
+      id: "curated-theory",
+      title: "Structured Concept Notes",
+      desc: "Crisp architectural diagrams, mental models, and real-world code implementations for each engineering topic."
+    },
+    {
+      id: "knowledge-checks",
+      title: "Topic Quizzes & Verification",
+      desc: "Instant MCQs to test comprehension right after reading before advancing to mandatory practical challenges."
+    },
+    {
+      id: "progress-tracking",
+      title: "Self-Paced Mastery & Certificates",
+      desc: "Live completion milestones, detailed submission logs, and verified completion certificates."
+    }
+  ],
 
-  // Dynamic Faculty Directory (Loaded from Backend /api/staff/faculty/)
-  faculty: [],
-
-  // Dynamic Fellow Testimonials & Reviews (Loaded via API)
-  testimonials: [],
-
-  // Contact & Platform Info
   contact: {
-    email: "admissions@skillstack.com",
-    supportEmail: "support@skillstack.com",
-    facultyDesk: "faculty@skillstack.com",
-    phone: "+91 44 2850 4900",
-    tollFree: "1800 572 8900",
-    campus: "SkillStack Tech Hub, OMR Cyber Corridor, Chennai, Tamil Nadu, India",
-    workingHours: "Monday – Saturday: 09:00 AM – 07:00 PM IST",
+    email: "deepansenthil098@gmail.com",
+    creator: "Deepan S",
+    location: "Chennai, Tamil Nadu, India",
+    portfolio: "https://portfolio-deepan.vercel.app/",
+    jerryEdits: "https://jerry-edits.vercel.app/",
     socials: {
-      github: "https://github.com/skillstack-learning",
-      linkedin: "https://linkedin.com/company/skillstack-learning",
-      twitter: "https://twitter.com/SkillStackLearn"
+      github: "https://github.com/Deepan-senthilkumar",
+      linkedin: "https://linkedin.com/in/deepan49",
+      portfolio: "https://portfolio-deepan.vercel.app/",
+      jerryEdits: "https://jerry-edits.vercel.app/",
+      youtube: "https://youtube.com/@jerryedits4"
     }
   }
 };

@@ -1,0 +1,3 @@
+# Google AdSense Authorized Digital Sellers (ads.txt)
+google.com, pub-6469063098847756, DIRECT, f08c47fec0942fa0
+
