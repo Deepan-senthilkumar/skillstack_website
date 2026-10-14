@@ -11,4 +11,10 @@ Allow: /
 User-agent: Googlebot
 Allow: /
 
-Sitemap: https://skillstack.vercel.app/sitemap.xml
+# Google Image & Favicon Crawler
+User-agent: Googlebot-Image
+Allow: /skillstack.png
+Allow: /favicon.ico
+Allow: /images/
+
+Sitemap: https://learn-skillstack.vercel.app/sitemap.xml
