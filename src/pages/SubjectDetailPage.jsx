@@ -233,11 +233,11 @@ export default function SubjectDetailPage({
                   background: isCompleted
                     ? 'linear-gradient(135deg, #16A34A 0%, #15803D 100%)'
                     : isEnrolled
-                    ? 'linear-gradient(135deg, #7B1C6E 0%, #D97706 100%)'
-                    : 'linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%)',
+                    ? 'linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)'
+                    : 'linear-gradient(135deg, #EC4899 0%, #7C3AED 100%)',
                   boxShadow: isCompleted
                     ? '0 8px 24px rgba(22, 163, 74, 0.35)'
-                    : '0 8px 24px rgba(123, 28, 110, 0.35)',
+                    : '0 8px 24px rgba(124, 58, 237, 0.35)',
                   cursor: enrolling ? 'wait' : 'pointer',
                   opacity: enrolling ? 0.7 : 1
                 }}
@@ -298,11 +298,6 @@ export default function SubjectDetailPage({
           <h4>Automatic Marks</h4>
           <p>Pass criteria assertions without waiting days for manual review.</p>
         </div>
-      </div>
-
-      {/* In-Page AdSense Banner */}
-      <div className="my-6">
-        <RealAdSlot slotType="banner" />
       </div>
 
       {/* Syllabus Modules Accordion */}

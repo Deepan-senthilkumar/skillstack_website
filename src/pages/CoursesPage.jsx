@@ -384,9 +384,9 @@ export default function CoursesPage({ subjects, onSelectSubject, onNavigate, use
                     <button
                       className="subject-cta-btn"
                       style={{
-                        background: 'linear-gradient(135deg, #7B1C6E 0%, #D97706 100%)',
+                        background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)',
                         color: '#FFFFFF',
-                        boxShadow: '0 4px 14px rgba(123, 28, 110, 0.3)',
+                        boxShadow: '0 4px 14px rgba(124, 58, 237, 0.3)',
                         border: 'none'
                       }}
                       onClick={(e) => {
@@ -400,6 +400,12 @@ export default function CoursesPage({ subjects, onSelectSubject, onNavigate, use
                   ) : (
                     <button
                       className="subject-cta-btn"
+                      style={{
+                        background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)',
+                        color: '#FFFFFF',
+                        boxShadow: '0 4px 14px rgba(124, 58, 237, 0.25)',
+                        border: 'none'
+                      }}
                       onClick={(e) => {
                         e.stopPropagation();
                         onSelectSubject(subject);
@@ -416,11 +422,6 @@ export default function CoursesPage({ subjects, onSelectSubject, onNavigate, use
           })}
         </div>
       )}
-
-      {/* In-Page AdSense Banner */}
-      <div className="mt-8 mb-4">
-        <RealAdSlot slotType="banner" />
-      </div>
     </div>
   );
 }

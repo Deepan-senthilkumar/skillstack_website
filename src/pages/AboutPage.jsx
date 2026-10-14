@@ -393,7 +393,7 @@ export default function AboutPage({ onNavigate }) {
             <button
               className="hero-btn btn-primary"
               onClick={() => onNavigate('courses')}
-              style={{ background: 'linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%)', color: '#FFFFFF' }}
+              style={{ background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)', color: '#FFFFFF', borderRadius: '9999px', border: 'none' }}
             >
               Explore Course Tracks <ArrowRight size={15} />
             </button>
