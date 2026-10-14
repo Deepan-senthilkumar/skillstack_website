@@ -371,13 +371,15 @@ export default function App() {
         />
       )}
 
-      {/* Cookie & AdSense Consent Banner */}
+      {/* Cookie & AdSense Consent Banner (Disabled as requested) */}
+      {/* 
       <CookieConsentBanner
         onNavigate={(page) => {
           setCurrentPage(page);
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
       />
+      */}
 
       {/* Auth Modal */}
       {authModalOpen && (
