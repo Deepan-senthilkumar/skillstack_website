@@ -188,24 +188,26 @@ export default function App() {
       {isServerWaking && (
         <div style={{
           position: 'fixed',
-          top: '14px',
+          top: '18px',
           left: '50%',
           transform: 'translateX(-50%)',
           zIndex: 99999,
-          background: 'linear-gradient(135deg, #7B1C6E 0%, #A82596 100%)',
+          background: 'rgba(124, 58, 237, 0.95)',
+          backdropFilter: 'blur(12px)',
           color: '#FFFFFF',
-          padding: '8px 18px',
-          borderRadius: '999px',
-          boxShadow: '0 8px 24px rgba(123, 28, 110, 0.35)',
+          padding: '10px 22px',
+          borderRadius: '9999px',
+          boxShadow: '0 12px 30px -4px rgba(124, 58, 237, 0.45)',
           display: 'flex',
           alignItems: 'center',
           gap: '10px',
-          fontSize: '12.5px',
-          fontWeight: 600,
+          fontSize: '13px',
+          fontWeight: 700,
+          border: '1px solid rgba(255, 255, 255, 0.25)',
           pointerEvents: 'none'
         }}>
-          <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: '#FDC029' }} />
-          ⚡ Server is waking up from standby (Render free tier)... Please wait a moment.
+          <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: '#F472B6', boxShadow: '0 0 10px #F472B6' }} />
+          <span>⚡ Backend cluster is spinning up from standby... Connecting now.</span>
         </div>
       )}
       <Navbar

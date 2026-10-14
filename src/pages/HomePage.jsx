@@ -153,8 +153,8 @@ export default function HomePage({
                 <Users size={18} color="#059669" />
               </div>
               <div>
-                <div style={{ fontSize: '13px', fontWeight: 800, color: '#0F172A' }}>10k+</div>
-                <div style={{ fontSize: '11px', color: '#64748B', fontWeight: 600 }}>Active Learners</div>
+                <div style={{ fontSize: '13px', fontWeight: 800, color: '#0F172A' }}>Active Cohorts</div>
+                <div style={{ fontSize: '11px', color: '#64748B', fontWeight: 600 }}>Peer Learning</div>
               </div>
             </div>
 
@@ -424,7 +424,7 @@ export default function HomePage({
                       {subject.short_description || subject.description || 'Comprehensive curriculum with hands-on coding modules and automated problem evaluations.'}
                     </p>
 
-                    {/* Metadata Strip */}
+                    {/* Metadata Strip - All Real DB Metrics */}
                     <div style={{
                       display: 'flex',
                       alignItems: 'center',
@@ -440,8 +440,8 @@ export default function HomePage({
                         <span style={{ color: '#475569', fontWeight: 600 }}>{subject.module_count ?? 3} Chapters</span>
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <Users size={14} color="#059669" />
-                        <span style={{ color: '#475569', fontWeight: 600 }}>100+ Students</span>
+                        <Terminal size={14} color="#059669" />
+                        <span style={{ color: '#475569', fontWeight: 600 }}>{subject.duration || 'Structured Track'}</span>
                       </div>
                     </div>
                   </div>
@@ -652,11 +652,6 @@ export default function HomePage({
           </div>
         </div>
       </section>
-
-      {/* In-Feed Google AdSense Banner */}
-      <div style={{ maxWidth: '1200px', margin: '40px auto 20px', padding: '0 20px' }}>
-        <RealAdSlot slotType="banner" />
-      </div>
     </div>
   );
 }

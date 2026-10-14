@@ -427,7 +427,7 @@ export default function ContactPage({ subjects = [] }) {
                   style={{
                     padding: '12px',
                     borderRadius: 'var(--radius-full)',
-                    background: 'linear-gradient(135deg, #7B1C6E 0%, #A82596 100%)',
+                    background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)',
                     color: '#FFFFFF',
                     fontWeight: 800,
                     fontSize: '14px',

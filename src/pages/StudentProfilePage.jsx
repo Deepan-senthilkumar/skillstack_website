@@ -261,9 +261,9 @@ export default function StudentProfilePage({
               fontWeight: 700,
               border: 'none',
               cursor: 'pointer',
-              background: activeTab === 'active' ? 'linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%)' : '#F1F5F9',
+              background: activeTab === 'active' ? 'linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)' : '#F1F5F9',
               color: activeTab === 'active' ? '#FFFFFF' : '#475569',
-              boxShadow: activeTab === 'active' ? '0 4px 14px rgba(123, 28, 110, 0.25)' : 'none',
+              boxShadow: activeTab === 'active' ? '0 4px 14px rgba(124, 58, 237, 0.25)' : 'none',
               transition: 'all 0.2s ease'
             }}
           >

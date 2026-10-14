@@ -109,13 +109,13 @@ export default function Navbar({
                   fontSize: '13px',
                   fontWeight: isActive ? 700 : 600,
                   color: isActive ? '#FFFFFF' : 'var(--text-secondary)',
-                  background: isActive ? 'linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%)' : 'transparent',
+                  background: isActive ? 'linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)' : 'transparent',
                   border: 'none',
                   cursor: 'pointer',
                   transition: 'all 0.2s ease',
                   whiteSpace: 'nowrap',
                   flexShrink: 0,
-                  boxShadow: isActive ? '0 2px 10px rgba(123, 28, 110, 0.3)' : 'none'
+                  boxShadow: isActive ? '0 2px 10px rgba(124, 58, 237, 0.3)' : 'none'
                 }}
               >
                 {link.icon}
@@ -221,7 +221,7 @@ export default function Navbar({
                   fontWeight: 700,
                   padding: '7px 14px',
                   borderRadius: 'var(--radius-full)',
-                  background: 'linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%)',
+                  background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)',
                   color: '#FFFFFF',
                   whiteSpace: 'nowrap',
                   flexShrink: 0
@@ -238,15 +238,15 @@ export default function Navbar({
                   gap: '6px',
                   padding: '5px 12px',
                   borderRadius: 'var(--radius-full)',
-                  background: currentPage === 'profile' ? 'rgba(123, 28, 110, 0.12)' : '#F1F5F9',
-                  border: currentPage === 'profile' ? '1.5px solid #7B1C6E' : '1px solid #CBD5E1',
+                  background: currentPage === 'profile' ? 'rgba(124, 58, 237, 0.12)' : '#F1F5F9',
+                  border: currentPage === 'profile' ? '1.5px solid #7C3AED' : '1px solid #CBD5E1',
                   cursor: 'pointer',
                   flexShrink: 0,
                   transition: 'all 0.2s ease'
                 }}
                 title="View My Profile, Enrolled Courses & Certificates"
               >
-                <UserCheck size={13} color="#7B1C6E" />
+                <UserCheck size={13} color="#7C3AED" />
                 <span style={{ fontWeight: 700, color: '#0F172A', fontSize: '12px' }}>
                   {user.first_name || user.display_name || user.username}
                 </span>
@@ -255,8 +255,8 @@ export default function Navbar({
                   fontWeight: 800,
                   padding: '1px 5px',
                   borderRadius: '3px',
-                  background: 'rgba(123, 28, 110, 0.1)',
-                  color: '#7B1C6E'
+                  background: 'rgba(124, 58, 237, 0.1)',
+                  color: '#7C3AED'
                 }}>
                   Fellow
                 </span>
@@ -283,7 +283,7 @@ export default function Navbar({
                   borderRadius: 'var(--radius-full)',
                   fontSize: '12px',
                   fontWeight: 700,
-                  background: 'linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%)',
+                  background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)',
                   color: '#FFFFFF',
                   border: 'none',
                   display: 'inline-flex',
@@ -301,9 +301,9 @@ export default function Navbar({
                   borderRadius: 'var(--radius-full)',
                   fontSize: '12px',
                   fontWeight: 700,
-                  background: 'rgba(123, 28, 110, 0.08)',
-                  color: '#7B1C6E',
-                  border: '1px solid rgba(123, 28, 110, 0.2)'
+                  background: 'rgba(124, 58, 237, 0.08)',
+                  color: '#7C3AED',
+                  border: '1px solid rgba(124, 58, 237, 0.25)'
                 }}
               >
                 Sign In
@@ -321,7 +321,7 @@ export default function Navbar({
                 width: '38px',
                 height: '38px',
                 borderRadius: '10px',
-                background: mobileMenuOpen ? '#7B1C6E' : '#F8FAFC',
+                background: mobileMenuOpen ? '#7C3AED' : '#F8FAFC',
                 color: mobileMenuOpen ? '#FFFFFF' : '#1E293B',
                 border: '1px solid #E2E8F0',
                 cursor: 'pointer',
