@@ -1,37 +1,37 @@
 :root {
-  /* SkillStack Exact Logo Color Palette: Deep Magenta (#7B1C6E) & Gold (#FDC029) */
-  --bg-main: #FDFBFD;
+  /* SkillStack Modern Vibrant Palette: Royal Purple (#7C3AED), Violet (#A855F7) & Vivid Pink (#EC4899) */
+  --bg-main: #FAFAFA;
   --bg-surface: #FFFFFF;
-  --bg-surface-elevated: #F9F3F8;
+  --bg-surface-elevated: #F8FAFC;
   --bg-sidebar: #FFFFFF;
-  --bg-code: #160614;
+  --bg-code: #0F172A;
   
-  --border-subtle: #F0E2EE;
-  --border-medium: #E2CBDD;
-  --border-focus: #7B1C6E;
+  --border-subtle: #F1F5F9;
+  --border-medium: #E2E8F0;
+  --border-focus: #7C3AED;
 
-  --text-primary: #1F081C;
-  --text-secondary: #4A2045;
-  --text-tertiary: #7A5775;
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --text-tertiary: #94A3B8;
 
-  /* SkillStack Exact Logo Gradient System */
-  --blue-primary: #7B1C6E;
-  --blue-vibrant: #7B1C6E;
-  --blue-gradient: linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%);
-  --blue-gradient-hover: linear-gradient(135deg, #5C1352 0%, #E5A817 100%);
-  --blue-gradient-subtle: linear-gradient(180deg, #FDF5FD 0%, #FFFFFF 100%);
-  --blue-soft: rgba(123, 28, 110, 0.08);
-  --blue-border: rgba(123, 28, 110, 0.22);
-  --blue-glow: rgba(123, 28, 110, 0.3);
+  /* SkillStack Vibrant Gradient System */
+  --blue-primary: #7C3AED;
+  --blue-vibrant: #7C3AED;
+  --blue-gradient: linear-gradient(135deg, #7C3AED 0%, #A855F7 50%, #EC4899 100%);
+  --blue-gradient-hover: linear-gradient(135deg, #6D28D9 0%, #9333EA 50%, #DB2777 100%);
+  --blue-gradient-subtle: linear-gradient(180deg, rgba(124, 58, 237, 0.04) 0%, #FFFFFF 100%);
+  --blue-soft: rgba(124, 58, 237, 0.08);
+  --blue-border: rgba(124, 58, 237, 0.2);
+  --blue-glow: rgba(124, 58, 237, 0.35);
 
-  --accent: #7B1C6E;
-  --accent-gold: #FDC029;
-  --accent-hover: #5C1352;
-  --accent-soft: rgba(123, 28, 110, 0.08);
-  --accent-glow: rgba(123, 28, 110, 0.3);
+  --accent: #7C3AED;
+  --accent-gold: #EC4899;
+  --accent-hover: #6D28D9;
+  --accent-soft: rgba(124, 58, 237, 0.08);
+  --accent-glow: rgba(124, 58, 237, 0.35);
 
-  --amber: #FDC029;
-  --amber-soft: rgba(253, 192, 41, 0.15);
+  --amber: #F59E0B;
+  --amber-soft: rgba(245, 158, 11, 0.12);
 
   --coral: #E11D48;
   --coral-soft: rgba(225, 29, 72, 0.08);
@@ -250,25 +250,25 @@ button, input, select, textarea {
 /* Main Layout Grid */
 .app-container {
   display: flex;
-  min-height: calc(100vh - 66px);
+  min-height: calc(100vh - 64px);
   width: 100%;
   background: #F8FAFC;
+  align-items: stretch;
 }
 
-/* Sidebar */
+/* Sidebar — Full Page Flow without cramped inner scroll */
 .app-sidebar {
-  width: 350px;
-  min-width: 350px;
-  max-width: 350px;
+  width: 360px;
+  min-width: 360px;
+  max-width: 360px;
   flex-shrink: 0;
   background: #FFFFFF;
   border-right: 1px solid #E2E8F0;
-  padding: 20px 16px 40px;
-  overflow-y: auto;
-  max-height: calc(100vh - 66px);
-  position: sticky;
-  top: 66px;
-  box-shadow: 1px 0 4px rgba(15, 23, 42, 0.02);
+  padding: 24px 18px 60px;
+  overflow: visible;
+  height: auto;
+  min-height: 100%;
+  box-shadow: 1px 0 6px rgba(15, 23, 42, 0.02);
   z-index: 10;
 }
 
@@ -404,9 +404,9 @@ button, input, select, textarea {
   border-radius: var(--radius-full);
   font-size: 13px;
   font-weight: 700;
-  border: 1.5px solid rgba(123, 28, 110, 0.15);
+  border: 1.5px solid rgba(124, 58, 237, 0.15);
   background: #FFFFFF;
-  color: var(--text-secondary);
+  color: #475569;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -416,22 +416,22 @@ button, input, select, textarea {
 }
 
 .content-tab-btn:hover {
-  color: #7B1C6E;
-  border-color: rgba(123, 28, 110, 0.35);
-  background: rgba(123, 28, 110, 0.03);
+  color: #7C3AED;
+  border-color: rgba(124, 58, 237, 0.35);
+  background: rgba(124, 58, 237, 0.04);
 }
 
 .content-tab-btn.active {
-  background: linear-gradient(135deg, #7B1C6E 0%, #D97706 100%);
+  background: linear-gradient(135deg, #7C3AED 0%, #A855F7 50%, #EC4899 100%);
   color: #FFFFFF;
   border-color: transparent;
-  box-shadow: 0 4px 14px rgba(123, 28, 110, 0.3);
+  box-shadow: 0 4px 16px rgba(124, 58, 237, 0.35);
 }
 
 /* Interactive Stepper Navigation Bar */
 .stepper-nav-bar {
   background: #FFFFFF;
-  border: 1.5px solid rgba(123, 28, 110, 0.12);
+  border: 1.5px solid rgba(124, 58, 237, 0.14);
   border-radius: 20px;
   padding: 14px 20px;
   margin-bottom: 24px;

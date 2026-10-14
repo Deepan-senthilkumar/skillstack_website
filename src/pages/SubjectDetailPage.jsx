@@ -333,11 +333,11 @@ export default function SubjectDetailPage({
                 width: '40px',
                 height: '40px',
                 borderRadius: '50%',
-                background: 'rgba(123, 28, 110, 0.15)',
+                background: 'rgba(124, 58, 237, 0.12)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: '#7B1C6E',
+                color: '#7C3AED',
                 flexShrink: 0
               }}>
                 <Lock size={20} />
@@ -360,7 +360,8 @@ export default function SubjectDetailPage({
                 fontSize: '13.5px',
                 fontWeight: 700,
                 whiteSpace: 'nowrap',
-                background: 'linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%)'
+                background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 50%, #EC4899 100%)',
+                boxShadow: '0 4px 16px rgba(124, 58, 237, 0.3)'
               }}
             >
               {enrolling ? 'Enrolling...' : (user ? 'Enroll Now to Unlock' : 'Login to Enroll')}
@@ -426,7 +427,7 @@ export default function SubjectDetailPage({
                         <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>
                           {module.topics?.length || 0} Topics
                         </span>
-                        {isOpen ? <ChevronUp size={16} color="#7B1C6E" /> : <ChevronDown size={16} color="#94A3B8" />}
+                        {isOpen ? <ChevronUp size={16} color="#7C3AED" /> : <ChevronDown size={16} color="#94A3B8" />}
                       </div>
                     </div>
 
@@ -448,7 +449,7 @@ export default function SubjectDetailPage({
                           >
                             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                               {isEnrolled || isCompleted ? (
-                                <CheckCircle2 size={15} color="var(--blue-vibrant)" />
+                                <CheckCircle2 size={15} color="#7C3AED" />
                               ) : (
                                 <Lock size={14} color="#94A3B8" />
                               )}
@@ -490,8 +491,8 @@ export default function SubjectDetailPage({
       <div style={{
         marginTop: '50px',
         padding: '30px',
-        background: 'var(--blue-gradient-subtle)',
-        border: '1px solid var(--blue-border)',
+        background: 'rgba(124, 58, 237, 0.04)',
+        border: '1px solid rgba(124, 58, 237, 0.15)',
         borderRadius: 'var(--radius-xl)',
         textAlign: 'center'
       }}>
@@ -508,11 +509,12 @@ export default function SubjectDetailPage({
           style={{
             padding: '12px 30px',
             fontSize: '15px',
+            fontWeight: 700,
+            borderRadius: '9999px',
             background: isCompleted
               ? 'linear-gradient(135deg, #16A34A 0%, #15803D 100%)'
-              : isEnrolled
-              ? 'linear-gradient(135deg, #7B1C6E 0%, #D97706 100%)'
-              : 'linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%)',
+              : 'linear-gradient(135deg, #7C3AED 0%, #A855F7 50%, #EC4899 100%)',
+            boxShadow: '0 6px 22px rgba(124, 58, 237, 0.35)',
             cursor: enrolling ? 'wait' : 'pointer'
           }}
         >

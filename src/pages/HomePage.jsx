@@ -455,7 +455,7 @@ export default function HomePage({
                         borderRadius: '9999px',
                         background: isCompleted
                           ? 'linear-gradient(135deg, #10B981 0%, #059669 100%)'
-                          : 'linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)',
+                          : 'linear-gradient(135deg, #7C3AED 0%, #A855F7 50%, #EC4899 100%)',
                         color: '#FFFFFF',
                         fontWeight: 700,
                         fontSize: '14px',
