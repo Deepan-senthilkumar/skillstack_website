@@ -164,9 +164,9 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
       const data = await api.getMyEnrollments();
       const list = Array.isArray(data) ? data : (data?.results || []);
       const matched = list.find(e =>
-        (currentSubject?.id && String(e.subject) === String(currentSubject.id)) ||
+        (currentSubject?.id && (String(e.subject) === String(currentSubject.id) || String(e.subject_id) === String(currentSubject.id))) ||
         (currentSubject?.slug && e.subject_slug === currentSubject.slug) ||
-        (list.length > 0 && !currentSubject)
+        (currentSubject?.name && e.subject_name && e.subject_name.toLowerCase() === currentSubject.name.toLowerCase())
       );
       if (matched) {
         setIsEnrolled(true);
@@ -177,8 +177,8 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
       }
     } catch (e) {
       console.warn('Failed to verify enrollment:', e);
-      // Fallback: don't lock out if network error
-      setIsEnrolled(true);
+      setIsEnrolled(false);
+      setEnrollment(null);
     }
   };
 
@@ -187,12 +187,16 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
       alert('Please sign in or register to enroll in this course');
       return;
     }
-    const targetSubject = currentSubject?.id || currentSubject?.slug || 'c-programming';
+    const targetSubject = currentSubject?.id || currentSubject?.slug;
+    if (!targetSubject) {
+      alert('No course selected for enrollment.');
+      return;
+    }
     setEnrolling(true);
     try {
       const res = await api.enrollCourse(targetSubject);
       setIsEnrolled(true);
-      setEnrollment(res);
+      setEnrollment(res.enrollment || res);
       if (onRefresh) onRefresh();
     } catch (err) {
       alert(err.message || 'Failed to enroll in this course');

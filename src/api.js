@@ -8,27 +8,41 @@ class ApiClient {
   }
 
   getToken() {
-    return localStorage.getItem('kalari_access_token');
+    return localStorage.getItem('skillstack_access_token') || localStorage.getItem('kalari_access_token');
+  }
+
+  getRefreshToken() {
+    return localStorage.getItem('skillstack_refresh_token') || localStorage.getItem('kalari_refresh_token');
   }
 
   setTokens(access, refresh) {
-    if (access) localStorage.setItem('kalari_access_token', access);
-    if (refresh) localStorage.setItem('kalari_refresh_token', refresh);
+    if (access) {
+      localStorage.setItem('skillstack_access_token', access);
+      localStorage.setItem('kalari_access_token', access);
+    }
+    if (refresh) {
+      localStorage.setItem('skillstack_refresh_token', refresh);
+      localStorage.setItem('kalari_refresh_token', refresh);
+    }
   }
 
   clearTokens() {
+    localStorage.removeItem('skillstack_access_token');
+    localStorage.removeItem('skillstack_refresh_token');
+    localStorage.removeItem('skillstack_user');
     localStorage.removeItem('kalari_access_token');
     localStorage.removeItem('kalari_refresh_token');
     localStorage.removeItem('kalari_user');
   }
 
   getUser() {
-    const u = localStorage.getItem('kalari_user');
+    const u = localStorage.getItem('skillstack_user') || localStorage.getItem('kalari_user');
     return u ? JSON.parse(u) : null;
   }
 
   setUser(user) {
     if (user) {
+      localStorage.setItem('skillstack_user', JSON.stringify(user));
       localStorage.setItem('kalari_user', JSON.stringify(user));
     }
   }
@@ -51,7 +65,7 @@ class ApiClient {
         headers,
       });
 
-      if (response.status === 401 && !options._retry && localStorage.getItem('kalari_refresh_token')) {
+      if (response.status === 401 && !options._retry && this.getRefreshToken()) {
         // Try refreshing token
         const refreshed = await this.refreshToken();
         if (refreshed) {
@@ -86,7 +100,7 @@ class ApiClient {
   }
 
   async refreshToken() {
-    const refresh = localStorage.getItem('kalari_refresh_token');
+    const refresh = this.getRefreshToken();
     if (!refresh) return false;
 
     try {
