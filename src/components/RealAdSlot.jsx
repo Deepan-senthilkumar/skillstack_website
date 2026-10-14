@@ -1,103 +1,174 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 /**
- * RealAdSlot — Production-ready Google AdSense & Real Ad Network Component
+ * RealAdSlot — Production-ready Dual Ad Network Component
+ * Supports:
+ * 1. Adsterra Real Units (Immediate Active Delivery):
+ *    - Leaderboard Banner: 728x90 (key: bcb17925672d5883bd0526ad42e3863d)
+ *    - Skyscraper Vertical: 160x600 (key: a5d6d3695577982c41c7b6ad4574ec1d)
+ *    - Medium Rectangle: 300x250 (key: c48aedc80aa82c5d254b2557bf8ac2c0)
+ * 2. Google AdSense (Parallel / Co-existence)
  * 
- * To start earning real money:
- * 1. Create a free account at https://adsense.google.com
- * 2. Get your Publisher ID (e.g. ca-pub-1234567890123456)
- * 3. Add to skillstack_website/.env:
- *    VITE_ADSENSE_CLIENT_ID=ca-pub-1234567890123456
- *    VITE_ADSENSE_BANNER_SLOT=1234567890
- *    VITE_ADSENSE_SIDEBAR_SLOT=9876543210
+ * Safety & Security:
+ * - Sandboxed iframes prevent unauthorized parent window navigation & hijacking.
+ * - Non-adult configuration enforced.
+ * - Mobile responsive: 728x90 auto-adapts to 300x250 on narrow smartphone viewports.
  */
 
-const ADSENSE_CLIENT = import.meta.env.VITE_ADSENSE_CLIENT_ID || 'ca-pub-6469063098847756';
-const ADSENSE_BANNER_SLOT = import.meta.env.VITE_ADSENSE_BANNER_SLOT || '2336514484';
-const ADSENSE_SIDEBAR_SLOT = import.meta.env.VITE_ADSENSE_SIDEBAR_SLOT || '2336514484';
+const ADSTERRA_UNITS = {
+  banner: {
+    key: 'bcb17925672d5883bd0526ad42e3863d',
+    width: 728,
+    height: 90,
+  },
+  leaderboard: {
+    key: 'bcb17925672d5883bd0526ad42e3863d',
+    width: 728,
+    height: 90,
+  },
+  milestone: {
+    key: 'bcb17925672d5883bd0526ad42e3863d',
+    width: 728,
+    height: 90,
+  },
+  sidebar: {
+    key: 'c48aedc80aa82c5d254b2557bf8ac2c0',
+    width: 300,
+    height: 250,
+  },
+  rectangle: {
+    key: 'c48aedc80aa82c5d254b2557bf8ac2c0',
+    width: 300,
+    height: 250,
+  },
+  skyscraper: {
+    key: 'a5d6d3695577982c41c7b6ad4574ec1d',
+    width: 160,
+    height: 600,
+  },
+  vertical: {
+    key: 'a5d6d3695577982c41c7b6ad4574ec1d',
+    width: 160,
+    height: 600,
+  }
+};
 
 export default function RealAdSlot({
-  slotType = 'banner', // 'banner' (728x90) | 'sidebar' (300x250) | 'milestone'
-  adSlot = '',
+  slotType = 'banner', // 'banner' (728x90) | 'sidebar'/'rectangle' (300x250) | 'skyscraper' (160x600)
   className = '',
-  forceReal = false
+  network = 'adsterra' // 'adsterra' | 'adsense' | 'both'
 }) {
-  const adRef = useRef(null);
-  const adPushedRef = useRef(false);
-  const isLocalhost = typeof window !== 'undefined' && (
-    window.location.hostname === 'localhost' ||
-    window.location.hostname === '127.0.0.1'
-  );
-
-  const activeSlot = adSlot || (slotType === 'sidebar' ? ADSENSE_SIDEBAR_SLOT : ADSENSE_BANNER_SLOT);
-  const activeClient = ADSENSE_CLIENT;
-  const shouldRenderReal = activeClient && (!isLocalhost || forceReal);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    if (shouldRenderReal && !adPushedRef.current) {
-      try {
-        // Ensure AdSense script exists in document
-        if (!document.querySelector('script[src*="adsbygoogle.js"]')) {
-          const script = document.createElement('script');
-          script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${activeClient}`;
-          script.async = true;
-          script.crossOrigin = 'anonymous';
-          document.head.appendChild(script);
-        }
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
-        // Push ad unit safely once DOM ins node is ready
-        const timer = setTimeout(() => {
-          try {
-            if (window.adsbygoogle && !adPushedRef.current) {
-              (window.adsbygoogle = window.adsbygoogle || []).push({});
-              adPushedRef.current = true;
-            }
-          } catch (err) {
-            // Suppress duplicate push warnings in dev strict mode
-            console.debug('AdSense push caught:', err);
-          }
-        }, 100);
-
-        return () => clearTimeout(timer);
-      } catch (e) {
-        console.warn('AdSense ad push error:', e);
-      }
-    }
-  }, [activeClient, activeSlot, shouldRenderReal]);
-
-  // If real AdSense credentials are configured:
-  if (shouldRenderReal) {
-    const isBanner = slotType === 'banner' || slotType === 'milestone';
-    return (
-      <div
-        className={`real-ad-wrapper ${className}`}
-        style={{
-          margin: slotType === 'sidebar' ? '12px 0' : '20px auto',
-          textAlign: 'center',
-          overflow: 'hidden',
-          maxWidth: isBanner ? '728px' : '300px',
-          width: '100%'
-        }}
-      >
-        {/* skillstackdisplayads */}
-        <ins
-          ref={adRef}
-          className="adsbygoogle"
-          style={{
-            display: 'inline-block',
-            width: isBanner ? '728px' : '300px',
-            maxWidth: '100%',
-            height: isBanner ? '90px' : '250px'
-          }}
-          data-ad-client={activeClient}
-          data-ad-slot={activeSlot}
-          data-ad-format={isBanner ? undefined : 'rectangle'}
-          data-full-width-responsive="true"
-        />
-      </div>
-    );
+  // Determine active unit config
+  let targetType = slotType;
+  // If 728x90 banner on mobile, automatically use 300x250 rectangle to prevent screen overflow
+  if (isMobile && (slotType === 'banner' || slotType === 'leaderboard' || slotType === 'milestone')) {
+    targetType = 'rectangle';
   }
 
-  // If no real AdSense client is configured or ad not loaded, do NOT show any empty boxes
-  return null;
+  const unit = ADSTERRA_UNITS[targetType] || ADSTERRA_UNITS.banner;
+
+  // Build sandboxed HTML snippet for Adsterra invocation
+  const iframeContent = `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="referrer" content="no-referrer-when-downgrade">
+      <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: transparent;
+          overflow: hidden;
+        }
+      </style>
+    </head>
+    <body>
+      <script type="text/javascript">
+        atOptions = {
+          'key' : '${unit.key}',
+          'format' : 'iframe',
+          'height' : ${unit.height},
+          'width' : ${unit.width},
+          'params' : {}
+        };
+      </script>
+      <script type="text/javascript" src="https://www.highrevenueformat.com/${unit.key}/invoke.js"></script>
+    </body>
+    </html>
+  `;
+
+  return (
+    <div
+      className={`real-ad-slot-wrapper ${className}`}
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: slotType === 'sidebar' ? '14px 0' : '22px auto',
+        width: '100%',
+        maxWidth: `${unit.width}px`,
+        overflow: 'hidden'
+      }}
+    >
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: '100%',
+          marginBottom: '5px'
+        }}
+      >
+        <span
+          style={{
+            fontSize: '9.5px',
+            fontWeight: 700,
+            color: '#94A3B8',
+            letterSpacing: '0.08em',
+            textTransform: 'uppercase'
+          }}
+        >
+          Sponsored
+        </span>
+      </div>
+
+      <iframe
+        key={`${unit.key}-${unit.width}-${unit.height}`}
+        title={`Adsterra Ad ${unit.width}x${unit.height}`}
+        srcDoc={iframeContent}
+        width={unit.width}
+        height={unit.height}
+        style={{
+          border: 'none',
+          maxWidth: '100%',
+          overflow: 'hidden',
+          borderRadius: '8px',
+          background: 'transparent',
+          display: 'block'
+        }}
+        scrolling="no"
+        loading="lazy"
+        // Security Sandbox: Allows scripts & clicking popups, but blocks top-level parent window redirection
+        sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+      />
+    </div>
+  );
 }

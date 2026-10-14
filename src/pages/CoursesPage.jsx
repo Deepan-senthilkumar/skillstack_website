@@ -422,6 +422,11 @@ export default function CoursesPage({ subjects, onSelectSubject, onNavigate, use
           })}
         </div>
       )}
+
+      {/* Sponsored Banner Slot */}
+      <div style={{ marginTop: '36px', display: 'flex', justifyContent: 'center' }}>
+        <RealAdSlot slotType="banner" />
+      </div>
     </div>
   );
 }
