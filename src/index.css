@@ -2941,5 +2941,420 @@ input:checked + .slider:before {
   animation: pulse-subtle 2s infinite ease-in-out;
 }
 
+/* =========================================================================
+   LAYER-BASED CLASSIC & UNIQUE EDTECH LANDING PAGE DESIGN SYSTEM
+   Inspired by modern layered portfolio & EdTech interfaces (Etech reference)
+   ========================================================================= */
+
+.etech-hero-section {
+  position: relative;
+  background: #FFFFFF;
+  padding: 48px 0 64px;
+  overflow: hidden;
+}
+
+.etech-hero-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  align-items: center;
+}
+
+@media (max-width: 968px) {
+  .etech-hero-container {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    text-align: center;
+  }
+}
+
+.etech-hero-title {
+  font-family: 'Sora', 'IBM Plex Sans', sans-serif;
+  font-size: clamp(34px, 4.2vw, 54px);
+  font-weight: 800;
+  line-height: 1.16;
+  color: #0F172A;
+  letter-spacing: -0.025em;
+  margin-bottom: 20px;
+}
+
+.etech-hero-title .highlight-purple {
+  background: linear-gradient(135deg, #7C3AED 0%, #A855F7 50%, #EC4899 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline;
+}
+
+.etech-hero-desc {
+  font-size: 16px;
+  line-height: 1.7;
+  color: #64748B;
+  margin-bottom: 32px;
+  max-width: 540px;
+}
+
+@media (max-width: 968px) {
+  .etech-hero-desc {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.etech-hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 968px) {
+  .etech-hero-actions {
+    justify-content: center;
+  }
+}
+
+.etech-btn-pink {
+  background: linear-gradient(135deg, #EC4899 0%, #DB2777 50%, #C026D3 100%);
+  color: #FFFFFF;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 13px 32px;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 10px 25px -4px rgba(236, 72, 153, 0.4);
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.etech-btn-pink:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px -4px rgba(236, 72, 153, 0.5);
+}
+
+.etech-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 14.5px;
+  color: #475569;
+  background: #F8FAFC;
+  border: 1.5px solid #E2E8F0;
+  padding: 12px 24px;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.etech-btn-ghost:hover {
+  background: #F1F5F9;
+  border-color: #CBD5E1;
+  color: #0F172A;
+}
+
+/* Layered Hero Image Frame with Organic Blob */
+.etech-hero-visual-box {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.etech-hero-blob-bg {
+  position: absolute;
+  width: 90%;
+  height: 95%;
+  border-radius: 46% 54% 63% 37% / 41% 44% 56% 59%;
+  background: linear-gradient(135deg, #DDD6FE 0%, #F5D0FE 50%, #FBCFE8 100%);
+  filter: blur(2px);
+  z-index: 1;
+}
+
+.etech-hero-img-wrap {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 440px;
+  aspect-ratio: 1;
+  border-radius: 40px;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(124, 58, 237, 0.25);
+  border: 6px solid #FFFFFF;
+}
+
+.etech-hero-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Floating Badges */
+.etech-float-badge {
+  position: absolute;
+  z-index: 3;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  padding: 10px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 10px 25px -4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: float 4s ease-in-out infinite;
+}
+
+.etech-float-badge.badge-top-left {
+  top: 6%;
+  left: -2%;
+  animation-delay: 0s;
+}
+
+.etech-float-badge.badge-top-right {
+  top: 18%;
+  right: -4%;
+  animation-delay: 1.5s;
+}
+
+.etech-float-badge.badge-bottom-left {
+  bottom: 8%;
+  left: 2%;
+  animation-delay: 0.8s;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+/* Brand Ribbon Banner */
+.etech-brand-ribbon {
+  background: linear-gradient(90deg, #7C3AED 0%, #9333EA 35%, #C026D3 70%, #EC4899 100%);
+  padding: 22px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 36px 48px;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.etech-ribbon-item {
+  color: #FFFFFF;
+  font-family: 'Sora', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  opacity: 0.95;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Search Courses Section */
+.etech-search-section {
+  padding: 56px 20px 48px;
+  text-align: center;
+  background: #FFFFFF;
+}
+
+.etech-search-title {
+  font-family: 'Sora', sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  color: #0F172A;
+  margin-bottom: 20px;
+}
+
+.etech-search-pill-box {
+  max-width: 580px;
+  margin: 0 auto;
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: #FFFFFF;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 9999px;
+  padding: 6px 8px 6px 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+.etech-search-pill-box:focus-within {
+  border-color: #A855F7;
+  box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.15);
+}
+
+.etech-search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 14.5px;
+  color: #0F172A;
+  background: transparent;
+}
+
+.etech-search-btn {
+  background: linear-gradient(135deg, #9333EA 0%, #C026D3 100%);
+  color: #FFFFFF;
+  font-weight: 700;
+  font-size: 13.5px;
+  padding: 9px 24px;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.etech-search-btn:hover {
+  opacity: 0.95;
+  transform: scale(1.02);
+}
+
+/* Benefits Section */
+.etech-benefits-section {
+  padding: 64px 24px 80px;
+  max-width: 1240px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  align-items: center;
+}
+
+@media (max-width: 968px) {
+  .etech-benefits-section {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+
+.etech-benefits-collage-wrap {
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  border-radius: 32px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.12);
+  border: 4px solid #FFFFFF;
+}
+
+.etech-benefits-collage-wrap img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.etech-benefits-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.etech-benefit-icon-round {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Full-Width Layered Purple Section for Popular Courses */
+.etech-courses-purple-layer {
+  background: linear-gradient(135deg, #7C3AED 0%, #9333EA 50%, #C026D3 100%);
+  padding: 80px 24px 96px;
+  position: relative;
+  overflow: hidden;
+}
+
+.etech-courses-purple-layer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 24px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.2), transparent 70%);
+}
+
+.etech-layer-header {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto 52px;
+  color: #FFFFFF;
+}
+
+.etech-layer-title {
+  font-family: 'Sora', sans-serif;
+  font-size: clamp(26px, 3.5vw, 40px);
+  font-weight: 800;
+  color: #FFFFFF;
+  margin-bottom: 12px;
+  letter-spacing: -0.02em;
+}
+
+.etech-layer-desc {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.6;
+}
+
+/* Instructor Section */
+.etech-instructor-section {
+  padding: 80px 24px;
+  max-width: 1240px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 60px;
+  align-items: center;
+}
+
+@media (max-width: 968px) {
+  .etech-instructor-section {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    text-align: center;
+  }
+}
+
+.etech-instructor-img-card {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+  border-radius: 36px;
+  overflow: hidden;
+  box-shadow: 0 20px 45px -8px rgba(124, 58, 237, 0.2);
+  border: 4px solid #FFFFFF;
+  background: #FFFFFF;
+}
+
+.etech-instructor-img-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+/* Testimonials Purple Layer */
+.etech-testimonials-layer {
+  background: linear-gradient(135deg, #6D28D9 0%, #8B5CF6 50%, #D946EF 100%);
+  padding: 80px 24px 96px;
+  color: #FFFFFF;
+  text-align: center;
+}
+
 
 

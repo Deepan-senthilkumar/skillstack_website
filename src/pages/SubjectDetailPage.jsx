@@ -17,6 +17,8 @@ export default function SubjectDetailPage({
   const [loading, setLoading] = useState(false);
   const [enrolling, setEnrolling] = useState(false);
   const [enrollError, setEnrollError] = useState(null);
+  const [enrollments, setEnrollments] = useState([]);
+  const [expandedModule, setExpandedModule] = useState(null);
 
   const fetchEnrollments = async () => {
     if (user || api.getToken()) {
@@ -242,11 +244,11 @@ export default function SubjectDetailPage({
               >
                 {isCompleted ? (
                   <>
-                    <CheckCircle2 size={18} color="#FFFFFF" /> Completed 🎓 &bull; View Syllabus
+                    <CheckCircle2 size={18} color="#FFFFFF" /> Completed 🎓 &bull; Review Lessons
                   </>
                 ) : isEnrolled ? (
                   <>
-                    <Play size={16} fill="currentColor" /> View Syllabus 🚀 {progress > 0 ? `(${progress}%)` : ''}
+                    <Play size={16} fill="currentColor" /> Start Learning 🚀 {progress > 0 ? `(${progress}%)` : ''}
                   </>
                 ) : enrolling ? (
                   <>
@@ -254,7 +256,7 @@ export default function SubjectDetailPage({
                   </>
                 ) : user ? (
                   <>
-                    <Play size={16} fill="currentColor" /> {enrollError ? 'Retry Enrollment' : 'Enroll Now'}
+                    <Play size={16} fill="currentColor" /> {enrollError ? 'Retry Enrollment' : 'Enroll to Start Learning'}
                   </>
                 ) : (
                   <>
