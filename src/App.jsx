@@ -15,6 +15,7 @@ import DisclaimerPage from './pages/DisclaimerPage';
 import CookieConsentBanner from './components/CookieConsentBanner';
 import RealAdSlot from './components/RealAdSlot';
 import { api } from './api';
+import { initAcademicIntegrityGuard } from './utils/academicIntegrityGuard';
 
 // ADMIN PANEL URL — update this to your deployed admin Vercel URL
 const ADMIN_PANEL_URL = import.meta.env.VITE_ADMIN_URL || 'http://localhost:5174';
@@ -120,7 +121,13 @@ export default function App() {
       setCurrentPage('home');
     };
     window.addEventListener('auth:logout', handleLogoutEvent);
-    return () => window.removeEventListener('auth:logout', handleLogoutEvent);
+
+    const cleanupGuard = initAcademicIntegrityGuard();
+
+    return () => {
+      window.removeEventListener('auth:logout', handleLogoutEvent);
+      if (cleanupGuard) cleanupGuard();
+    };
   }, []);
 
   // Only load detailed curriculum when user actually visits the curriculum, course detail or learning page
