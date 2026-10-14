@@ -108,7 +108,7 @@ export default function ContactPage({ subjects = [] }) {
             background: '#FFFFFF',
             padding: '32px',
             borderRadius: '28px',
-            border: '1.5px solid rgba(123, 28, 110, 0.14)',
+            border: '1.5px solid rgba(124, 58, 237, 0.14)',
             boxShadow: '0 10px 30px -5px rgba(10, 25, 60, 0.06)'
           }}>
             <h3 style={{ fontSize: '19px', fontWeight: 800, marginBottom: '18px', color: '#0F172A' }}>
@@ -122,19 +122,19 @@ export default function ContactPage({ subjects = [] }) {
                   width: '42px',
                   height: '42px',
                   borderRadius: '12px',
-                  background: 'rgba(123, 28, 110, 0.08)',
+                  background: 'rgba(124, 58, 237, 0.08)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   flexShrink: 0
                 }}>
-                  <Mail size={18} color="#7B1C6E" />
+                  <Mail size={18} color="#7C3AED" />
                 </div>
                 <div>
                   <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Email Address</div>
                   <a
                     href={`mailto:${creator.email}`}
-                    style={{ fontSize: '15px', fontWeight: 700, color: '#7B1C6E', textDecoration: 'none' }}
+                    style={{ fontSize: '15px', fontWeight: 700, color: '#7C3AED', textDecoration: 'none' }}
                   >
                     {creator.email}
                   </a>
@@ -148,13 +148,13 @@ export default function ContactPage({ subjects = [] }) {
                   width: '42px',
                   height: '42px',
                   borderRadius: '12px',
-                  background: 'rgba(123, 28, 110, 0.08)',
+                  background: 'rgba(124, 58, 237, 0.08)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   flexShrink: 0
                 }}>
-                  <MapPin size={18} color="#7B1C6E" />
+                  <MapPin size={18} color="#7C3AED" />
                 </div>
                 <div>
                   <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Based In</div>
@@ -169,13 +169,13 @@ export default function ContactPage({ subjects = [] }) {
                   width: '42px',
                   height: '42px',
                   borderRadius: '12px',
-                  background: 'rgba(123, 28, 110, 0.08)',
+                  background: 'rgba(124, 58, 237, 0.08)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   flexShrink: 0
                 }}>
-                  <Globe size={18} color="#7B1C6E" />
+                  <Globe size={18} color="#7C3AED" />
                 </div>
                 <div>
                   <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Official Portfolio</div>
@@ -183,7 +183,7 @@ export default function ContactPage({ subjects = [] }) {
                     href={creator.portfolioUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    style={{ fontSize: '14px', fontWeight: 700, color: '#7B1C6E', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                    style={{ fontSize: '14px', fontWeight: 700, color: '#7C3AED', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
                   >
                     portfolio-deepan.vercel.app <ExternalLink size={12} />
                   </a>
@@ -226,7 +226,7 @@ export default function ContactPage({ subjects = [] }) {
             background: '#FFFFFF',
             padding: '24px 28px',
             borderRadius: '24px',
-            border: '1.5px solid rgba(123, 28, 110, 0.12)',
+            border: '1.5px solid rgba(124, 58, 237, 0.12)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
@@ -286,7 +286,7 @@ export default function ContactPage({ subjects = [] }) {
           background: '#FFFFFF',
           padding: '36px 32px',
           borderRadius: '28px',
-          border: '1.5px solid rgba(123, 28, 110, 0.14)',
+          border: '1.5px solid rgba(124, 58, 237, 0.14)',
           boxShadow: '0 10px 30px -5px rgba(10, 25, 60, 0.06)'
         }}>
           {submitted ? (

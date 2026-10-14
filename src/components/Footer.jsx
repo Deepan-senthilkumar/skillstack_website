@@ -51,7 +51,7 @@ export default function Footer({ onNavigate, onOpenStudentAuth, onOpenStaffAuth 
             <h4>Creator & Contact</h4>
             <div style={{ fontSize: '13px', color: '#64748B', display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <Mail size={14} color="#7B1C6E" style={{ flexShrink: 0 }} />
+                <Mail size={14} color="#7C3AED" style={{ flexShrink: 0 }} />
                 <a
                   href={`mailto:${siteConfig.creator.email}`}
                   style={{ color: '#0F172A', fontWeight: 600, textDecoration: 'none' }}
@@ -60,22 +60,22 @@ export default function Footer({ onNavigate, onOpenStudentAuth, onOpenStaffAuth 
                 </a>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <MapPin size={14} color="#7B1C6E" style={{ flexShrink: 0 }} />
+                <MapPin size={14} color="#7C3AED" style={{ flexShrink: 0 }} />
                 <span>{siteConfig.creator.location}</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '4px' }}>
-                <Globe size={14} color="#7B1C6E" style={{ flexShrink: 0 }} />
+                <Globe size={14} color="#7C3AED" style={{ flexShrink: 0 }} />
                 <a
                   href={siteConfig.creator.portfolioUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ color: '#7B1C6E', fontWeight: 700, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                  style={{ color: '#7C3AED', fontWeight: 700, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
                 >
                   Deepan's Portfolio <ExternalLink size={12} />
                 </a>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <ExternalLink size={14} color="#7B1C6E" style={{ flexShrink: 0 }} />
+                <ExternalLink size={14} color="#7C3AED" style={{ flexShrink: 0 }} />
                 <a
                   href={siteConfig.creator.jerryEditsUrl}
                   target="_blank"

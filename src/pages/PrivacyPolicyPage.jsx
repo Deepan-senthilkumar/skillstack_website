@@ -24,7 +24,7 @@ export default function PrivacyPolicyPage({ onNavigate }) {
             gap: '8px',
             background: 'none',
             border: 'none',
-            color: '#7B1C6E',
+            color: '#7C3AED',
             fontSize: '13.5px',
             fontWeight: 700,
             cursor: 'pointer',
@@ -39,7 +39,7 @@ export default function PrivacyPolicyPage({ onNavigate }) {
         {/* Hero Card */}
         <div style={{
           background: '#FFFFFF',
-          border: '1.5px solid rgba(123, 28, 110, 0.14)',
+          border: '1.5px solid rgba(124, 58, 237, 0.14)',
           borderRadius: '24px',
           padding: '36px 40px',
           boxShadow: '0 8px 30px rgba(0, 0, 0, 0.04)',
@@ -49,8 +49,8 @@ export default function PrivacyPolicyPage({ onNavigate }) {
             display: 'inline-flex',
             alignItems: 'center',
             gap: '6px',
-            background: 'rgba(123, 28, 110, 0.08)',
-            color: '#7B1C6E',
+            background: 'rgba(124, 58, 237, 0.08)',
+            color: '#7C3AED',
             padding: '4px 12px',
             borderRadius: '999px',
             fontSize: '12px',
@@ -88,7 +88,7 @@ export default function PrivacyPolicyPage({ onNavigate }) {
           {/* Section 1 */}
           <section>
             <h2 style={{ fontSize: '20px', fontWeight: 800, color: '#0F172A', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <FileText size={20} color="#7B1C6E" />
+              <FileText size={20} color="#7C3AED" />
               <span>1. Introduction &amp; Scope</span>
             </h2>
             <p>
@@ -98,13 +98,13 @@ export default function PrivacyPolicyPage({ onNavigate }) {
 
           {/* Section 2 - GOOGLE ADSENSE DISCLOSURE (CRUCIAL FOR APPROVAL) */}
           <section style={{
-            background: 'linear-gradient(135deg, rgba(123, 28, 110, 0.04) 0%, rgba(253, 192, 41, 0.06) 100%)',
-            border: '1.5px solid rgba(123, 28, 110, 0.2)',
+            background: 'linear-gradient(135deg, rgba(124, 58, 237, 0.04) 0%, rgba(253, 192, 41, 0.06) 100%)',
+            border: '1.5px solid rgba(124, 58, 237, 0.2)',
             borderRadius: '16px',
             padding: '24px 28px'
           }}>
-            <h2 style={{ fontSize: '20px', fontWeight: 800, color: '#7B1C6E', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Globe size={20} color="#7B1C6E" />
+            <h2 style={{ fontSize: '20px', fontWeight: 800, color: '#7C3AED', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Globe size={20} color="#7C3AED" />
               <span>2. Google AdSense &amp; Third-Party Advertising Partners</span>
             </h2>
             <p style={{ fontWeight: 600, color: '#0F172A' }}>
@@ -118,7 +118,7 @@ export default function PrivacyPolicyPage({ onNavigate }) {
                 <strong>Google's DoubleClick DART Cookie:</strong> Google's use of advertising cookies enables it and its partners to serve ads to our users based on their visits to {siteConfig.brand.name} and/or other sites on the Internet.
               </li>
               <li>
-                <strong>Opting Out of Personalized Advertising:</strong> Users may opt out of personalized advertising by visiting Google's <a href="https://adssettings.google.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#7B1C6E', fontWeight: 700 }}>Ads Settings</a>. Alternatively, users can opt out of a third-party vendor's use of cookies for personalized advertising by visiting <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer" style={{ color: '#7B1C6E', fontWeight: 700 }}>www.aboutads.info</a>.
+                <strong>Opting Out of Personalized Advertising:</strong> Users may opt out of personalized advertising by visiting Google's <a href="https://adssettings.google.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#7C3AED', fontWeight: 700 }}>Ads Settings</a>. Alternatively, users can opt out of a third-party vendor's use of cookies for personalized advertising by visiting <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer" style={{ color: '#7C3AED', fontWeight: 700 }}>www.aboutads.info</a>.
               </li>
               <li>
                 <strong>Ad Network Technologies:</strong> Third-party ad servers or ad networks use technologies like cookies, JavaScript, or Web Beacons in their respective advertisements and links that appear on {siteConfig.brand.name}, which are sent directly to users' browsers. They automatically receive your IP address when this occurs. These technologies are used to measure the effectiveness of their advertising campaigns and/or to personalize the advertising content that you see.
@@ -132,7 +132,7 @@ export default function PrivacyPolicyPage({ onNavigate }) {
           {/* Section 3 */}
           <section>
             <h2 style={{ fontSize: '20px', fontWeight: 800, color: '#0F172A', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Server size={20} color="#7B1C6E" />
+              <Server size={20} color="#7C3AED" />
               <span>3. Log Files &amp; Web Analytics</span>
             </h2>
             <p>
@@ -143,7 +143,7 @@ export default function PrivacyPolicyPage({ onNavigate }) {
           {/* Section 4 */}
           <section>
             <h2 style={{ fontSize: '20px', fontWeight: 800, color: '#0F172A', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Lock size={20} color="#7B1C6E" />
+              <Lock size={20} color="#7C3AED" />
               <span>4. Student Accounts &amp; Data Security</span>
             </h2>
             <p>
@@ -154,7 +154,7 @@ export default function PrivacyPolicyPage({ onNavigate }) {
           {/* Section 5 */}
           <section>
             <h2 style={{ fontSize: '20px', fontWeight: 800, color: '#0F172A', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Eye size={20} color="#7B1C6E" />
+              <Eye size={20} color="#7C3AED" />
               <span>5. GDPR &amp; CCPA Privacy Rights</span>
             </h2>
             <p>
@@ -174,7 +174,7 @@ export default function PrivacyPolicyPage({ onNavigate }) {
               6. Contacting the Site Administrator
             </h2>
             <p style={{ margin: 0 }}>
-              If you have additional questions or require more information about our Privacy Policy or cookie usage, please contact our Lead Trainer and Administrator, <strong>{siteConfig.creator.name}</strong>, via email at <a href={`mailto:${siteConfig.creator.email}`} style={{ color: '#7B1C6E', fontWeight: 700 }}>{siteConfig.creator.email}</a>.
+              If you have additional questions or require more information about our Privacy Policy or cookie usage, please contact our Lead Trainer and Administrator, <strong>{siteConfig.creator.name}</strong>, via email at <a href={`mailto:${siteConfig.creator.email}`} style={{ color: '#7C3AED', fontWeight: 700 }}>{siteConfig.creator.email}</a>.
             </p>
           </section>
         </div>

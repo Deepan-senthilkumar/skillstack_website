@@ -2842,7 +2842,7 @@ input:checked + .slider:before {
 }
 
 .fcc-nav-btn.next {
-  background: linear-gradient(135deg, #7C3AED 0%, #9B2D8C 100%);
+  background: linear-gradient(135deg, #7C3AED 0%, #A855F7 100%);
   border: none;
   color: #FFFFFF;
   box-shadow: 0 3px 10px rgba(124, 58, 237, 0.25);
@@ -2854,7 +2854,7 @@ input:checked + .slider:before {
 }
 
 .fcc-nav-btn.action {
-  background: #FAF5F9;
+  background: #F5F3FF;
   border: 1.5px solid rgba(124, 58, 237, 0.25);
   color: #7C3AED;
 }

@@ -109,7 +109,7 @@ export default function CoursesPage({ subjects, onSelectSubject, onNavigate, use
               <Sparkles size={14} color="#FDC029" />
               <span>Interactive Engineering Curriculum</span>
               <span style={{
-                background: 'linear-gradient(135deg, #7B1C6E, #FDC029)',
+                background: 'linear-gradient(135deg, #7C3AED, #FDC029)',
                 color: '#FFFFFF',
                 fontSize: '10.5px',
                 fontWeight: 800,
