@@ -749,43 +749,52 @@ export default function SecureQuizModal({ topic, onClose, onPassed }) {
                   {currentQuestionIdx < questions.length - 1 ? (
                     <button
                       onClick={() => setCurrentQuestionIdx(prev => Math.min(questions.length - 1, prev + 1))}
-                      className="btn-secondary"
+                      className="btn-primary"
                       style={{
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         gap: '6px',
-                        padding: '9px 18px',
+                        padding: '10px 22px',
                         borderRadius: '12px',
-                        fontSize: '12.5px',
-                        minHeight: '44px'
+                        fontSize: '13px',
+                        fontWeight: 700,
+                        background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)',
+                        color: '#FFFFFF',
+                        border: 'none',
+                        minHeight: '44px',
+                        cursor: 'pointer',
+                        boxShadow: '0 4px 14px rgba(124, 58, 237, 0.25)'
                       }}
                     >
-                      Next <ArrowRight size={14} />
+                      Next <ArrowRight size={15} />
                     </button>
-                  ) : null}
-
-                  <button
-                    onClick={() => handleSubmit(false)}
-                    disabled={submitting}
-                    className="btn-primary"
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '6px',
-                      padding: '9px 24px',
-                      borderRadius: '12px',
-                      fontSize: '13px',
-                      fontWeight: 800,
-                      backgroundColor: '#16A34A',
-                      borderColor: '#16A34A',
-                      minHeight: '44px'
-                    }}
-                  >
-                    {submitting ? <RefreshCw size={14} className="animate-spin" /> : <Check size={14} />}
-                    <span>Submit Exam</span>
-                  </button>
+                  ) : (
+                    <button
+                      onClick={() => handleSubmit(false)}
+                      disabled={submitting}
+                      className="btn-primary"
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '6px',
+                        padding: '10px 26px',
+                        borderRadius: '12px',
+                        fontSize: '13px',
+                        fontWeight: 800,
+                        backgroundColor: '#16A34A',
+                        color: '#FFFFFF',
+                        border: 'none',
+                        minHeight: '44px',
+                        cursor: 'pointer',
+                        boxShadow: '0 4px 14px rgba(22, 163, 74, 0.35)'
+                      }}
+                    >
+                      {submitting ? <RefreshCw size={15} className="animate-spin" /> : <Check size={15} />}
+                      <span>Submit Exam</span>
+                    </button>
+                  )}
                 </div>
               </div>
             </div>

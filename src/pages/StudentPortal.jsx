@@ -408,12 +408,18 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
             }}
             style={{
               width: '100%',
-              padding: '6px 10px',
-              fontSize: '11.5px',
-              marginBottom: '10px',
+              padding: '8px 12px',
+              fontSize: '12px',
+              fontWeight: 700,
+              marginBottom: '12px',
               justifyContent: 'center',
               gap: '6px',
-              borderRadius: 'var(--radius-full)'
+              borderRadius: 'var(--radius-full)',
+              background: '#FFFFFF',
+              border: '1.5px solid rgba(124, 58, 237, 0.25)',
+              color: '#7C3AED',
+              boxShadow: '0 2px 8px rgba(124, 58, 237, 0.06)',
+              cursor: 'pointer'
             }}
           >
             <ArrowLeft size={13} /> Switch Subject Track
@@ -474,16 +480,20 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
               key={lvl}
               onClick={() => setLevelFilter(lvl)}
               style={{
-                padding: '3px 8px',
-                fontSize: '10px',
+                padding: '4px 10px',
+                fontSize: '10.5px',
                 fontWeight: 700,
                 borderRadius: 'var(--radius-full)',
                 border: '1px solid',
-                borderColor: levelFilter === lvl ? '#7C3AED' : '#E2E8F0',
-                background: levelFilter === lvl ? 'rgba(124, 58, 237, 0.1)' : '#FFFFFF',
-                color: levelFilter === lvl ? '#7C3AED' : '#64748B',
+                borderColor: levelFilter === lvl ? 'transparent' : '#E2E8F0',
+                background: levelFilter === lvl
+                  ? 'linear-gradient(135deg, #7C3AED 0%, #A855F7 50%, #EC4899 100%)'
+                  : '#FFFFFF',
+                color: levelFilter === lvl ? '#FFFFFF' : '#64748B',
+                boxShadow: levelFilter === lvl ? '0 2px 8px rgba(124, 58, 237, 0.25)' : 'none',
                 cursor: 'pointer',
-                textTransform: 'capitalize'
+                textTransform: 'capitalize',
+                transition: 'all 0.15s ease'
               }}
             >
               {lvl === 'all' ? 'All' : lvl === 'lab_open' ? '⚡ Lab Open' : lvl}
@@ -1235,9 +1245,15 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                   type="button"
                   onClick={() => setActiveTab('notes_content')}
                   className={`stepper-step-pill ${activeTab === 'notes_content' ? 'active' : ''}`}
-                  style={{ color: '#166534' }}
+                  style={{
+                    background: activeTab === 'notes_content'
+                      ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(5, 150, 105, 0.16) 100%)'
+                      : 'rgba(16, 185, 129, 0.06)',
+                    border: '1.5px solid rgba(16, 185, 129, 0.35)',
+                    color: '#065F46'
+                  }}
                 >
-                  <CheckCircle2 size={16} color="#16A34A" />
+                  <CheckCircle2 size={16} color="#10B981" />
                   <span>1. Theory &amp; Notes</span>
                 </button>
 
@@ -1249,22 +1265,33 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                   onClick={() => setActiveTab('quiz')}
                   className={`stepper-step-pill ${activeTab === 'quiz' ? 'active' : ''}`}
                   style={{
-                    color: activeQuizStatus.isPassed ? '#166534' : activeTab === 'quiz' ? '#7C3AED' : '#475569'
+                    background: activeQuizStatus.isPassed
+                      ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(5, 150, 105, 0.16) 100%)'
+                      : activeTab === 'quiz'
+                      ? 'linear-gradient(135deg, rgba(124, 58, 237, 0.12) 0%, rgba(236, 72, 153, 0.12) 100%)'
+                      : 'rgba(124, 58, 237, 0.05)',
+                    border: activeQuizStatus.isPassed
+                      ? '1.5px solid rgba(16, 185, 129, 0.35)'
+                      : activeTab === 'quiz'
+                      ? '1.5px solid rgba(168, 85, 247, 0.45)'
+                      : '1.5px solid rgba(124, 58, 237, 0.2)',
+                    color: activeQuizStatus.isPassed ? '#065F46' : '#7C3AED'
                   }}
                 >
                   {activeQuizStatus.isPassed ? (
-                    <CheckCircle2 size={16} color="#16A34A" />
+                    <CheckCircle2 size={16} color="#10B981" />
                   ) : (
                     <span style={{
                       width: '20px', height: '20px', borderRadius: '50%',
-                      border: activeTab === 'quiz' ? '2px solid #7C3AED' : '2px solid #CBD5E1',
-                      background: activeTab === 'quiz' ? '#7C3AED' : '#FFFFFF',
+                      background: activeTab === 'quiz' ? 'linear-gradient(135deg, #7C3AED 0%, #EC4899 100%)' : '#FFFFFF',
+                      border: activeTab === 'quiz' ? 'none' : '1.5px solid #CBD5E1',
                       color: activeTab === 'quiz' ? '#FFFFFF' : '#64748B',
                       display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                      fontSize: '10.5px', fontWeight: 800
+                      fontSize: '10.5px', fontWeight: 800,
+                      boxShadow: activeTab === 'quiz' ? '0 2px 6px rgba(124, 58, 237, 0.3)' : 'none'
                     }}>2</span>
                   )}
-                  <span>2. Topic MCQs {activeQuizStatus.isPassed ? '(Passed)' : `(${activeTopic?.quiz_questions?.length || 3} Qs)`}</span>
+                  <span>2. Topic MCQs {activeQuizStatus.isPassed ? '(Passed)' : `(${activeTopic?.quiz_questions?.length || 5} Qs)`}</span>
                 </button>
 
                 <span style={{ color: '#CBD5E1', fontSize: '13px' }}>→</span>
@@ -1275,17 +1302,29 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                   onClick={() => setActiveTab('labs')}
                   className={`stepper-step-pill ${activeTab === 'labs' ? 'active' : ''}`}
                   style={{
-                    color: activePracticalStatus.isPassed ? '#166534' : '#D97706'
+                    background: activePracticalStatus.isPassed
+                      ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(5, 150, 105, 0.16) 100%)'
+                      : activeTab === 'labs'
+                      ? 'linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(234, 88, 12, 0.12) 100%)'
+                      : 'rgba(245, 158, 11, 0.05)',
+                    border: activePracticalStatus.isPassed
+                      ? '1.5px solid rgba(16, 185, 129, 0.35)'
+                      : activeTab === 'labs'
+                      ? '1.5px solid rgba(245, 158, 11, 0.4)'
+                      : '1.5px solid rgba(245, 158, 11, 0.2)',
+                    color: activePracticalStatus.isPassed ? '#065F46' : '#B45309'
                   }}
                 >
                   {activePracticalStatus.isPassed ? (
-                    <CheckCircle2 size={16} color="#16A34A" />
+                    <CheckCircle2 size={16} color="#10B981" />
                   ) : (
                     <span style={{
                       width: '20px', height: '20px', borderRadius: '50%',
-                      background: '#FEF3C7', color: '#D97706', border: '1.5px solid #D97706',
+                      background: 'linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)',
+                      color: '#FFFFFF',
                       display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                      fontSize: '11px', fontWeight: 800
+                      fontSize: '11px', fontWeight: 800,
+                      boxShadow: '0 2px 6px rgba(245, 158, 11, 0.3)'
                     }}>⚡</span>
                   )}
                   <span>3. Mandatory Practical {activePracticalStatus.isPassed ? '(Passed)' : `(${activePracticalStatus.passedCount}/${activePracticalStatus.total})`}</span>
@@ -1301,14 +1340,16 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                     style={{
                       fontSize: '12px',
                       fontWeight: 700,
-                      padding: '6px 14px',
+                      padding: '7px 16px',
                       borderRadius: 'var(--radius-full)',
                       color: '#7C3AED',
-                      borderColor: 'rgba(124, 58, 237, 0.25)',
-                      background: 'rgba(124, 58, 237, 0.04)',
+                      borderColor: 'rgba(168, 85, 247, 0.35)',
+                      background: 'linear-gradient(135deg, rgba(124, 58, 237, 0.06) 0%, rgba(236, 72, 153, 0.06) 100%)',
                       display: 'inline-flex',
                       alignItems: 'center',
-                      gap: '5px'
+                      gap: '5px',
+                      cursor: 'pointer',
+                      boxShadow: '0 2px 8px rgba(124, 58, 237, 0.06)'
                     }}
                   >
                     <HelpCircle size={13} /> Practice MCQs
@@ -1320,18 +1361,19 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                     className="btn-primary"
                     onClick={() => setActiveTab('labs')}
                     style={{
-                      background: 'linear-gradient(135deg, #D97706 0%, #B45309 100%)',
+                      background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 50%, #EC4899 100%)',
                       color: '#FFFFFF',
                       border: 'none',
-                      padding: '7px 16px',
+                      padding: '8px 18px',
                       borderRadius: 'var(--radius-full)',
-                      fontSize: '12px',
+                      fontSize: '12.5px',
                       fontWeight: 800,
                       cursor: 'pointer',
                       display: 'inline-flex',
                       alignItems: 'center',
                       gap: '6px',
-                      boxShadow: '0 4px 12px rgba(217, 119, 6, 0.25)'
+                      boxShadow: '0 4px 16px rgba(168, 85, 247, 0.35)',
+                      transition: 'all 0.2s ease'
                     }}
                   >
                     <Terminal size={13} /> Mandatory Practical Lab
@@ -1382,9 +1424,9 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                 className={`content-tab-btn ${activeTab === 'quiz' ? 'active' : ''}`}
                 onClick={() => setActiveTab('quiz')}
               >
-                <HelpCircle size={14} color={activeTab === 'quiz' ? '#FFFFFF' : '#D97706'} />
+                <HelpCircle size={14} color={activeTab === 'quiz' ? '#FFFFFF' : '#7C3AED'} />
                 <span>
-                  Topic MCQs &amp; Quiz ({activeTopic.quiz_questions?.length || 3})
+                  Topic MCQs &amp; Quiz ({activeTopic.quiz_questions?.length || 5})
                   {activeQuizStatus.isPassed && ' ✓'}
                 </span>
               </button>
@@ -1610,25 +1652,35 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                   gap: '16px'
                 }}>
                   <div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                       <span style={{
-                        fontSize: '11px', fontWeight: 800, padding: '3px 10px', borderRadius: 'var(--radius-full)',
-                        background: 'rgba(124, 58, 237, 0.1)', color: '#7C3AED', textTransform: 'uppercase'
+                        fontSize: '11px', fontWeight: 800, padding: '4px 12px', borderRadius: 'var(--radius-full)',
+                        background: 'linear-gradient(135deg, rgba(124, 58, 237, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%)',
+                        color: '#7C3AED', border: '1px solid rgba(168, 85, 247, 0.25)',
+                        textTransform: 'uppercase', letterSpacing: '0.04em'
                       }}>
                         Knowledge Gate &bull; Step 2
                       </span>
                       {activeQuizStatus.isPassed ? (
-                        <span style={{ fontSize: '11px', fontWeight: 800, padding: '3px 10px', borderRadius: 'var(--radius-full)', background: 'rgba(22, 163, 74, 0.1)', color: '#166534', border: '1px solid #16A34A' }}>
+                        <span style={{
+                          fontSize: '11px', fontWeight: 800, padding: '4px 12px', borderRadius: 'var(--radius-full)',
+                          background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.14) 100%)',
+                          color: '#065F46', border: '1px solid rgba(16, 185, 129, 0.3)'
+                        }}>
                           ✓ Passed &amp; Verified
                         </span>
                       ) : (
-                        <span style={{ fontSize: '11px', fontWeight: 800, padding: '3px 10px', borderRadius: 'var(--radius-full)', background: '#FEF3C7', color: '#92400E' }}>
+                        <span style={{
+                          fontSize: '11px', fontWeight: 800, padding: '4px 12px', borderRadius: 'var(--radius-full)',
+                          background: 'linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%)',
+                          color: '#DB2777', border: '1px solid rgba(236, 72, 153, 0.25)'
+                        }}>
                           Self-Practice &amp; Scored Test
                         </span>
                       )}
                     </div>
                     <h2 style={{ fontSize: '22px', fontWeight: 800, color: '#0F172A', margin: '0 0 6px' }}>
-                      Topic Multiple Choice Questions ({activeTopic.quiz_questions?.length || 3})
+                      Topic Multiple Choice Questions ({activeTopic.quiz_questions?.length || 5})
                     </h2>
                     <p style={{ fontSize: '13.5px', color: '#64748B', margin: 0, lineHeight: 1.5 }}>
                       Practice the core conceptual questions below. Select an answer to get instant explanations.
@@ -1643,18 +1695,19 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                         background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 50%, #EC4899 100%)',
                         color: '#FFFFFF',
                         border: 'none',
-                        padding: '10px 22px',
+                        padding: '11px 24px',
                         borderRadius: 'var(--radius-full)',
-                        fontSize: '13px',
+                        fontSize: '13.5px',
                         fontWeight: 800,
                         cursor: 'pointer',
                         display: 'inline-flex',
                         alignItems: 'center',
                         gap: '8px',
-                        boxShadow: '0 4px 16px rgba(124, 58, 237, 0.35)'
+                        boxShadow: '0 4px 18px rgba(168, 85, 247, 0.38)',
+                        transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
                       }}
                     >
-                      <Shield size={15} />
+                      <Shield size={16} />
                       <span>{activeQuizStatus.isPassed ? 'Re-take 5-Q Test' : 'Take Scored 5-Q Test'}</span>
                     </button>
                   </div>
@@ -1675,9 +1728,10 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                 ) : (
                   activeTopic.quiz_questions.map((q, qIdx) => {
                     const practiceState = mcqPracticeAnswers[q.id];
-                    const selectedOpt = practiceState?.selectedOption;
+                    const selectedOpt = practiceState?.selectedOption ? String(practiceState.selectedOption).trim().toUpperCase() : null;
+                    const correctOpt = q.correct_option ? String(q.correct_option).trim().toUpperCase() : null;
                     const isRevealed = Boolean(practiceState?.isRevealed);
-                    const isCorrect = selectedOpt === q.correct_option;
+                    const isCorrect = Boolean(selectedOpt && correctOpt && selectedOpt === correctOpt);
 
                     const optionsList = [
                       { key: 'A', text: q.option_a },
@@ -1688,29 +1742,46 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
 
                     return (
                       <div key={q.id || qIdx} className="mcq-card" data-protected-assessment="true">
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
                           <span style={{
-                            fontSize: '11px', fontWeight: 800, padding: '3px 10px',
-                            borderRadius: 'var(--radius-full)', background: '#F1F5F9', color: '#475569', textTransform: 'uppercase'
+                            fontSize: '11px', fontWeight: 800, padding: '4px 12px',
+                            borderRadius: 'var(--radius-full)',
+                            background: 'linear-gradient(135deg, rgba(124, 58, 237, 0.08) 0%, rgba(236, 72, 153, 0.08) 100%)',
+                            color: '#7C3AED',
+                            border: '1px solid rgba(168, 85, 247, 0.2)',
+                            textTransform: 'uppercase',
+                            letterSpacing: '0.04em'
                           }}>
                             Question #{qIdx + 1}
                           </span>
                           {isRevealed && (
                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                               <span style={{
-                                fontSize: '12px', fontWeight: 800,
-                                color: isCorrect ? '#16A34A' : '#DC2626',
-                                display: 'inline-flex', alignItems: 'center', gap: '4px'
+                                fontSize: '12.5px', fontWeight: 800,
+                                color: isCorrect ? '#059669' : '#DC2626',
+                                display: 'inline-flex', alignItems: 'center', gap: '5px',
+                                background: isCorrect ? 'rgba(16, 185, 129, 0.08)' : 'rgba(239, 68, 68, 0.08)',
+                                padding: '3px 10px', borderRadius: 'var(--radius-full)',
+                                border: isCorrect ? '1px solid rgba(16, 185, 129, 0.25)' : '1px solid rgba(239, 68, 68, 0.25)'
                               }}>
-                                {isCorrect ? <CheckCircle2 size={14} /> : <X size={14} />}
+                                {isCorrect ? <CheckCircle2 size={14} color="#059669" /> : <X size={14} color="#DC2626" />}
                                 {isCorrect ? 'Correct!' : 'Incorrect'}
                               </span>
                               <button
                                 type="button"
                                 onClick={() => handleResetMcqPractice(q.id)}
                                 style={{
-                                  background: 'transparent', border: 'none', color: '#64748B',
-                                  fontSize: '11.5px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '3px'
+                                  background: 'rgba(100, 116, 139, 0.08)',
+                                  border: '1px solid rgba(100, 116, 139, 0.2)',
+                                  color: '#475569',
+                                  fontSize: '11px',
+                                  fontWeight: 700,
+                                  cursor: 'pointer',
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: '4px',
+                                  padding: '4px 10px',
+                                  borderRadius: 'var(--radius-full)'
                                 }}
                               >
                                 <RotateCcw size={12} /> Retry
@@ -1727,8 +1798,9 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                         {/* Options Grid */}
                         <div className="mcq-options-grid">
                           {optionsList.map(opt => {
-                            const isThisSelected = selectedOpt === opt.key;
-                            const isThisCorrectAnswer = q.correct_option === opt.key;
+                            const optKey = opt.key.toUpperCase();
+                            const isThisSelected = selectedOpt === optKey;
+                            const isThisCorrectAnswer = correctOpt === optKey;
 
                             let btnClass = 'mcq-option-btn';
                             if (isRevealed) {
