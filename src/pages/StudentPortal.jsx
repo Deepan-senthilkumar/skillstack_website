@@ -1202,10 +1202,10 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                         fontWeight: 800,
                         padding: '7px 16px',
                         borderRadius: 'var(--radius-full)',
-                        background: 'linear-gradient(135deg, #7B1C6E 0%, #4338CA 100%)',
+                        background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 50%, #EC4899 100%)',
                         color: '#FFFFFF',
                         border: 'none',
-                        boxShadow: '0 4px 12px rgba(123, 28, 110, 0.25)',
+                        boxShadow: '0 4px 14px rgba(124, 58, 237, 0.3)',
                         display: 'inline-flex',
                         alignItems: 'center',
                         gap: '6px',
@@ -1249,7 +1249,7 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                   onClick={() => setActiveTab('quiz')}
                   className={`stepper-step-pill ${activeTab === 'quiz' ? 'active' : ''}`}
                   style={{
-                    color: activeQuizStatus.isPassed ? '#166534' : activeTab === 'quiz' ? '#7B1C6E' : '#475569'
+                    color: activeQuizStatus.isPassed ? '#166534' : activeTab === 'quiz' ? '#7C3AED' : '#475569'
                   }}
                 >
                   {activeQuizStatus.isPassed ? (
@@ -1257,8 +1257,8 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                   ) : (
                     <span style={{
                       width: '20px', height: '20px', borderRadius: '50%',
-                      border: activeTab === 'quiz' ? '2px solid #7B1C6E' : '2px solid #CBD5E1',
-                      background: activeTab === 'quiz' ? '#7B1C6E' : '#FFFFFF',
+                      border: activeTab === 'quiz' ? '2px solid #7C3AED' : '2px solid #CBD5E1',
+                      background: activeTab === 'quiz' ? '#7C3AED' : '#FFFFFF',
                       color: activeTab === 'quiz' ? '#FFFFFF' : '#64748B',
                       display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
                       fontSize: '10.5px', fontWeight: 800
@@ -1420,12 +1420,12 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                 className={`content-tab-btn ${activeTab === 'doubts' ? 'active' : ''}`}
                 onClick={() => setActiveTab('doubts')}
                 style={{
-                  background: activeTab === 'doubts' ? 'linear-gradient(135deg, #7B1C6E 0%, #A82596 100%)' : undefined,
-                  color: activeTab === 'doubts' ? '#FFFFFF' : '#7B1C6E',
+                  background: activeTab === 'doubts' ? 'linear-gradient(135deg, #7C3AED 0%, #A855F7 50%, #EC4899 100%)' : undefined,
+                  color: activeTab === 'doubts' ? '#FFFFFF' : '#7C3AED',
                   fontWeight: 800
                 }}
               >
-                <MessageSquare size={14} color={activeTab === 'doubts' ? '#FFFFFF' : '#7B1C6E'} />
+                <MessageSquare size={14} color={activeTab === 'doubts' ? '#FFFFFF' : '#7C3AED'} />
                 <span>Ask Doubt &amp; Clarification</span>
               </button>
             </div>
@@ -1640,10 +1640,10 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                       className="btn-primary"
                       onClick={() => handleStartTopicAssessment(activeTopic)}
                       style={{
-                        background: 'linear-gradient(135deg, #7B1C6E 0%, #4338CA 100%)',
+                        background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 50%, #EC4899 100%)',
                         color: '#FFFFFF',
                         border: 'none',
-                        padding: '10px 20px',
+                        padding: '10px 22px',
                         borderRadius: 'var(--radius-full)',
                         fontSize: '13px',
                         fontWeight: 800,
@@ -1651,7 +1651,7 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                         display: 'inline-flex',
                         alignItems: 'center',
                         gap: '8px',
-                        boxShadow: '0 4px 16px rgba(123, 28, 110, 0.3)'
+                        boxShadow: '0 4px 16px rgba(124, 58, 237, 0.35)'
                       }}
                     >
                       <Shield size={15} />

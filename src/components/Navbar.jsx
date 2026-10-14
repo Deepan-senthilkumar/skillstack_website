@@ -48,7 +48,6 @@ export default function Navbar({
   const navLinks = [
     { key: 'home', label: 'Home', icon: <Home size={15} /> },
     { key: 'courses', label: 'Curriculum', icon: <BookOpen size={15} />, matchPages: ['courses', 'course-detail'] },
-    ...(user ? [{ key: 'profile', label: 'My Courses & Certs 🎓', icon: <Award size={15} /> }] : []),
     { key: 'about', label: 'About', icon: <Info size={15} /> },
     { key: 'contact', label: 'Contact', icon: <Mail size={15} /> },
   ];
@@ -125,148 +124,146 @@ export default function Navbar({
           })}
         </div>
 
-        {/* Right Actions Bar */}
+        {/* Right Actions Bar (Clean, uncluttered, premium) */}
         <div style={{
           display: 'flex',
           alignItems: 'center',
-          gap: '8px',
+          gap: '10px',
           flexShrink: 0,
         }}>
-          {/* Production Cluster Status (Desktop only) */}
-          <div className="desktop-only-flex" style={{
-            alignItems: 'center',
-            gap: '6px',
-            padding: '5px 10px',
-            fontSize: '11px',
-            fontWeight: 700,
-            borderRadius: 'var(--radius-full)',
-            background: 'rgba(123, 28, 110, 0.05)',
-            border: '1px solid rgba(123, 28, 110, 0.15)',
-            color: serverOnline ? '#7B1C6E' : serverOnline === false ? '#DC2626' : '#94A3B8',
-            flexShrink: 0
-          }} title="Production Cluster Status">
-            <span style={{
-              width: '7px',
-              height: '7px',
-              borderRadius: '50%',
-              background: serverOnline ? '#10B981' : serverOnline === false ? '#DC2626' : '#94A3B8',
-              boxShadow: serverOnline ? '0 0 8px #10B981' : 'none'
-            }} />
-            <span>{serverOnline ? 'Cluster Live' : serverOnline === false ? 'Offline' : 'Connecting...'}</span>
-          </div>
-
           {/* Desktop Auth Controls */}
           {!user ? (
             <div className="desktop-only-flex" style={{ alignItems: 'center', gap: '8px', flexShrink: 0 }}>
               <button
                 className="btn-secondary"
-                onClick={() => onOpenAuth('student', true)}
-                style={{
-                  fontSize: '12.5px',
-                  fontWeight: 700,
-                  padding: '7px 14px',
-                  borderRadius: 'var(--radius-full)',
-                  borderColor: 'rgba(123, 28, 110, 0.25)',
-                  color: '#7B1C6E',
-                  background: 'rgba(123, 28, 110, 0.05)',
-                  whiteSpace: 'nowrap',
-                  flexShrink: 0
-                }}
-              >
-                <Users size={13} /> Enroll
-              </button>
-
-              <button
-                className="btn-secondary"
                 onClick={() => onOpenAuth('student', false)}
                 style={{
-                  fontSize: '12.5px',
-                  fontWeight: 700,
-                  padding: '7px 14px',
-                  borderRadius: 'var(--radius-full)',
+                  fontSize: '13px',
+                  fontWeight: 600,
+                  padding: '7px 16px',
+                  borderRadius: '9999px',
+                  border: '1px solid #E2E8F0',
+                  color: '#475569',
+                  background: '#FFFFFF',
                   whiteSpace: 'nowrap',
-                  flexShrink: 0
+                  cursor: 'pointer'
                 }}
               >
                 Sign In
               </button>
-            </div>
-          ) : (
-            /* Logged in as Student */
-            <div className="desktop-only-flex" style={{ alignItems: 'center', gap: '8px', flexShrink: 0 }}>
-              {total > 0 && (
-                <div style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '5px 12px',
-                  fontSize: '11px',
-                  borderRadius: 'var(--radius-full)',
-                  background: 'rgba(123, 28, 110, 0.05)',
-                  border: '1px solid rgba(123, 28, 110, 0.15)',
-                  flexShrink: 0
-                }}>
-                  <div style={{ width: '36px', height: '5px', background: '#E2E8F0', borderRadius: '3px', overflow: 'hidden' }}>
-                    <div style={{ width: `${pct}%`, height: '100%', background: 'linear-gradient(90deg, #7B1C6E, #FDC029)', borderRadius: '3px' }} />
-                  </div>
-                  <span style={{ color: '#7B1C6E', fontWeight: 800 }}>{pct}%</span>
-                </div>
-              )}
 
               <button
                 className="btn-primary"
+                onClick={() => onOpenAuth('student', true)}
+                style={{
+                  fontSize: '13px',
+                  fontWeight: 700,
+                  padding: '7px 18px',
+                  borderRadius: '9999px',
+                  background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  boxShadow: '0 4px 14px rgba(124, 58, 237, 0.25)',
+                  whiteSpace: 'nowrap',
+                  cursor: 'pointer'
+                }}
+              >
+                Enroll Free
+              </button>
+            </div>
+          ) : (
+            /* Logged in as Student */
+            <div className="desktop-only-flex" style={{ alignItems: 'center', gap: '10px', flexShrink: 0 }}>
+              {/* Primary Action: Learning Workbench */}
+              <button
                 onClick={() => handleNavClick('learning')}
                 style={{
                   fontSize: '12.5px',
                   fontWeight: 700,
-                  padding: '7px 14px',
-                  borderRadius: 'var(--radius-full)',
+                  padding: '7px 16px',
+                  borderRadius: '9999px',
                   background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)',
                   color: '#FFFFFF',
+                  border: 'none',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  boxShadow: '0 4px 14px rgba(124, 58, 237, 0.25)',
+                  cursor: 'pointer',
                   whiteSpace: 'nowrap',
-                  flexShrink: 0
+                  transition: 'transform 0.15s ease, box-shadow 0.15s ease'
                 }}
+                onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-1px)'}
+                onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
               >
-                <Play size={13} /> Workbench
+                <Play size={12} fill="#FFFFFF" />
+                <span>Workbench</span>
               </button>
 
+              {/* Student Profile Avatar Pill */}
               <div
                 onClick={() => handleNavClick('profile')}
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: '6px',
-                  padding: '5px 12px',
-                  borderRadius: 'var(--radius-full)',
-                  background: currentPage === 'profile' ? 'rgba(124, 58, 237, 0.12)' : '#F1F5F9',
-                  border: currentPage === 'profile' ? '1.5px solid #7C3AED' : '1px solid #CBD5E1',
+                  gap: '8px',
+                  padding: '4px 14px 4px 5px',
+                  borderRadius: '9999px',
+                  background: currentPage === 'profile' ? 'rgba(124, 58, 237, 0.1)' : '#F8FAFC',
+                  border: currentPage === 'profile' ? '1.5px solid #7C3AED' : '1px solid #E2E8F0',
                   cursor: 'pointer',
                   flexShrink: 0,
                   transition: 'all 0.2s ease'
                 }}
-                title="View My Profile, Enrolled Courses & Certificates"
+                title="My Profile, Enrolled Courses & Certificates"
               >
-                <UserCheck size={13} color="#7C3AED" />
-                <span style={{ fontWeight: 700, color: '#0F172A', fontSize: '12px' }}>
-                  {user.first_name || user.display_name || user.username}
-                </span>
-                <span style={{
-                  fontSize: '10px',
+                <div style={{
+                  width: '26px',
+                  height: '26px',
+                  borderRadius: '50%',
+                  background: 'linear-gradient(135deg, #7C3AED 0%, #EC4899 100%)',
+                  color: '#FFFFFF',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                   fontWeight: 800,
-                  padding: '1px 5px',
-                  borderRadius: '3px',
-                  background: 'rgba(124, 58, 237, 0.1)',
-                  color: '#7C3AED'
+                  fontSize: '11.5px',
                 }}>
-                  Fellow
+                  {(user.first_name || user.username || 'U').charAt(0).toUpperCase()}
+                </div>
+                <span style={{ fontWeight: 700, color: '#0F172A', fontSize: '12.5px' }}>
+                  {user.first_name || user.display_name || user.username}
                 </span>
               </div>
 
+              {/* Minimal Sign Out Button */}
               <button
-                className="btn-secondary"
-                style={{ padding: '6px 10px', borderRadius: 'var(--radius-full)', flexShrink: 0 }}
                 onClick={onLogout}
-                title="Logout"
+                title="Sign Out"
+                style={{
+                  width: '34px',
+                  height: '34px',
+                  borderRadius: '50%',
+                  border: '1px solid #E2E8F0',
+                  background: '#FFFFFF',
+                  color: '#64748B',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease',
+                  flexShrink: 0
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.color = '#EF4444';
+                  e.currentTarget.style.borderColor = '#FCA5A5';
+                  e.currentTarget.style.background = '#FEF2F2';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.color = '#64748B';
+                  e.currentTarget.style.borderColor = '#E2E8F0';
+                  e.currentTarget.style.background = '#FFFFFF';
+                }}
               >
                 <LogOut size={13} />
               </button>

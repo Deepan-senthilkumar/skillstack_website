@@ -148,14 +148,14 @@ export default function StudentProfilePage({
               width: '74px',
               height: '74px',
               borderRadius: '22px',
-              background: 'linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%)',
+              background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 50%, #EC4899 100%)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               color: '#FFFFFF',
               fontSize: '30px',
               fontWeight: 800,
-              boxShadow: '0 8px 24px rgba(123, 28, 110, 0.4)',
+              boxShadow: '0 8px 24px rgba(124, 58, 237, 0.35)',
               border: '2px solid rgba(255, 255, 255, 0.2)'
             }}>
               {displayName.charAt(0).toUpperCase()}
@@ -394,9 +394,9 @@ export default function StudentProfilePage({
               <button
                 onClick={() => setActiveTab('catalog')}
                 style={{
-                  padding: '11px 22px',
+                  padding: '11px 24px',
                   borderRadius: '999px',
-                  background: 'linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%)',
+                  background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 50%, #EC4899 100%)',
                   color: '#FFFFFF',
                   fontWeight: 700,
                   fontSize: '13.5px',
@@ -405,7 +405,7 @@ export default function StudentProfilePage({
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '8px',
-                  boxShadow: '0 4px 14px rgba(123, 28, 110, 0.25)'
+                  boxShadow: '0 4px 16px rgba(124, 58, 237, 0.3)'
                 }}
               >
                 <PlusCircle size={16} /> Browse Course Catalog
@@ -447,8 +447,8 @@ export default function StudentProfilePage({
                           borderRadius: '6px',
                           fontSize: '11.5px',
                           fontWeight: 800,
-                          background: 'rgba(123, 28, 110, 0.08)',
-                          color: '#7B1C6E'
+                          background: 'rgba(124, 58, 237, 0.08)',
+                          color: '#7C3AED'
                         }}>
                           {subObj.level || 'Academic Track'}
                         </span>
@@ -476,13 +476,13 @@ export default function StudentProfilePage({
                       <div style={{ marginBottom: '20px' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', fontWeight: 700, marginBottom: '6px' }}>
                           <span style={{ color: '#475569' }}>Curriculum Completion</span>
-                          <span style={{ color: '#7B1C6E', fontWeight: 800 }}>{pct}%</span>
+                          <span style={{ color: '#7C3AED', fontWeight: 800 }}>{pct}%</span>
                         </div>
                         <div style={{ width: '100%', height: '8px', background: '#F1F5F9', borderRadius: '4px', overflow: 'hidden' }}>
                           <div style={{
                             width: `${pct}%`,
                             height: '100%',
-                            background: 'linear-gradient(90deg, #7B1C6E 0%, #FDC029 100%)',
+                            background: 'linear-gradient(90deg, #7C3AED 0%, #A855F7 50%, #EC4899 100%)',
                             borderRadius: '4px',
                             transition: 'width 0.4s ease'
                           }} />
@@ -495,9 +495,9 @@ export default function StudentProfilePage({
                         onClick={() => onStartLearning(subObj)}
                         style={{
                           flex: 1,
-                          padding: '11px',
-                          borderRadius: '12px',
-                          background: 'linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%)',
+                          padding: '12px',
+                          borderRadius: '9999px',
+                          background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 50%, #EC4899 100%)',
                           color: '#FFFFFF',
                           fontWeight: 700,
                           fontSize: '13px',
@@ -507,10 +507,10 @@ export default function StudentProfilePage({
                           alignItems: 'center',
                           justifyContent: 'center',
                           gap: '6px',
-                          boxShadow: '0 4px 12px rgba(123, 28, 110, 0.2)'
+                          boxShadow: '0 4px 14px rgba(124, 58, 237, 0.3)'
                         }}
                       >
-                        <Play size={14} /> Continue Learning
+                        <Play size={14} fill="#FFFFFF" /> Continue Learning
                       </button>
                     </div>
                   </div>
@@ -544,14 +544,15 @@ export default function StudentProfilePage({
               <button
                 onClick={() => setActiveTab('active')}
                 style={{
-                  padding: '10px 20px',
-                  borderRadius: '999px',
-                  background: 'linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%)',
+                  padding: '10px 22px',
+                  borderRadius: '9999px',
+                  background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 50%, #EC4899 100%)',
                   color: '#FFFFFF',
                   fontWeight: 700,
                   fontSize: '13px',
                   border: 'none',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 14px rgba(124, 58, 237, 0.3)'
                 }}
               >
                 Go to Active Courses
@@ -623,7 +624,7 @@ export default function StudentProfilePage({
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                           <span style={{ color: '#64748B', fontWeight: 600 }}>Credential Status:</span>
-                          <span style={{ color: '#7B1C6E', fontWeight: 800 }}>Official Certificate Minted 🎓</span>
+                          <span style={{ color: '#7C3AED', fontWeight: 800 }}>Official Certificate Minted 🎓</span>
                         </div>
                       </div>
                     </div>
@@ -709,14 +710,15 @@ export default function StudentProfilePage({
               <button
                 onClick={() => setActiveTab('active')}
                 style={{
-                  padding: '10px 20px',
-                  borderRadius: '999px',
-                  background: 'linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%)',
+                  padding: '10px 22px',
+                  borderRadius: '9999px',
+                  background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 50%, #EC4899 100%)',
                   color: '#FFFFFF',
                   fontWeight: 700,
                   fontSize: '13px',
                   border: 'none',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 14px rgba(124, 58, 237, 0.3)'
                 }}
               >
                 Go to My Active Courses
@@ -795,8 +797,8 @@ export default function StudentProfilePage({
                       style={{
                         width: '100%',
                         padding: '12px',
-                        borderRadius: '12px',
-                        background: 'linear-gradient(135deg, #7B1C6E 0%, #A21CAF 100%)',
+                        borderRadius: '9999px',
+                        background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 50%, #EC4899 100%)',
                         color: '#FFFFFF',
                         fontWeight: 700,
                         fontSize: '13.5px',
@@ -806,7 +808,7 @@ export default function StudentProfilePage({
                         alignItems: 'center',
                         justifyContent: 'center',
                         gap: '8px',
-                        boxShadow: '0 4px 14px rgba(123, 28, 110, 0.25)',
+                        boxShadow: '0 4px 16px rgba(124, 58, 237, 0.3)',
                         opacity: enrollingSubjectId === subject.id ? 0.7 : 1
                       }}
                     >
@@ -849,14 +851,15 @@ export default function StudentProfilePage({
               <button
                 onClick={() => setActiveTab('active')}
                 style={{
-                  padding: '10px 20px',
-                  borderRadius: '999px',
-                  background: 'linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%)',
+                  padding: '10px 22px',
+                  borderRadius: '9999px',
+                  background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 50%, #EC4899 100%)',
                   color: '#FFFFFF',
                   fontWeight: 700,
                   fontSize: '13px',
                   border: 'none',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 14px rgba(124, 58, 237, 0.3)'
                 }}
               >
                 Go to Active Courses
