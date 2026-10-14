@@ -374,11 +374,7 @@ export default function CoursesPage({ subjects, onSelectSubject, onNavigate, use
                       }}
                       onClick={(e) => {
                         e.stopPropagation();
-                        if (onStartLearning) {
-                          onStartLearning(subject);
-                        } else {
-                          onSelectSubject(subject);
-                        }
+                        onSelectSubject(subject);
                       }}
                     >
                       <CheckCircle2 size={15} color="#FFFFFF" />
@@ -395,51 +391,22 @@ export default function CoursesPage({ subjects, onSelectSubject, onNavigate, use
                       }}
                       onClick={(e) => {
                         e.stopPropagation();
-                        if (onStartLearning) {
-                          onStartLearning(subject);
-                        } else {
-                          onSelectSubject(subject);
-                        }
+                        onSelectSubject(subject);
                       }}
                     >
-                      <Play size={14} fill="currentColor" />
+                      <BookOpen size={14} />
                       <span>View Syllabus 🚀 {progress > 0 ? `(${progress}%)` : ''}</span>
                     </button>
-                  ) : user ? (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                      <button
-                        className="subject-cta-btn"
-                        disabled={enrollingId === subject.id}
-                        style={{
-                          background: 'linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%)',
-                          color: '#FFFFFF',
-                          opacity: enrollingId === subject.id ? 0.7 : 1,
-                          cursor: enrollingId === subject.id ? 'wait' : 'pointer'
-                        }}
-                        onClick={(e) => handleEnroll(subject, e)}
-                      >
-                        <span>{enrollingId === subject.id ? 'Enrolling...' : (enrollError[subject.id] ? 'Retry Enrollment' : 'Enroll Now')}</span>
-                        <ArrowRight size={15} />
-                      </button>
-                      {enrollError[subject.id] && (
-                        <span style={{ fontSize: '11px', color: '#EF4444', textAlign: 'center' }}>
-                          {enrollError[subject.id]}
-                        </span>
-                      )}
-                    </div>
                   ) : (
                     <button
                       className="subject-cta-btn"
                       onClick={(e) => {
                         e.stopPropagation();
-                        if (onOpenStudentAuth) {
-                          onOpenStudentAuth(false, () => handleEnroll(subject, e));
-                        } else {
-                          onSelectSubject(subject);
-                        }
+                        onSelectSubject(subject);
                       }}
                     >
-                      <span>Login to Enroll</span>
+                      <BookOpen size={14} />
+                      <span>View Syllabus</span>
                       <ArrowRight size={15} />
                     </button>
                   )}
