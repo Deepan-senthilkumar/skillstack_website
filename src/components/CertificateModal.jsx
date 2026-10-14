@@ -66,7 +66,7 @@ export default function CertificateModal({ certificate, onClose }) {
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Award size={20} color="#7B1C6E" />
+            <Award size={20} color="#7C3AED" />
             <span style={{ fontWeight: 800, fontSize: '15px', color: '#0F172A' }}>
               Official Course Completion Certificate
             </span>
@@ -92,13 +92,13 @@ export default function CertificateModal({ certificate, onClose }) {
                 gap: '6px',
                 padding: '7px 16px',
                 borderRadius: '999px',
-                background: '#7B1C6E',
+                background: '#7C3AED',
                 color: '#FFFFFF',
                 border: 'none',
                 fontWeight: 700,
                 fontSize: '12.5px',
                 cursor: 'pointer',
-                boxShadow: '0 4px 12px rgba(123, 28, 110, 0.25)'
+                boxShadow: '0 4px 12px rgba(124, 58, 237, 0.25)'
               }}
             >
               <Printer size={14} /> Print / Save PDF
@@ -155,14 +155,14 @@ export default function CertificateModal({ certificate, onClose }) {
                 width: '42px',
                 height: '42px',
                 borderRadius: '10px',
-                background: 'linear-gradient(135deg, #7B1C6E 0%, #A82596 100%)',
+                background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 color: '#FFFFFF',
                 fontWeight: 900,
                 fontSize: '22px',
-                boxShadow: '0 6px 16px rgba(123, 28, 110, 0.25)'
+                boxShadow: '0 6px 16px rgba(124, 58, 237, 0.25)'
               }}>
                 ⚡
               </div>
@@ -194,8 +194,8 @@ export default function CertificateModal({ certificate, onClose }) {
               display: 'inline-block',
               padding: '6px 20px',
               borderRadius: '999px',
-              background: 'linear-gradient(90deg, rgba(226, 201, 116, 0.18), rgba(123, 28, 110, 0.12), rgba(226, 201, 116, 0.18))',
-              color: '#7B1C6E',
+              background: 'linear-gradient(90deg, rgba(226, 201, 116, 0.18), rgba(124, 58, 237, 0.12), rgba(226, 201, 116, 0.18))',
+              color: '#7C3AED',
               fontSize: '12px',
               fontWeight: 800,
               letterSpacing: '0.18em',
@@ -246,14 +246,14 @@ export default function CertificateModal({ certificate, onClose }) {
             display: 'inline-block',
             padding: '10px 28px',
             borderRadius: '16px',
-            background: 'linear-gradient(135deg, rgba(123, 28, 110, 0.08) 0%, rgba(253, 192, 41, 0.1) 100%)',
-            border: '1.5px solid rgba(123, 28, 110, 0.2)',
+            background: 'linear-gradient(135deg, rgba(124, 58, 237, 0.08) 0%, rgba(253, 192, 41, 0.1) 100%)',
+            border: '1.5px solid rgba(124, 58, 237, 0.2)',
             marginBottom: '32px'
           }}>
             <h2 style={{
               fontSize: '22px',
               fontWeight: 850,
-              color: '#7B1C6E',
+              color: '#7C3AED',
               margin: 0,
               letterSpacing: '-0.01em'
             }}>
@@ -281,7 +281,7 @@ export default function CertificateModal({ certificate, onClose }) {
 
             <div>
               <div style={{ fontSize: '10px', color: '#94A3B8', fontWeight: 800, textTransform: 'uppercase' }}>Credential ID</div>
-              <div style={{ fontSize: '12px', fontWeight: 700, color: '#7B1C6E', marginTop: '2px', fontFamily: 'monospace' }}>
+              <div style={{ fontSize: '12px', fontWeight: 700, color: '#7C3AED', marginTop: '2px', fontFamily: 'monospace' }}>
                 {certId}
               </div>
             </div>

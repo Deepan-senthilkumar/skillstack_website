@@ -24,7 +24,7 @@ export default function TermsPage({ onNavigate }) {
             gap: '8px',
             background: 'none',
             border: 'none',
-            color: '#7B1C6E',
+            color: '#7C3AED',
             fontSize: '13.5px',
             fontWeight: 700,
             cursor: 'pointer',
@@ -39,7 +39,7 @@ export default function TermsPage({ onNavigate }) {
         {/* Hero Card */}
         <div style={{
           background: '#FFFFFF',
-          border: '1.5px solid rgba(123, 28, 110, 0.14)',
+          border: '1.5px solid rgba(124, 58, 237, 0.14)',
           borderRadius: '24px',
           padding: '36px 40px',
           boxShadow: '0 8px 30px rgba(0, 0, 0, 0.04)',
@@ -49,8 +49,8 @@ export default function TermsPage({ onNavigate }) {
             display: 'inline-flex',
             alignItems: 'center',
             gap: '6px',
-            background: 'rgba(123, 28, 110, 0.08)',
-            color: '#7B1C6E',
+            background: 'rgba(124, 58, 237, 0.08)',
+            color: '#7C3AED',
             padding: '4px 12px',
             borderRadius: '999px',
             fontSize: '12px',
@@ -132,7 +132,7 @@ export default function TermsPage({ onNavigate }) {
               5. Governing Law &amp; Contact
             </h2>
             <p>
-              These terms are governed by and construed in accordance with the laws of India. For any legal inquiries, contact <strong>{siteConfig.creator.name}</strong> at <a href={`mailto:${siteConfig.creator.email}`} style={{ color: '#7B1C6E', fontWeight: 700 }}>{siteConfig.creator.email}</a>.
+              These terms are governed by and construed in accordance with the laws of India. For any legal inquiries, contact <strong>{siteConfig.creator.name}</strong> at <a href={`mailto:${siteConfig.creator.email}`} style={{ color: '#7C3AED', fontWeight: 700 }}>{siteConfig.creator.email}</a>.
             </p>
           </section>
         </div>

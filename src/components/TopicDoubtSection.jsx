@@ -57,7 +57,7 @@ export default function TopicDoubtSection({ topic, currentUser }) {
   return (
     <div style={{
       background: '#FFFFFF',
-      border: '1.5px solid rgba(123, 28, 110, 0.14)',
+      border: '1.5px solid rgba(124, 58, 237, 0.14)',
       borderRadius: '24px',
       padding: '28px 32px',
       boxShadow: '0 8px 24px rgba(0, 0, 0, 0.04)',
@@ -80,12 +80,12 @@ export default function TopicDoubtSection({ topic, currentUser }) {
             width: '44px',
             height: '44px',
             borderRadius: '14px',
-            background: 'linear-gradient(135deg, #7B1C6E 0%, #A82596 100%)',
+            background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             color: '#FFFFFF',
-            boxShadow: '0 4px 12px rgba(123, 28, 110, 0.25)'
+            boxShadow: '0 4px 12px rgba(124, 58, 237, 0.25)'
           }}>
             <MessageSquare size={22} />
           </div>
@@ -94,7 +94,7 @@ export default function TopicDoubtSection({ topic, currentUser }) {
               1-on-1 Topic Doubt &amp; Clarification
             </h3>
             <p style={{ margin: '3px 0 0', fontSize: '12.5px', color: '#64748B' }}>
-              Ask a question about <strong style={{ color: '#7B1C6E' }}>{topic?.title}</strong>. Responses are sent privately only to you by Prof. Deepan.
+              Ask a question about <strong style={{ color: '#7C3AED' }}>{topic?.title}</strong>. Responses are sent privately only to you by Prof. Deepan.
             </p>
           </div>
         </div>
@@ -141,7 +141,7 @@ export default function TopicDoubtSection({ topic, currentUser }) {
               transition: 'border-color 0.2s',
               background: '#F8FAFC'
             }}
-            onFocus={(e) => { e.target.style.borderColor = '#7B1C6E'; e.target.style.background = '#FFFFFF'; }}
+            onFocus={(e) => { e.target.style.borderColor = '#7C3AED'; e.target.style.background = '#FFFFFF'; }}
             onBlur={(e) => { e.target.style.borderColor = '#CBD5E1'; e.target.style.background = '#F8FAFC'; }}
           />
         </div>
@@ -169,7 +169,7 @@ export default function TopicDoubtSection({ topic, currentUser }) {
               display: 'inline-flex',
               alignItems: 'center',
               gap: '8px',
-              background: 'linear-gradient(135deg, #7B1C6E 0%, #A82596 100%)',
+              background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)',
               color: '#FFFFFF',
               border: 'none',
               padding: '10px 22px',
@@ -178,7 +178,7 @@ export default function TopicDoubtSection({ topic, currentUser }) {
               fontWeight: 800,
               cursor: submitting || !questionText.trim() ? 'not-allowed' : 'pointer',
               opacity: submitting || !questionText.trim() ? 0.6 : 1,
-              boxShadow: '0 4px 14px rgba(123, 28, 110, 0.25)',
+              boxShadow: '0 4px 14px rgba(124, 58, 237, 0.25)',
               transition: 'all 0.2s ease'
             }}
           >

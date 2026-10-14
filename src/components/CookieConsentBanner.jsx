@@ -93,7 +93,7 @@ export default function CookieConsentBanner({ onNavigate }) {
         <button
           onClick={handleAccept}
           style={{
-            background: 'linear-gradient(135deg, #7B1C6E 0%, #A82596 100%)',
+            background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)',
             color: '#FFFFFF',
             border: 'none',
             padding: '8px 18px',
@@ -101,7 +101,7 @@ export default function CookieConsentBanner({ onNavigate }) {
             fontSize: '12.5px',
             fontWeight: 800,
             cursor: 'pointer',
-            boxShadow: '0 4px 12px rgba(123, 28, 110, 0.35)'
+            boxShadow: '0 4px 12px rgba(124, 58, 237, 0.35)'
           }}
         >
           Accept Cookies

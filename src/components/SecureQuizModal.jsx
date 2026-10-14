@@ -485,7 +485,7 @@ export default function SecureQuizModal({ topic, onClose, onPassed }) {
           {/* Loading State */}
           {loading && (
             <div style={{ textAlign: 'center', padding: '60px 0', color: '#64748B' }}>
-              <RefreshCw size={32} className="animate-spin" style={{ margin: '0 auto 12px', color: '#7B1C6E' }} />
+              <RefreshCw size={32} className="animate-spin" style={{ margin: '0 auto 12px', color: '#7C3AED' }} />
               <div style={{ fontSize: '15px', fontWeight: 700, color: '#0F172A' }}>
                 Securing Examination Sandbox...
               </div>
@@ -598,8 +598,8 @@ export default function SecureQuizModal({ topic, onClose, onPassed }) {
                           width: '34px',
                           height: '34px',
                           borderRadius: '10px',
-                          border: isCurrent ? '2px solid #7B1C6E' : '1px solid #CBD5E1',
-                          backgroundColor: isCurrent ? '#7B1C6E' : isAnswered ? '#DCFCE7' : '#FFFFFF',
+                          border: isCurrent ? '2px solid #7C3AED' : '1px solid #CBD5E1',
+                          backgroundColor: isCurrent ? '#7C3AED' : isAnswered ? '#DCFCE7' : '#FFFFFF',
                           color: isCurrent ? '#FFFFFF' : isAnswered ? '#166534' : '#64748B',
                           fontWeight: 800,
                           fontSize: '12px',
@@ -641,8 +641,8 @@ export default function SecureQuizModal({ topic, onClose, onPassed }) {
                     fontWeight: 800,
                     textTransform: 'uppercase',
                     letterSpacing: '0.5px',
-                    color: '#7B1C6E',
-                    backgroundColor: 'rgba(123, 28, 110, 0.08)',
+                    color: '#7C3AED',
+                    backgroundColor: 'rgba(124, 58, 237, 0.08)',
                     padding: '3px 10px',
                     borderRadius: '12px'
                   }}>
@@ -682,8 +682,8 @@ export default function SecureQuizModal({ topic, onClose, onPassed }) {
                           gap: '14px',
                           padding: '14px 18px',
                           borderRadius: '14px',
-                          border: isSelected ? '2px solid #7B1C6E' : '1.5px solid #E2E8F0',
-                          backgroundColor: isSelected ? 'rgba(123, 28, 110, 0.05)' : '#FFFFFF',
+                          border: isSelected ? '2px solid #7C3AED' : '1.5px solid #E2E8F0',
+                          backgroundColor: isSelected ? 'rgba(124, 58, 237, 0.05)' : '#FFFFFF',
                           cursor: 'pointer',
                           transition: 'all 0.15s ease'
                         }}
@@ -692,8 +692,8 @@ export default function SecureQuizModal({ topic, onClose, onPassed }) {
                           width: '26px',
                           height: '26px',
                           borderRadius: '50%',
-                          border: isSelected ? '2px solid #7B1C6E' : '1.5px solid #CBD5E1',
-                          backgroundColor: isSelected ? '#7B1C6E' : '#FFFFFF',
+                          border: isSelected ? '2px solid #7C3AED' : '1.5px solid #CBD5E1',
+                          backgroundColor: isSelected ? '#7C3AED' : '#FFFFFF',
                           color: isSelected ? '#FFFFFF' : '#64748B',
                           fontWeight: 800,
                           fontSize: '11px',
@@ -707,7 +707,7 @@ export default function SecureQuizModal({ topic, onClose, onPassed }) {
                         <span style={{
                           fontSize: '13.5px',
                           fontWeight: isSelected ? 700 : 500,
-                          color: isSelected ? '#7B1C6E' : '#1E293B',
+                          color: isSelected ? '#7C3AED' : '#1E293B',
                           flex: 1
                         }}>
                           {text}

@@ -24,7 +24,7 @@ export default function DisclaimerPage({ onNavigate }) {
             gap: '8px',
             background: 'none',
             border: 'none',
-            color: '#7B1C6E',
+            color: '#7C3AED',
             fontSize: '13.5px',
             fontWeight: 700,
             cursor: 'pointer',
@@ -39,7 +39,7 @@ export default function DisclaimerPage({ onNavigate }) {
         {/* Hero Card */}
         <div style={{
           background: '#FFFFFF',
-          border: '1.5px solid rgba(123, 28, 110, 0.14)',
+          border: '1.5px solid rgba(124, 58, 237, 0.14)',
           borderRadius: '24px',
           padding: '36px 40px',
           boxShadow: '0 8px 30px rgba(0, 0, 0, 0.04)',

@@ -409,7 +409,7 @@ export default function Navbar({
                       width: '38px',
                       height: '38px',
                       borderRadius: '50%',
-                      background: 'linear-gradient(135deg, #7B1C6E, #FDC029)',
+                      background: 'linear-gradient(135deg, #7C3AED, #FDC029)',
                       color: '#FFFFFF',
                       display: 'flex',
                       alignItems: 'center',
@@ -440,10 +440,10 @@ export default function Navbar({
                     <div style={{ marginBottom: '12px' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', fontWeight: 700, color: '#64748B', marginBottom: '4px' }}>
                         <span>Curriculum Progress</span>
-                        <span style={{ color: '#7B1C6E' }}>{completed}/{total} ({pct}%)</span>
+                        <span style={{ color: '#7C3AED' }}>{completed}/{total} ({pct}%)</span>
                       </div>
                       <div style={{ width: '100%', height: '6px', background: '#E2E8F0', borderRadius: '3px', overflow: 'hidden' }}>
-                        <div style={{ width: `${pct}%`, height: '100%', background: 'linear-gradient(90deg, #7B1C6E, #FDC029)' }} />
+                        <div style={{ width: `${pct}%`, height: '100%', background: 'linear-gradient(90deg, #7C3AED, #FDC029)' }} />
                       </div>
                     </div>
                   )}
@@ -454,7 +454,7 @@ export default function Navbar({
                       width: '100%',
                       padding: '10px',
                       borderRadius: '10px',
-                      background: 'linear-gradient(135deg, #7B1C6E 0%, #A21CAF 100%)',
+                      background: 'linear-gradient(135deg, #7C3AED 0%, #A21CAF 100%)',
                       color: '#FFFFFF',
                       fontWeight: 700,
                       fontSize: '13px',
@@ -478,7 +478,7 @@ export default function Navbar({
                   border: '1px solid #E2E8F0'
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                    <Sparkles size={16} color="#7B1C6E" />
+                    <Sparkles size={16} color="#7C3AED" />
                     <span style={{ fontWeight: 800, fontSize: '13.5px', color: '#0F172A' }}>
                       Learn C Programming
                     </span>
@@ -493,7 +493,7 @@ export default function Navbar({
                         flex: 1,
                         padding: '9px',
                         borderRadius: '10px',
-                        background: 'linear-gradient(135deg, #7B1C6E 0%, #FDC029 100%)',
+                        background: 'linear-gradient(135deg, #7C3AED 0%, #FDC029 100%)',
                         color: '#FFFFFF',
                         fontWeight: 700,
                         fontSize: '12.5px',
@@ -510,7 +510,7 @@ export default function Navbar({
                         padding: '9px',
                         borderRadius: '10px',
                         background: '#FFFFFF',
-                        color: '#7B1C6E',
+                        color: '#7C3AED',
                         fontWeight: 700,
                         fontSize: '12.5px',
                         border: '1.5px solid rgba(124, 58, 237, 0.2)',
@@ -547,7 +547,7 @@ export default function Navbar({
                         fontSize: '14px',
                         fontWeight: isActive ? 700 : 600,
                         background: isActive ? 'rgba(124, 58, 237, 0.08)' : 'transparent',
-                        color: isActive ? '#7B1C6E' : '#334155',
+                        color: isActive ? '#7C3AED' : '#334155',
                         border: 'none',
                         cursor: 'pointer',
                         textAlign: 'left',
@@ -555,12 +555,12 @@ export default function Navbar({
                       }}
                     >
                       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <span style={{ color: isActive ? '#7B1C6E' : '#64748B' }}>
+                        <span style={{ color: isActive ? '#7C3AED' : '#64748B' }}>
                           {link.icon}
                         </span>
                         <span>{link.label}</span>
                       </div>
-                      <ChevronRight size={14} color={isActive ? '#7B1C6E' : '#CBD5E1'} />
+                      <ChevronRight size={14} color={isActive ? '#7C3AED' : '#CBD5E1'} />
                     </button>
                   );
                 })}

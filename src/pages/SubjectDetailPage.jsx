@@ -167,7 +167,7 @@ export default function SubjectDetailPage({
               display: 'inline-block',
               padding: '5px 14px',
               borderRadius: 'var(--radius-full)',
-              background: 'linear-gradient(135deg, rgba(123, 28, 110, 0.4), rgba(253, 192, 41, 0.3))',
+              background: 'linear-gradient(135deg, rgba(124, 58, 237, 0.4), rgba(253, 192, 41, 0.3))',
               border: '1px solid rgba(253, 192, 41, 0.35)',
               color: '#FDC029',
               fontSize: '11.5px',
@@ -317,8 +317,8 @@ export default function SubjectDetailPage({
         {/* LOCKED SYLLABUS PREVIEW BANNER */}
         {!isEnrolled && !isCompleted && (
           <div style={{
-            background: 'linear-gradient(135deg, rgba(123, 28, 110, 0.08) 0%, rgba(253, 192, 41, 0.06) 100%)',
-            border: '1.5px dashed rgba(123, 28, 110, 0.35)',
+            background: 'linear-gradient(135deg, rgba(124, 58, 237, 0.08) 0%, rgba(253, 192, 41, 0.06) 100%)',
+            border: '1.5px dashed rgba(124, 58, 237, 0.35)',
             borderRadius: 'var(--radius-lg)',
             padding: '18px 22px',
             marginBottom: '20px',
