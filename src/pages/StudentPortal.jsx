@@ -89,20 +89,31 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
   };
 
   const handleSelectMcqOption = (questionId, optionKey) => {
-    setMcqPracticeAnswers(prev => ({
-      ...prev,
-      [questionId]: {
-        selectedOption: optionKey,
-        isRevealed: true
-      }
-    }));
+    setMcqPracticeAnswers(prev => {
+      const current = prev[questionId] || {};
+      if (current.isRevealed) return prev;
+      return {
+        ...prev,
+        [questionId]: {
+          selectedOption: optionKey,
+          isRevealed: true,
+          retryCount: current.retryCount || 0
+        }
+      };
+    });
   };
 
   const handleResetMcqPractice = (questionId) => {
     setMcqPracticeAnswers(prev => {
-      const copy = { ...prev };
-      delete copy[questionId];
-      return copy;
+      const current = prev[questionId] || {};
+      return {
+        ...prev,
+        [questionId]: {
+          selectedOption: null,
+          isRevealed: false,
+          retryCount: (current.retryCount || 0) + 1
+        }
+      };
     });
   };
 
@@ -1732,6 +1743,8 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                     const correctOpt = q.correct_option ? String(q.correct_option).trim().toUpperCase() : null;
                     const isRevealed = Boolean(practiceState?.isRevealed);
                     const isCorrect = Boolean(selectedOpt && correctOpt && selectedOpt === correctOpt);
+                    const retryCount = practiceState?.retryCount || 0;
+                    const canRetry = !isCorrect && retryCount < 1;
 
                     const optionsList = [
                       { key: 'A', text: q.option_a },
@@ -1767,25 +1780,28 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                                 {isCorrect ? <CheckCircle2 size={14} color="#059669" /> : <X size={14} color="#DC2626" />}
                                 {isCorrect ? 'Correct!' : 'Incorrect'}
                               </span>
-                              <button
-                                type="button"
-                                onClick={() => handleResetMcqPractice(q.id)}
-                                style={{
-                                  background: 'rgba(100, 116, 139, 0.08)',
-                                  border: '1px solid rgba(100, 116, 139, 0.2)',
-                                  color: '#475569',
-                                  fontSize: '11px',
-                                  fontWeight: 700,
-                                  cursor: 'pointer',
-                                  display: 'inline-flex',
-                                  alignItems: 'center',
-                                  gap: '4px',
-                                  padding: '4px 10px',
-                                  borderRadius: 'var(--radius-full)'
-                                }}
-                              >
-                                <RotateCcw size={12} /> Retry
-                              </button>
+                              {canRetry && (
+                                <button
+                                  type="button"
+                                  onClick={() => handleResetMcqPractice(q.id)}
+                                  title="1 retry attempt available"
+                                  style={{
+                                    background: 'rgba(100, 116, 139, 0.08)',
+                                    border: '1px solid rgba(100, 116, 139, 0.2)',
+                                    color: '#475569',
+                                    fontSize: '11px',
+                                    fontWeight: 700,
+                                    cursor: 'pointer',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '4px',
+                                    padding: '4px 10px',
+                                    borderRadius: 'var(--radius-full)'
+                                  }}
+                                >
+                                  <RotateCcw size={12} /> Retry
+                                </button>
+                              )}
                             </div>
                           )}
                         </div>
@@ -1816,7 +1832,13 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                                 key={opt.key}
                                 type="button"
                                 className={btnClass}
-                                onClick={() => handleSelectMcqOption(q.id, opt.key)}
+                                onClick={() => {
+                                  if (!isRevealed) {
+                                    handleSelectMcqOption(q.id, opt.key);
+                                  }
+                                }}
+                                disabled={isRevealed}
+                                style={{ cursor: isRevealed ? 'default' : 'pointer' }}
                               >
                                 <span className="mcq-option-circle">{opt.key}</span>
                                 <span style={{ flex: 1 }}>{opt.text}</span>
