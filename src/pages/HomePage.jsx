@@ -63,11 +63,11 @@ export default function HomePage({
               marginBottom: '20px'
             }}>
               <Sparkles size={14} color="#7C3AED" />
-              <span>Next-Gen Software Engineering Platform</span>
+              <span>SkillStack • Next-Gen Software Engineering Platform</span>
             </div>
 
             <h1 className="etech-hero-title">
-              Develop your skills in a{' '}
+              SkillStack — Develop your skills in a{' '}
               <span className="highlight-purple">
                 new &amp; unique way
               </span>

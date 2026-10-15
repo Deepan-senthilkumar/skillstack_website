@@ -14,6 +14,9 @@ Allow: /
 # Google Image & Favicon Crawler
 User-agent: Googlebot-Image
 Allow: /skillstack.png
+Allow: /skillstack-192.png
+Allow: /skillstack-512.png
+Allow: /favicon-48x48.png
 Allow: /favicon.ico
 Allow: /images/
 
