@@ -204,7 +204,7 @@ class ApiClient {
   // Curriculum — fetch modules+topics with Instant Cache
   async getCurriculum(subjectSlug = '', forceRefresh = false) {
     const slug = subjectSlug || 'c-programming';
-    const cacheKey = `skillstack_curriculum_${slug}`;
+    const cacheKey = `skillstack_curriculum_v2_${slug}`;
     if (!forceRefresh) {
       try {
         const cached = localStorage.getItem(cacheKey);
