@@ -9,6 +9,7 @@ import {
 import confetti from 'canvas-confetti';
 import CountdownTimer from '../components/CountdownTimer';
 import ProblemWorkbenchModal from '../components/ProblemWorkbenchModal';
+import VSCodeWorkbenchModal from '../components/VSCodeWorkbenchModal';
 import SecureQuizModal from '../components/SecureQuizModal';
 import RichContentRenderer from '../components/RichContentRenderer';
 import CertificateModal from '../components/CertificateModal';
@@ -119,12 +120,13 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
 
   // Flatten all topics for easy navigation
   const flatTopics = [];
-  activeCurriculum.forEach(module => {
+  activeCurriculum.forEach((module, mIdx) => {
     (module.topics || []).forEach(topic => {
       flatTopics.push({
         ...topic,
         moduleName: module.name,
         moduleId: module.id,
+        moduleOrder: module.order || (mIdx + 1),
         level: module.level,
       });
     });
@@ -254,22 +256,92 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
     return prac.isPassed && (quiz.hasQuiz ? quiz.isPassed : true);
   };
 
-  // Sequential Unlock Map:
-  // Topic 0 is unlocked.
-  // Topic N is unlocked ONLY IF Topic N - 1 is strictly completed!
-  const topicUnlockStatus = {};
-  let prevIsDone = true;
-  flatTopics.forEach((t) => {
-    topicUnlockStatus[t.topic_id] = prevIsDone;
-    prevIsDone = prevIsDone && isTopicStrictlyCompleted(t);
-  });
-
   // Module completion status
   const isModuleCompleted = (mod) => {
-    const topics = mod.topics || [];
+    const topics = mod?.topics || [];
     if (topics.length === 0) return false;
     return topics.every(t => isTopicStrictlyCompleted(t));
   };
+
+  // FreeCodeCamp Milestone Project Gating
+  const getMilestoneStatus = () => {
+    const mod1 = activeCurriculum.find(m => m.name.startsWith('1.') || m.order === 1);
+    const mod2 = activeCurriculum.find(m => m.name.startsWith('2.') || m.order === 2);
+    const mod3 = activeCurriculum.find(m => m.name.startsWith('3.') || m.order === 3);
+    const mod4 = activeCurriculum.find(m => m.name.startsWith('4.') || m.order === 4);
+    const mod10 = activeCurriculum.find(m => m.name.startsWith('10.') || m.order === 10);
+    const modProjects = activeCurriculum.find(m => m.name.includes('Practice Projects') || m.order === 13);
+
+    const projectTopics = modProjects?.topics || [];
+    const calcProject = projectTopics.find(t => t.title.toLowerCase().includes('calculator')) || projectTopics[0];
+    const mgmtProject = projectTopics.find(t => t.title.toLowerCase().includes('student') || t.title.toLowerCase().includes('bank')) || projectTopics[1];
+    const fileProject = projectTopics.find(t => t.title.toLowerCase().includes('employee') || t.title.toLowerCase().includes('memory pool')) || projectTopics[4];
+
+    const isCalcPassed = calcProject ? isTopicStrictlyCompleted(calcProject) : false;
+    const isMgmtPassed = mgmtProject ? isTopicStrictlyCompleted(mgmtProject) : false;
+    const isFilePassed = fileProject ? isTopicStrictlyCompleted(fileProject) : false;
+
+    const mod1Done = mod1 ? isModuleCompleted(mod1) : false;
+    const mod2Done = mod2 ? isModuleCompleted(mod2) : false;
+    const mod3Done = mod3 ? isModuleCompleted(mod3) : false;
+    const mod4Done = mod4 ? isModuleCompleted(mod4) : false;
+
+    // Milestone 1 Gate: Mod 1 & 2 done => locks Mod 3 until Calculator project is passed
+    const milestone1Locked = (mod1Done && mod2Done) && !isCalcPassed;
+    // Milestone 2 Gate: Mod 3 & 4 done => locks Mod 5 until Student/Bank Management project is passed
+    const milestone2Locked = (mod3Done && mod4Done) && !isMgmtPassed;
+    // Milestone 3 Gate: Mod 10 done => locks Mod 11 until File-Based records project is passed
+    const milestone3Locked = (mod10 ? isModuleCompleted(mod10) : false) && !isFilePassed;
+
+    return {
+      calcProject,
+      isCalcPassed,
+      mgmtProject,
+      isMgmtPassed,
+      fileProject,
+      isFilePassed,
+      milestone1Locked,
+      milestone2Locked,
+      milestone3Locked
+    };
+  };
+
+  const milestoneStatus = getMilestoneStatus();
+
+  // Sequential Unlock Map with FreeCodeCamp Milestone Gates:
+  const topicUnlockStatus = {};
+  let prevIsDone = true;
+  flatTopics.forEach((t) => {
+    const modOrder = t.moduleOrder || 1;
+    const isMod3OrHigher = modOrder >= 3 && modOrder <= 12;
+    const isMod5OrHigher = modOrder >= 5 && modOrder <= 12;
+    const isMod11OrHigher = modOrder >= 11 && modOrder <= 12;
+
+    let lockedByMilestone = false;
+    if (isMod11OrHigher && milestoneStatus.milestone3Locked) {
+      lockedByMilestone = true;
+    } else if (isMod5OrHigher && milestoneStatus.milestone2Locked) {
+      lockedByMilestone = true;
+    } else if (isMod3OrHigher && milestoneStatus.milestone1Locked) {
+      lockedByMilestone = true;
+    }
+
+    if (modOrder === 13) {
+      if (t.title.toLowerCase().includes('calculator')) {
+        const mod2 = activeCurriculum.find(m => m.order === 2 || m.name.startsWith('2.'));
+        topicUnlockStatus[t.topic_id] = Boolean(mod2 && isModuleCompleted(mod2));
+      } else if (t.title.toLowerCase().includes('student') || t.title.toLowerCase().includes('bank')) {
+        const mod4 = activeCurriculum.find(m => m.order === 4 || m.name.startsWith('4.'));
+        topicUnlockStatus[t.topic_id] = Boolean(mod4 && isModuleCompleted(mod4));
+      } else {
+        topicUnlockStatus[t.topic_id] = prevIsDone;
+      }
+    } else {
+      topicUnlockStatus[t.topic_id] = prevIsDone && !lockedByMilestone;
+    }
+
+    prevIsDone = prevIsDone && isTopicStrictlyCompleted(t);
+  });
 
   // Real-time cooldown countdown ticker
   useEffect(() => {
@@ -1055,6 +1127,122 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
             </button>
           </div>
         )}
+        {/* FreeCodeCamp Milestone 1 Project Required Banner */}
+        {milestoneStatus.milestone1Locked && (
+          <div style={{
+            background: 'linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%)',
+            border: '2px solid #F59E0B',
+            borderRadius: '16px',
+            padding: '16px 20px',
+            marginBottom: '20px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '12px',
+            boxShadow: '0 4px 16px rgba(245, 158, 11, 0.15)'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div style={{
+                width: '42px', height: '42px', borderRadius: '50%',
+                background: 'linear-gradient(135deg, #D97706 0%, #F59E0B 100%)',
+                color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: '20px'
+              }}>
+                🏆
+              </div>
+              <div>
+                <div style={{ fontWeight: 800, fontSize: '14.5px', color: '#78350F' }}>
+                  Milestone 1 Completed: Calculator Project Required!
+                </div>
+                <div style={{ fontSize: '12.5px', color: '#92400E' }}>
+                  You finished C Basics & Control! Submit and pass the <strong>Calculator Project</strong> in Practice Projects to unlock Functions, Arrays & subsequent modules.
+                </div>
+              </div>
+            </div>
+            {milestoneStatus.calcProject && (
+              <button
+                onClick={() => {
+                  setActiveTopicId(milestoneStatus.calcProject.topic_id);
+                  if (milestoneStatus.calcProject.problems?.[0]) {
+                    setSelectedProblem(milestoneStatus.calcProject.problems[0]);
+                  }
+                }}
+                style={{
+                  padding: '9px 20px',
+                  borderRadius: '999px',
+                  background: 'linear-gradient(135deg, #D97706 0%, #B45309 100%)',
+                  color: '#FFFFFF',
+                  fontWeight: 800,
+                  fontSize: '13px',
+                  border: 'none',
+                  cursor: 'pointer'
+                }}
+              >
+                Open Calculator Project ⚡
+              </button>
+            )}
+          </div>
+        )}
+
+        {/* FreeCodeCamp Milestone 2 Project Required Banner */}
+        {milestoneStatus.milestone2Locked && (
+          <div style={{
+            background: 'linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%)',
+            border: '2px solid #F59E0B',
+            borderRadius: '16px',
+            padding: '16px 20px',
+            marginBottom: '20px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '12px',
+            boxShadow: '0 4px 16px rgba(245, 158, 11, 0.15)'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div style={{
+                width: '42px', height: '42px', borderRadius: '50%',
+                background: 'linear-gradient(135deg, #D97706 0%, #F59E0B 100%)',
+                color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: '20px'
+              }}>
+                🏆
+              </div>
+              <div>
+                <div style={{ fontWeight: 800, fontSize: '14.5px', color: '#78350F' }}>
+                  Milestone 2 Completed: Systems Project Required!
+                </div>
+                <div style={{ fontSize: '12.5px', color: '#92400E' }}>
+                  You finished Functions, Arrays & Strings! Build and submit <strong>Student/Bank Management System</strong> to unlock Pointers & Data Types.
+                </div>
+              </div>
+            </div>
+            {milestoneStatus.mgmtProject && (
+              <button
+                onClick={() => {
+                  setActiveTopicId(milestoneStatus.mgmtProject.topic_id);
+                  if (milestoneStatus.mgmtProject.problems?.[0]) {
+                    setSelectedProblem(milestoneStatus.mgmtProject.problems[0]);
+                  }
+                }}
+                style={{
+                  padding: '9px 20px',
+                  borderRadius: '999px',
+                  background: 'linear-gradient(135deg, #D97706 0%, #B45309 100%)',
+                  color: '#FFFFFF',
+                  fontWeight: 800,
+                  fontSize: '13px',
+                  border: 'none',
+                  cursor: 'pointer'
+                }}
+              >
+                Open Project ⚡
+              </button>
+            )}
+          </div>
+        )}
+
         {(enrollment?.status === 'COMPLETED' || (flatTopics.length > 0 && flatTopics.every(t => isTopicStrictlyCompleted(t)))) && (
           <div style={{
             background: 'linear-gradient(135deg, #FAF5FF 0%, #FDF4FF 100%)',
@@ -2207,6 +2395,86 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
                           )}
                         </div>
                       </div>
+
+                      {/* Optional Submodule: Interview & Challenge Questions (Revealed upon solving mandatory practical) */}
+                      {isPassed && (
+                        <div style={{
+                          marginTop: '16px',
+                          padding: '16px 20px',
+                          borderRadius: '12px',
+                          background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(168, 85, 247, 0.05) 100%)',
+                          border: '1.5px dashed rgba(124, 58, 237, 0.35)'
+                        }}>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                              <span style={{ fontSize: '18px' }}>💡</span>
+                              <h4 style={{ margin: 0, fontSize: '14px', fontWeight: 800, color: '#4F46E5' }}>
+                                Interview & Deep-Dive Challenges
+                              </h4>
+                            </div>
+                            <span style={{
+                              fontSize: '11px',
+                              fontWeight: 700,
+                              padding: '2px 8px',
+                              borderRadius: '12px',
+                              background: '#EDE9FE',
+                              color: '#6D28D9'
+                            }}>
+                              Optional Practice
+                            </span>
+                          </div>
+
+                          <p style={{ fontSize: '12.5px', color: '#64748B', lineHeight: '1.5', margin: '0 0 12px 0' }}>
+                            Mandatory practical passed! Level up with these real technical interview questions and tricky edge cases (Optional: solve if you like, does not block progression).
+                          </p>
+
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '12px' }}>
+                            <div style={{ backgroundColor: '#FFFFFF', padding: '10px 14px', borderRadius: '8px', border: '1px solid #E2E8F0' }}>
+                              <div style={{ fontWeight: 700, fontSize: '12.5px', color: '#1E293B', marginBottom: '2px' }}>
+                                1. System Interview: Memory and Performance Tradeoffs
+                              </div>
+                              <div style={{ fontSize: '12px', color: '#475569' }}>
+                                How does the C compiler lay out memory for this concept, and what causes cache misses or overhead?
+                              </div>
+                            </div>
+                            <div style={{ backgroundColor: '#FFFFFF', padding: '10px 14px', borderRadius: '8px', border: '1px solid #E2E8F0' }}>
+                              <div style={{ fontWeight: 700, fontSize: '12.5px', color: '#1E293B', marginBottom: '2px' }}>
+                                2. Defensive Engineering: Undefined Behavior & Edge Cases
+                              </div>
+                              <div style={{ fontSize: '12px', color: '#475569' }}>
+                                How do you guard against silent overflow, unaligned access, or dangling pointer states?
+                              </div>
+                            </div>
+                          </div>
+
+                          <button
+                            onClick={() => {
+                              setSelectedProblem({
+                                ...problem,
+                                title: `[Interview Challenge] ${problem.title}`,
+                                description: `### Technical Interview Coding Challenge: ${topic?.title}\n\nRefactor your solution into a production-grade, defensive implementation with error bounds and clean headers.`,
+                                starter_code: problem.starter_code
+                              });
+                            }}
+                            style={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '6px',
+                              padding: '6px 14px',
+                              borderRadius: '6px',
+                              backgroundColor: '#4F46E5',
+                              color: '#FFF',
+                              border: 'none',
+                              fontSize: '12px',
+                              fontWeight: 600,
+                              cursor: 'pointer'
+                            }}
+                          >
+                            <Terminal size={13} />
+                            <span>Practice in VS Code Studio</span>
+                          </button>
+                        </div>
+                      )}
                     </div>
                   );
                 })
@@ -2318,9 +2586,9 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
         )}
       </main>
 
-      {/* Problem Workbench Modal */}
+      {/* Problem Workbench Modal -> Upgraded to VS Code Multi-File Studio */}
       {selectedProblem && (
-        <ProblemWorkbenchModal
+        <VSCodeWorkbenchModal
           problem={selectedProblem}
           onClose={() => setSelectedProblem(null)}
           onSubmitted={(res) => {
@@ -2329,7 +2597,7 @@ export default function StudentPortal({ curriculum = [], user, onRefresh, curren
             loadTopicProgress();
             if (onRefresh) onRefresh();
             confetti({
-              particleCount: 80,
+              particleCount: 90,
               spread: 70,
               origin: { y: 0.6 }
             });
